@@ -1,25 +1,25 @@
 <?php 
 require 'function/corestart.php';
 checkuser();
+$v="n";
+if(isset($_COOKIE['ser'])){
+	setcookie('ser','',time()-999999);
+}
 if(isset($_GET['dels'])&&isset($_GET['id'])){
-	$dels=$_GET['dels'];
 	$sid=$_GET['id'];
-$ok=deldir(PATHS."//Servers//{$sid}");
+//$ok=ddf(PATHS."//Servers//{$sid}//");
+$ok=1;
 if($ok){
-	query("delete from server where id='$sid'");
+	query("delete from server where sid='{$sid}'");
 	$row=mysql_affected_rows();
 if($row>0)
 {
-	$rs=query("select * from user where username='{$username}'");
-	        $rom=mysql_fetch_array($rs);
-			$cou=$rom['scout']-1;
-			query("update user set scout ='{$cou}'where username='{$username}'");
 	header("Location: list.php?s=4");//4删除成功
 }else{
-//header("Location: list.php?f=4");
+header("Location: list.php?f=4");
 }
 }else{
-//header("Location: list.php?f=5");//5文件夹删除失败
+header("Location: list.php?f=5");//5文件夹删除失败
 }
 }
 ?>
@@ -28,7 +28,7 @@ if($row>0)
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Ucon | manage</title>
+  <title>URP | 产品列表</title>
   <meta name="description" content="产品列表">
   <meta name="keywords" content="list">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -42,62 +42,13 @@ if($row>0)
  
 </head>
 <body>
-<!--[if lte IE 9]>
-<p class="browsehappy">你正在使用<strong>过时</strong>的浏览器，Amaze UI 暂不支持。 请 <a href="http://browsehappy.com/" target="_blank">升级浏览器</a>
-  以获得更好的体验！</p>
-<![endif]-->
-
-<header class="am-topbar am-topbar-inverse admin-header">
-  <div class="am-topbar-brand">
-    <strong>Ucon2.0</strong> <small>后台管理</small>
-  </div>
-
-  <button class="am-topbar-btn am-topbar-toggle am-btn am-btn-sm am-btn-success am-show-sm-only" data-am-collapse="{target: '#topbar-collapse'}"><span class="am-sr-only">导航切换</span> <span class="am-icon-bars"></span></button>
-
-  <div class="am-collapse am-topbar-collapse" id="topbar-collapse">
-
-    <ul class="am-nav am-nav-pills am-topbar-nav am-topbar-right admin-header-list">
-      <li><a href="javascript:;"><span class="am-icon-envelope-o"></span> 收件箱 <span class="am-badge am-badge-warning">5</span></a></li>
-      <li class="am-dropdown" data-am-dropdown>
-        <a class="am-dropdown-toggle" data-am-dropdown-toggle href="javascript:;">
-          <span class="am-icon-users"></span> 管理员 <span class="am-icon-caret-down"></span>
-        </a>
-        <ul class="am-dropdown-content">
-          <li><a href="#"><span class="am-icon-user"></span> 资料</a></li>
-          <li><a href="#"><span class="am-icon-cog"></span> 设置</a></li>
-          <li><a href="#"><span class="am-icon-power-off"></span> 退出</a></li>
-        </ul>
-      </li>
-     </ul>
-  </div>
-</header>
-
+ <!-- header start -->
+<?php require 'function/header.php';?>
+  <!-- header end -->
+  
 <div class="am-cf admin-main">
   <!-- sidebar start -->
-  <div class="admin-sidebar am-offcanvas" id="admin-offcanvas">
-    <div class="am-offcanvas-bar admin-offcanvas-bar">
-      <ul class="am-list admin-sidebar-list">
-        <li><a href="admin-index.html"><span class="am-icon-home"></span> 首页</a></li>
-        <li><a href="admin-table.html"><span class="am-icon-table"></span> 表格</a></li>
-        <li><a href="admin-form.html"><span class="am-icon-pencil-square-o"></span> 表单</a></li>
-        <li><a href="#"><span class="am-icon-sign-out"></span> 注销</a></li>
-      </ul>
-
-      <div class="am-panel am-panel-default admin-sidebar-panel">
-        <div class="am-panel-bd">
-          <p><span class="am-icon-bookmark"></span> 公告</p>
-          <p>时光静好，与君语；细水流年，与君同。—— Amaze UI</p>
-        </div>
-      </div>
-
-      <div class="am-panel am-panel-default admin-sidebar-panel">
-        <div class="am-panel-bd">
-          <p><span class="am-icon-tag"></span> wiki</p>
-          <p>Welcome to the Amaze UI wiki!</p>
-        </div>
-      </div>
-    </div>
-  </div>
+<?php require 'function/sidebar.php';?>
   <!-- sidebar end -->
 
   <!-- content start -->
@@ -146,17 +97,11 @@ $result=mysql_query("select * from server where user='{$_SESSION['username']}' l
 	$result=mysql_query("select * from server  limit $startCount,$perNumber"); 
 }
 ?>
-		<script language="javascript">
-	
-					function jump(i){
-					window.location="manage.php?ser="+i;
-					}
-					</script>
 <?php
 while($row = mysql_fetch_array($result))
   
 {
-	 $sname=iconv("GB2312","UTF-8//IGNORE",$row['name']) 
+	 $sname=$row['name']; 
 	?>
               <tr>
                 <td><input type="checkbox" /></td>
@@ -169,8 +114,8 @@ while($row = mysql_fetch_array($result))
                   <div class="am-btn-toolbar">
 				  
                     <div class="am-btn-group am-btn-group-xs">
-                      <button type="button"class="am-btn am-btn-default am-btn-xs am-text-secondary" onclick="jump('<?php echo $row['sid'];?>')"><span class="am-icon-pencil-square-o"></span>产品管理</button>
-                     <button class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only"type="button" onclick="javascript:window.location.href='list.php?dels=<?php echo $row['id'];?>&&id=<?php echo $row['id'];?>'"><span class="am-icon-trash-o"></span>删除</button>		
+                      <button type="button"class="am-btn am-btn-default am-btn-xs am-text-secondary" onclick="javascript:window.location.href='manage.php?index&ser=<?php echo $row['sid'];?>'"><span class="am-icon-pencil-square-o"></span>产品管理</button>
+                     <button class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only"type="button" onclick="javascript:window.location.href='list.php?dels&&id=<?php echo $row['sid'];?>'"><span class="am-icon-trash-o"></span>删除</button>		
 					</div>
                   
 				  </div>

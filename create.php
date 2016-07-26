@@ -2,6 +2,7 @@
 require 'function/corestart.php';
 require_once 'function/createpage.php';
 checkuser();
+$v="n";
 ?>
 <!doctype html>
 <html class="no-js fixed-layout">
@@ -22,61 +23,13 @@ checkuser();
  
 </head>
 <body>
-<!--[if lte IE 9]>
-<p class="browsehappy">你正在使用<strong>过时</strong>的浏览器，Amaze UI 暂不支持。 请 <a href="http://browsehappy.com/" target="_blank">升级浏览器</a>
-  以获得更好的体验！</p>
-<![endif]-->
-
-<header class="am-topbar am-topbar-inverse admin-header">
-  <div class="am-topbar-brand">
-    <strong>Ucon2.0</strong> <small>后台管理</small>
-  </div>
-
-  <button class="am-topbar-btn am-topbar-toggle am-btn am-btn-sm am-btn-success am-show-sm-only" data-am-collapse="{target: '#topbar-collapse'}"><span class="am-sr-only">导航切换</span> <span class="am-icon-bars"></span></button>
-
-  <div class="am-collapse am-topbar-collapse" id="topbar-collapse">
-
-    <ul class="am-nav am-nav-pills am-topbar-nav am-topbar-right admin-header-list">
-      <li class="am-dropdown" data-am-dropdown>
-        <a class="am-dropdown-toggle" data-am-dropdown-toggle href="javascript:;">
-          <span class="am-icon-users"></span> 管理员 <span class="am-icon-caret-down"></span>
-        </a>
-        <ul class="am-dropdown-content">
-          <li><a href="#"><span class="am-icon-user"></span> 资料</a></li>
-          <li><a href="#"><span class="am-icon-cog"></span> 设置</a></li>
-          <li><a href="#"><span class="am-icon-power-off"></span> 退出</a></li>
-        </ul>
-      </li>
-     </ul>
-  </div>
-</header>
+ <!-- header start -->
+<?php require 'function/header.php';?>
+  <!-- header end -->
 
 <div class="am-cf admin-main">
   <!-- sidebar start -->
-  <div class="admin-sidebar am-offcanvas" id="admin-offcanvas">
-    <div class="am-offcanvas-bar admin-offcanvas-bar">
-      <ul class="am-list admin-sidebar-list">
-        <li><a href="index.php"><span class="am-icon-home"></span> 首页</a></li>
-        <li><a href="list.php"><span class="am-icon-table"></span> 产品列表</a></li>
-        <li><a href="wallet.php"><span class="am-icon-pencil-square-o"></span> 我的钱包</a></li>
-        <li><a href="#"><span class="am-icon-sign-out"></span> 注销</a></li>
-      </ul>
-
-      <div class="am-panel am-panel-default admin-sidebar-panel">
-        <div class="am-panel-bd">
-          <p><span class="am-icon-bookmark"></span> 公告</p>
-          <p>Ucon2.0全新版本</p>
-        </div>
-      </div>
-
-      <div class="am-panel am-panel-default admin-sidebar-panel">
-        <div class="am-panel-bd">
-          <p><span class="am-icon-tag"></span> wiki</p>
-          <p>Test</p>
-        </div>
-      </div>
-    </div>
-  </div>
+<?php require 'function/sidebar.php';?>
   <!-- sidebar end -->
 
   <!-- content start -->
@@ -97,12 +50,7 @@ if(isset($_GET['c1'])&&isset($_POST['inser'])){
 	}
 	setcookie("inser", $inser, time()+600);
 	echo $c1a;
-	$rp=query("select * from map where state ='2'");
-	while($row=mysql_fetch_array($rp)){
-		?>
-		<option><?php echo $row['name'];?></option>
-	<?php
-	}
+		gfl(1);
 	echo $c1b;
 	echo "  <input id='' name='' type='text' class='' value='{$a[1]}' disabled> 
 	<input id='time' name='time' type='hidden' class='' value='{$a[1]}' >";
@@ -142,26 +90,37 @@ foreach($arr as $values)
 }
 	$cheat=$_POST['cheat'];
 	if($cheat=="off"){
-		$cheat="";
+		$ch=0;
+		$cheat="cheats disabled";
 	}else{
-		$cheat="cheats";
+		$ch=1;
+		$cheat="cheats enabled";
 	}
 	$sname=$_POST['servername'];
 	$map=$_POST['map'];
 	$time=$_POST['time'];
 	$dif=$_POST['dif'];
 	$pv=$_POST['pv'];
-		if(fcreate($sname,$port,$map,$dif,$pv,$cheat)==false){
+	$view=$_POST['view'];
+	$players=$_POST['players'];
+	if($players==0||$players==''){
+		$players=1;
+	}
+		$numbers = range(2000,3000);
+shuffle($numbers);
+foreach ($numbers as $number) {
+    $num=$number;
+	break;
+}
+$rpw=getinser(8);
+$sid=$_SESSION['username']."x".$num;
+		if(fcreate($sname,$port,$rport,$rpw,$map,$dif,$pv,$cheat,$sid)==false){
 			header("Location:create.php?c0&err=6");//写入基础文件失败
 		}else{
 			$rs=query("select * from user where username='{$username}'");
 	        $rom=mysql_fetch_array($rs);
 			$cou=$rom['scout']+1;
 			query("update user set scout ='{$cou}'where username='{$username}'");
-			$sec=1;
-			if($_SESSION['sec']==1){
-				$sec=2;
-			}
 			$uid = mysql_query("select * from server order by id DESC limit 1 ");
 	$uid=mysql_fetch_array($uid);
 	if($uid){
@@ -170,14 +129,8 @@ foreach($arr as $values)
 	$uid=0;
 	}
 	$uid++;
-	$numbers = range(2000,3000);
-shuffle($numbers);
-foreach ($numbers as $number) {
-    $num=$number;
-	break;
-}
-$sid=$sname."#".$num;
-	$q="insert into server(id,user,time,sec,rpw,rport,port,name,state,sid)values('$uid','$username','$time','$sec','123456','$rport','$port','$sname','0','$sid')";
+	$q="insert into server(id,user,time,rpw,rport,port,name,state,sid,players,welcome,difficult,mode,map,password,view,cheat)values('$uid','$username','$time','$rpw','$rport','$port','$sname','0','$sid','$players','本服务器由URP强力驱动','$dif','$pv','$map','','$view','$ch')";
+		//echo $q;
 			query($q);
 			$numb=mysql_affected_rows();
 			query("DELETE FROM inser WHERE inser='{$inser}'");

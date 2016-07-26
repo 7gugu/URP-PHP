@@ -1,63 +1,111 @@
 <?php 
 require 'function/corestart.php';
+$v="m";
 checkuser();
-//接口sid
-	if(isset($_GET['ser'])){
-    $sid=$_GET['ser'];
-	}else{
-		echo "<script>alert('参数错误!')</script>";
-sleep(2);
-header("Location:list.php");
+//首次进入
+if(isset($_GET['ser'])){
+	$ser=$_GET['ser'];
+	setcookie('ser',$ser,time()+3600);
+	echo "<script>location.href='manage.php?index';</script>"; 
+	exit();
+}
+//启动服务器
+if(isset($_GET['start'])){
+	$ser=$_COOKIE['ser'];
+	manage($ser,"start");
+	exit();
+}
+//关闭服务器
+if(isset($_GET['stop'])){
+	$ser=$_COOKIE['ser'];
+	manage($ser,"shutdown");
+	exit();
+}
+//重启服务器
+if(isset($_GET['restart'])){
+	$ser=$_COOKIE['ser'];
+	manage($ser,"restart");
+	exit();
+}
+//实时状态
+if(isset($_POST['players'])){
+	$ser=$_COOKIE['ser'];
+	udfile($ser,"players",$_POST['players'],"Server//Commands.dat");
+	udfile($ser,"rpw",$_POST['rpw'],"Rocket//Rocket.config.xml");
+	echo "<script>location.href='manage.php?index';</script>";  
+	exit();
+}
+if(isset($_POST['servername'])){
+	$ser=$_COOKIE['ser'];
+	udfile($ser,"servername",$_POST['servername'],"Server//Commands.dat");
+	udfile($ser,"welcome",$_POST['welcome'],"Server//Commands.dat");
+	udfile($ser,"difficult",$_POST['difficult'],"Server//Commands.dat");
+	udfile($ser,"mode",$_POST['mode'],"Server//Commands.dat");
+	udfile($ser,"map",$_POST['map'],"Server//Commands.dat");
+	udfile($ser,"password",$_POST['password'],"Server//Commands.dat");
+	udfile($ser,"view",$_POST['view'],"Server//Commands.dat");
+	udfile($ser,"cheat",$_POST['cheat'],"Server//Commands.dat");
+	echo "<script>location.href='manage.php?information';</script>";  
+	exit();
+}
+//获取数据
+if(isset($_COOKIE['ser'])){
+	$sid=$_COOKIE['ser'];
+	$username=$_SESSION['username'];
+	$rs=query("select * from server where sid='{$sid}' and user ='{$username}'");
+	$row=mysql_fetch_array($rs);
+}else{
+	echo "<script>location.href='list.php?err';</script>";  
+	exit();
+}
+//简易控制台
+if(isset($_POST['command'])){
+	$command=$_POST['command'];
+	$sid=$_COOKIE['ser'];
+	echo strpos($command,'shutdown');
+	if(strpos($command,'shutdown')!=''){
+		query("update server set state='0'where sid='{$sid}'");	
 	}
-	if(isset($_GET['save'])&&isset($_POST['text'])){
-		$text=$_POST['text'];
-		$text = trim($text); 
-		if(isset($_GET['cdat'])){
-			$text=htmlspecialchars($text);
-		echo rwfile($sid,$text,'w','server\\Commands.dat');
-		}elseif(isset($_GET['rxml'])){
-			echo rwfile($sid,$text,'w','Rocket\\Rocket.config.xml');
-		}
-		exit();
-	}
-	if(isset($_GET['open'])&&isset($_GET['id'])){
-		$ids=$_GET['id'];
-		manage($ids,'start');
-	}
-		if(isset($_GET['end'])&&isset($_GET['id'])){
-		$ids=$_GET['id'];
-		manage($ids,'end');
-	}
-	if(isset($_POST['cdat'])){
-		rwfile($sid,$_POST['cdat'],'w','server\\Commands.dat');
-	}
-	if(isset($_FILES['upfile'])){
-		$ser=$_POST['SER'];
+	rcon($command,1,$row['rport'],$row['rpw']);
+	echo "<script>location.href='manage.php?order';</script>";  
+	exit();
+}
+//添加插件
+if(isset($_GET['shop'])&&isset($_GET['move'])){
+	$ser=$_COOKIE['ser'];
+	if(file_exists($_GET['move'])){
+		$move=$_GET['move'];
+		$d=dirname(__FILE__)."/plugins/";
+			$pl=str_replace("\\","/",$d);
+		$plugin=str_replace($pl,"",$move);
+	copy($move,PATHS."/Servers/$ser/Rocket/plugins/$plugin");
+		echo "<script>location.href='manage.php?shop&suc';</script>";  
+	exit();
+}else{
+		echo "<script>location.href='manage.php?shop&err';</script>";  
+	exit();
+}
+}
+//上传地图
+if(isset($_FILES['upfile'])){
+		$sid=$_COOKIE['ser'];
 		$rem=upmap($_FILES['upfile']);
-		$rez=getzip("upload/".$_FILES['upfile']['name'],"map/");
+		$rez=getzip(PATHS.'/Servers/'.$sid.'/Workshop/Maps/'.$_FILES['upfile']['name'],PATHS.'/Servers/'.$sid.'/Workshop/Maps/');
 		if($rez==true&&$rem==true){	
-		$id = query("select * from map order by id DESC limit 1 ");
-	$id=mysql_fetch_array($id);
-	if($id){
-		$id=$id['id'];
-	}else{
-	$id=0;
+		header("Location:manage.php?map&suc");//upload successfully
+		}else{
+		header("Location:manage.php?map&err");//upload faild
 	}
-	$id++;
-	$tname=explode(".",$_FILES['upfile']['name']);
-		query("insert into map(id,name,state)values('$id','{$tname[0]}','1')");	
-		header("Location:manage.php?ser={$ser}&&uok");//upload successfully
-		}
-		header("Location:manage.php?ser={$ser}&&uno");//upload faild
-	}
+}
+
 ?>
 <!doctype html>
 <html class="no-js fixed-layout">
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Ucon | manage</title>
-  <meta name="description" content="这是一个 index 页面">
+  <title>URP | 管理服务器</title>
+  <meta name="description" content="manage">
   <meta name="keywords" content="index">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="renderer" content="webkit">
@@ -69,258 +117,614 @@ header("Location:list.php");
   <link rel="stylesheet" href="assets/css/admin.css">
 </head>
 <body>
-<header class="am-topbar am-topbar-inverse admin-header">
-  <div class="am-topbar-brand">
-    <strong>Ucon2.0</strong> <small>后台管理</small>
-  </div>
-
-  <button class="am-topbar-btn am-topbar-toggle am-btn am-btn-sm am-btn-success am-show-sm-only" data-am-collapse="{target: '#topbar-collapse'}"><span class="am-sr-only">导航切换</span> <span class="am-icon-bars"></span></button>
-
-  <div class="am-collapse am-topbar-collapse" id="topbar-collapse">
-
-    <ul class="am-nav am-nav-pills am-topbar-nav am-topbar-right admin-header-list">
-      <li><a href="javascript:;"><span class="am-icon-envelope-o"></span> 收件箱 <span class="am-badge am-badge-warning">5</span></a></li>
-      <li class="am-dropdown" data-am-dropdown>
-        <a class="am-dropdown-toggle" data-am-dropdown-toggle href="javascript:;">
-          <span class="am-icon-users"></span> 管理员 <span class="am-icon-caret-down"></span>
-        </a>
-        <ul class="am-dropdown-content">
-          <li><a href="#"><span class="am-icon-user"></span> 资料</a></li>
-          <li><a href="#"><span class="am-icon-cog"></span> 设置</a></li>
-          <li><a href="#"><span class="am-icon-power-off"></span> 退出</a></li>
-        </ul>
-      </li>
-     </ul>
-  </div>
-  <script src="assets/js/save.js" text="text/javascript"></script>
-  <script src="assets/ace/ace.js" type="text/javascript" charset="utf-8"></script>
-  <style type="text/css" media="screen">
-  pre{
-	  padding:50%;
-  }
-    #editor {
-       
-        position: absolute;
-      
-    }
-  </style>
-</header>
+ <!-- header start -->
+<?php require 'function/header.php';?>
+  <!-- header end -->
 
 <div class="am-cf admin-main">
   <!-- sidebar start -->
-  <div class="admin-sidebar am-offcanvas" id="admin-offcanvas">
-    <div class="am-offcanvas-bar admin-offcanvas-bar">
-      <ul class="am-list admin-sidebar-list">
-        <li><a href="admin-index.html"><span class="am-icon-home"></span> 首页</a></li>
-        <li><a href="admin-table.html"><span class="am-icon-table"></span> 产品管理</a></li>
-        <li><a href="admin-form.html"><span class="am-icon-pencil-square-o"></span> 账户明细</a></li>
-        <li><a href="#"><span class="am-icon-sign-out"></span> 注销</a></li>
-      </ul>
-
-      <div class="am-panel am-panel-default admin-sidebar-panel">
-        <div class="am-panel-bd">
-          <p><span class="am-icon-bookmark"></span> 公告</p>
-          <p>不氪金不是人。—— 7gugu</p>
-        </div>
-      </div>
-
-     
-    </div>
-  </div>
+  <?php require 'function/sidebar.php';?>
   <!-- sidebar end -->
 
   <!-- content start -->
-  <?php 
-  $rs=query("select * from server where sid='$sid'");
-  $rom=mysql_fetch_array($rs);
-  $sname=iconv("GB2312","UTF-8//IGNORE",$rom['name']) 
-  ?>
   <div class="admin-content">
   <div class="admin-content-body">
     <div class="am-cf am-padding am-padding-bottom-0">
       <div class="am-fl am-cf">
         <strong class="am-text-primary am-text-lg">管理服务器</strong> /
-        <small><?php echo $sname;?></small>
+        <small>
+		<?php 
+		echo $row['name'] ;
+		?>
+		</small>
       </div>
     </div>
-
     <hr>
-
-    <div class="am-tabs am-margin" data-am-tabs>
-      <ul class="am-tabs-nav am-nav am-nav-tabs">
-        <li class="am-active"><a href="#tab1">基本信息</a></li>
-        <li><a href="#tab2">文件管理</a></li>
-        <li><a href="#tab3">上传地图</a></li>
-      </ul>
-
-      <div class="am-tabs-bd">
-        <div class="am-tab-panel am-fade am-in am-active " id="tab1">
-		 <div class="am-u-sm-7 ">
- 
-          <div class="am-g am-margin-top">
-            <div class="am-u-sm-4 am-u-md-2 am-text-right">IP地址:</div>
-        <div class="am-u-sm-8 am-u-md-10">
-              <p><?php echo IP;?></p>
-              </div>
-          </div>
-          <div class="am-g am-margin-top">
-            <div class="am-u-sm-4 am-u-md-2 am-text-right">服务器名</div>
-  <div class="am-u-sm-8 am-u-md-10">
-              <p><?php echo $sname;?></p>
-              </div>
-          </div>
-		   <div class="am-g am-margin-top">
-            <div class="am-u-sm-4 am-u-md-2 am-text-right">端口</div>
-  <div class="am-u-sm-8 am-u-md-10">
-              <p>Game:<?php echo $rom['port'];?>/Rcon:<?php echo $rom['rport'];?></p>
-              </div>
-          </div>
-		   <div class="am-g am-margin-top">
-            <div class="am-u-sm-4 am-u-md-2 am-text-right">状态</div>
-  <div class="am-u-sm-8 am-u-md-10">
-              <p><?php
-			  if($rom['state']==0){
-				  echo "离线";
-			  }elseif($rom['state']==1){
-				  echo "在线";
-			  }else{
-				  echo "未知状态";
-			  }
-				  ?></p>
-              </div>
-          </div>
-</div>
- <div class="am-u-sm-5">
-          <div class="am-g am-margin-top">
-            <div class="am-u-sm-4 am-u-md-2 am-text-right">启动服务</div>
-            <div class="am-u-sm-8 am-u-md-10">
-			<?php 
-				$i=$rom['id'];
-			if($rom['state']==0){
-			
-				echo " 
-				<form action=\"manage.php?ser=1&open&id=$i\" method=\"POST\">
-				<button type=\"submit\" class=\"am-btn am-btn-success\">启动服务器</button> 
-				</form>
-				";
-			}elseif($rom['state']==1){
-				echo " 
-				<form action=\"manage.php?ser=1&end&id=$i\" method=\"POST\">
-				<button type=\"submit\" class=\"am-btn am-btn-danger\">关闭服务器</button>
-                </form>
-				";
-			}
-			?>
-            </div>
-			
-          </div>
-
-          <div class="am-g am-margin-top">
-            <div class="am-u-sm-4 am-u-md-2 am-text-right">
-              剩余时间
-            </div>
-            <div class="am-u-sm-8 am-u-md-10">
-             <p><?php echo $rom['time'];?>天</p>
-            </div>
-          </div>
-</div>
-        </div>
-        <div class="am-tab-panel am-fade" id="tab2">  
-		<div class="am-g am-g-fixed">
- <div class="am-u-sm-6 ">	
-   <label for="doc-select-1">Command.dat</label>    
-            <pre id="editorc">	
-		<?php 
-		$data =rwfile($sid,'','r','server\\Commands.dat');
-echo htmlspecialchars($data);
-	 ?>	 
-</pre>
-<script>
-    var editorc = ace.edit("editorc");
-    editorc.setTheme("assets/ace/theme/twilight");
-    editorc.session.setMode("ace/mode/text");
-</script>  
-         <div class="am-u-sm-8 " style="position:fixed; bottom:15px;  width:100%; _position:absolute;">
-            <button type="button" onclick="savec('<?php echo $sid;?>')" class="am-btn am-btn-success">保存更改</button>
-            </div>
-		  </div>  
-		 <div class="am-u-sm-6 ">	
-		   <label for="doc-select-1">Rocket.xml</label>
-          <form id="2"class="am-form">  
-            <pre id="editorr">	
-		<?php 
-		$data =$data =rwfile($sid,'','r','Rocket\\Rocket.config.xml');
-echo htmlspecialchars($data);
-	 ?> 
-</pre>
-<script>
-    var editorr = ace.edit("editorr");
-    editorr.setTheme("assets/ace/theme/twilight");
-    editorr.session.setMode("ace/mode/xml");
-</script>
-  <div class="am-u-sm-8 am-u-md-10">
-            <button type="button" onclick="saver()" class="am-btn am-btn-success">保存更改</button>
-            </div>
-          </form> 
-		  </div>
-		  </div>
-        </div>
-        <div class="am-tab-panel am-fade" id="tab3">
-		<div class="am-form-group">
-		<div class="am-u-sm-4 ">
-	  <form class="am-form">
-	  <?php
-$result=query("select * from map where state ='1' "); 
-?>
-
-  <div class="am-u-md-8">
-  <label for="doc-select-1">地图选择</label>
-  <select multiple class="" id="doc-select-2">
-  <?php
-while($row = mysql_fetch_array($result))  
-{
-	?>
-        <option><?php echo $row['name'];?></option>
-		<?php
-}
-	?>
-      </select> 
-	  <p class="am-form-help">修改地图请通过编辑器修改,若没有想要的可自己上传</p>
+<?php
+	if($row!=false){
+	if(isset($_GET['index'])){
+		$on='';
+		$off='';
+		$state="未知";
+		if($row['state']==1){
+		$on="disabled";
+		$state="在线";
+		}else{
+			$off="disabled";
+			$state="离线";
+		}
+echo "<table class='am-table am-table-striped '>
+ <thead>
+        <tr>
+            <th>服务器基础设置</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+	
+    <tbody>
+        <tr>
+            <td>操作服务器</td>
+            <td>
+			<div class='am-u-lg-6'>
+			<button type='submit'  onclick=\"javascript:window.location.href='manage.php?start'\"class='am-btn am-btn-success'{$on}>启动服务器</button>
+            <button type='submit' onclick=\"javascript:window.location.href='manage.php?stop'\" class='am-btn am-btn-danger'{$off}>关闭服务器</button> 
+            <button type='submit' onclick=\"javascript:window.location.href='manage.php?restart'\" class='am-btn am-btn-warning'{$off}>重启服务器</button> 			
 			</div>
-			 
+			</td>
+			<td>
+			</td>
+        </tr>
+		<form action='manage.php' method='POST'>
+        <tr>
+            <td>服务器最大人数</td>
+            <td>
+			<div class='am-u-lg-6'>
+			<input id='players' name='players' type='text' class='am-form-field' value='{$row['players']}'>
+			</div>
+			</td>
+			<td>
+			</td>
+        </tr>
+		<tr>
+            <td>Rcon密码</td>
+            <td>
+			<div class='am-u-lg-6'>
+			<input id='rpw' name='rpw' type='text' class='am-form-field' value='{$row['rpw']}' >
+			</div>
+			</td>
+			<td>
+			</td>
+        </tr>
+        <tr>
+            <td>可用时间</td>
+            <td>
+			<div class='am-u-lg-6'>
+			{$row['time']}
+			</div>
+			</td>
+			<td>
+			</td>
+        </tr>
+        
+		<tr>
+            <td>服务器状态</td>
+            <td>
+			<div class='am-u-lg-6'>
+			{$state}
+			</div>
+			</td>
+			<td>
+			</td>
+        </tr>
+		<tr>
+            <td>游戏端口</td>
+            <td>
+			<div class='am-u-lg-6'>
+			<input id='port' name='port' type='text' class='am-form-field' value='{$row['port']}' disabled>
+			</div>
+			</td>
+			<td>
+			</td>
+        </tr>
+        <tr>
+            <td>Rcon端口</td>
+            <td>
+			<div class='am-u-lg-6'>
+			<input id='rport' name='rport' type='text' class='am-form-field' value='{$row['rport']}' disabled>
+			</div>
+			</td>
+			<td>
+			</td>
+        </tr>
+		<tr>
+            <td>服务器IP</td>
+            <td>
+			<div class='am-u-lg-6'>
+			<input id='sip' name='sip' type='text' class='am-form-field' value='192.168.1.1' disabled>
+			</div>
+			</td>
+			<td>
+			</td>
+			
+        </tr>
+<tr>		
+<td>
+			</td>
+			<td>	
+			<div class='am-u-lg-6'>
+			
+		<button type='submit' class='am-btn am-btn-success'>保存设置</button>
+		</div>
+		</td>
+		<td>
+			</td>
+		</tr>
+    </tbody>
 	</form>
-	</div>
-	</div>
-          <form class="am-form" action="" enctype="multipart/form-data" method="post">
-            <div class="am-form-group">
-			<div class="am-u-sm-8 ">
-      <label for="doc-ipt-file-1">上传地图</label>
-      <input type="file" id="doc-ipt-file-1" name="upfile">
-	  <input type="hidden" name="ser" value="<?php  echo $_GET['ser'];?>">
-      <p class="am-form-help">请把地图文件压缩成ZIP格式,上传后将会自动解压并分享予服务器</p>
-	   <button type="submit" class="am-btn am-btn-warning">上传</button>
+</table>
+	";}
+if(isset($_GET['information'])){
+	echo "
+<table class='am-table am-table-striped '>
+ <thead>
+        <tr>
+            <th>服务器详细参数设定</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+	<form action='manage.php' class='am-form' method='POST'>
+        <tr>
+            <td>服务器名称</td>
+            <td>
+			<div class='am-u-lg-6'>
+			<input id='servername' name='servername' type='text' class='am-form-field' value='{$row['name']}'>
+			</div>
+			</td>
+			<td>
+			</td>
+        </tr>
+        <tr>
+            <td>服务器欢迎信息</td>
+            <td>
+			<div class='am-u-lg-6'>
+			<textarea name='welcome' id='welcome'class='' rows='5' id='doc-ta-1' >{$row['welcome']}</textarea>
+			</div>
+			</td>
+			<td>
+			</td>
+        </tr>
+        <tr>
+            <td>游戏难度</td>
+            <td>
+			<div class='am-u-lg-6'>
+			 <select name='difficult' id='doc-select-1'>";
+			 if($row['difficult']=='normal'){
+				 echo"
+          <option value='normal'>Normal</option>
+          <option value='easy'>Easy</option>
+		   <option value='difficult'>Difficult</option>
+		    <option value='gold'>Gold</option>";
+			 }elseif($row['difficult']=='easy'){
+				 echo"
+				 <option value='easy'>Easy</option>
+          <option value='normal'>Normal</option>
+		   <option value='difficult'>Difficult</option>
+		    <option value='gold'>Gold</option>";
+			 }elseif($row['difficult']=='difficult'){
+				 echo"
+				 <option value='difficult'>Difficult</option>
+          <option value='normal'>Normal</option>
+          <option value='easy'>Easy</option>
+		    <option value='gold'>Gold</option>";
+			 }elseif($row['difficult']=='gold'){
+				echo"
+				<option value='gold'>Gold</option>
+          <option value='normal'>Normal</option>
+          <option value='easy'>Easy</option>
+		   <option value='difficult'>Difficult</option>"; 
+			 }
+			echo"
+        </select>
+			</div>
+			</td>
+			<td>
+			</td>
+        </tr>
+        
+		<tr>
+            <td>模式</td>
+            <td>
+			<div class='am-u-lg-6'>
+			 <select name='mode' id='doc-select-1'>";
+			 if($row['mode']=='pvp'){
+				 echo"<option value='pvp'>PVP</option>
+          <option value='pve'>PVE</option>
+";
+			 }elseif($row['mode']=='pve'){
+				 echo"
+				 <option value='pvp'>PVE</option>
+          <option value='pve'>PVP</option>";
+			 }
+       echo " </select>
+			</div>
+			</td>
+			<td>
+			</td>
+        </tr>
+		<tr>
+            <td>地图 [{$row['map']}]</td>
+            <td>
+			<div class='am-u-lg-6'>
+			 <select name='map' id='doc-select-1'>
+			
+			 
+			 ";
+		  gfl(0);
+		  gfl(1);
+       echo " </select>
+		</div>
+			</td>
+			<td>
+			</td>
+        </tr>
+        <tr>
+            <td>密码</td>
+            <td>
+			<div class='am-u-lg-6'>
+			<input id='password' name='password' value='{$row['password']}' type='text' class='am-form-field' >
+			</div>
+			</td>
+			<td>
+			</td>
+        </tr>
+		<tr>
+            <td>视角</td>
+            <td>
+			<div class='am-u-lg-6'>
+	 <select name='view' id='doc-select-1'>";
+	  if($row['view']=='both'){
+				 echo"
+				 <option value='both'>both</option>
+          <option value='first'>first</option>
+		  <option value='third'>third</option>
+          ";
+			 }elseif($row['view']=='first'){
+				 echo"
+				 <option value='first'>first</option>
+				 <option value='both'>both</option>
+		  <option value='third'>third</option>
+				 ";
+			 }elseif($row['view']=='third'){
+				 echo"
+				  <option value='third'>third</option>
+				 <option value='both'>both</option>
+          <option value='first'>first</option>
+				";
+			 }
+      echo "  </select>
+			</div>
+			</td>
+			<td>
+			</td>
+        </tr>	
+		<tr>
+            <td>作弊</td>
+            <td>
+			<div class='am-u-lg-6'>
+	 <select name='cheat' id='doc-select-1'>";
+		   if($row['cheat']=='1'){
+				 echo"<option value='1'>开启</option>
+				 <option value='0'>关闭</option>
+";
+			 }elseif($row['cheat']=='0'){
+				 echo"
+				 <option value='0'>关闭</option>
+          <option value='1'>开启</option>";
+			 }
+       echo " </select>
+			</div>
+			</td>
+			<td>
+			</td>
+        </tr>
+		<tr>
+		<td>
+			</td>
+		<td>
+		<div class='am-u-lg-6'>
+		<button type='submit' class='am-btn am-btn-success'>保存设置</button>
+		</div>
+		</td>
+		<td>
+			</td>
+		</tr>
+		</form>
+    </tbody>
+</table>
+	
+	";}
+if(isset($_GET['order'])){
+	$dis='';
+	if($row['state']==0){
+		$dis='disabled';
+	}
+	echo "
+
+	  <form class='am-form' ";
+	  if($row['state']==1){
+		echo "action='manage.php'";
+	} 
+	echo " method='POST'  >
+<div class='am-form-group'>
+			<div class='am-u-sm-12 '>
+      <label for='doc-ipt-file-1'>命令行</label>
+      <input id='command' name='command' type='text' id='doc-ipt-file-1'>
+	       <p class='am-form-help'>我们推荐您使用Windows自带的Telnet来连接服务器,此处仅仅是提供一个入口给大家临时使用</p>
+           <button type='submit' class='am-btn am-btn-success' {$dis}>发送</button>   
+	   
+	  </div>
+	  <div class='am-u-sm-4 '>
 	  </div>
     </div>
           </form>
+		  <br><br> <br><br> <br><br>
+	
+	";
+}
+if(isset($_GET['plugin'])){
+	echo "
+	
+<table class='am-table am-table-striped '>
+ <thead>
+        <tr>
+            <th>服务器插件设置</th>
+            <th></th>
+            <th>操作:</th>
+			<th></th>
+        </tr>
+    </thead>
+    <tbody>
+       
+           ";
+		  $ser=$_COOKIE['ser'];
+		   plist(PATHS."/Servers/$ser/Rocket/plugins","dll");
+		  echo  "
+      
+		
+<tr>		
+<td>
+			</td>
+			<td>	
+		</td>
+		<td>
+			</td>
+			<td>
+		<button type='button'  onclick=\"javascript:window.location.href='manage.php?shop'\" class='am-btn am-btn-secondary'>添加新的插件</button>
+		</td>
+		</tr>
+    </tbody>
+</table>";
+}
+if(isset($_GET['po'])){
+	$po=$_GET['po'];
+	$ser=$_COOKIE['ser'];
+	if(isset($_GET['del'])){
+		echo "
+		<table class='am-table am-table-striped am-table-centered'>
+ <thead>
+        <tr>
+            <th>服务器插件设置</th>
+        </tr>
+    </thead>
+	<tbody>
+	<tr>
+	<td>";
+	echo del(PATHS."/Servers/$ser/Rocket/plugins/".$po); 
+	echo "<br><a href='manage.php?plugin'>返回插件列表</a></td>
+	</tr>
+	</tbody>
+	</table>";
+		exit();
+	}
+	echo "
+<table class='am-table am-table-striped '>
+ <thead>
+        <tr>
+            <th>服务器插件设置</th>
+            <th></th>
+            <th>操作:</th>
+			<th></th>
+        </tr>
+    </thead>
+	<form>
+    <tbody>
+       <tr>
+	   <td><a href='manage.php?plugin'>返回上一级</a></td>
+	   <td></td>
+	   <td></td>
+	   <td></td>
+	   </tr>
+           ";
+	plist(PATHS."/Servers/$ser/Rocket/plugins/".$po,"xml");
+	 echo  "
+      
+		
+<tr>		
+<td>
+			</td>
+			<td>	
+			
+		</td>
+		<td>
+			</td><td></td>
+		</tr>
+    </tbody>
+	</form>
+</table>";
+}
+if(isset($_GET['pfile'])){
+	$ser=$_COOKIE['ser'];
+	$fn=str_replace(PATHS."/Servers/$ser/Rocket/plugins/","",$_GET['pfile']);
+	$fn=explode("/",$fn);
+		echo "
+<table class='am-table am-table-striped '>
+ <thead>
+        <tr>
+            <th>服务器插件设置</th>
+			<th></th>
+		
+        </tr>
+    </thead>
+	<form action='manage.php?save' method='POST' id='save'>
+    <tbody>
+       <tr>
+	   <td> <a href='manage.php?plugin'> 返回上一级</a></td>
+	   	   <td></td> <td></td>
+	   </tr>
+	   <tr><td>文件名:<br>{$fn[1]}<br></td>
+	   <td>
+           ";?>
+		   <style type="text/css" media="screen">
+  pre{
+	  padding:30%;
+      height: 100%;
+	  margin: 0; 
+  }
+  </style>
+		     <script src="assets/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+			 <input type='hidden' value='<?php echo $_GET['pfile']; ?>' name='path' id='path'></input>
+            <pre id="editor" name="editor">	
+		<?php 
+		$data=rwfile($_GET['pfile'],'r','');
+echo htmlspecialchars($data);
+	 ?> 
+</pre>
+<input type="hidden" id="es" name='es' value=''/>
+<script>
+    var editorr = ace.edit("editor");
+    editorr.setTheme("assets/ace/theme/twilight");
+    editorr.session.setMode("ace/mode/xml");
+	   editor.getSession().setWrapLimitRange(null, null);
+    editor.getSession().setUseWrapMode(true);
+    //不显示垂直衬线
+    editor.renderer.setShowPrintMargin(false);
+	function get(){
+		document.getElementById("es").value=editorr.getValue();
+		document.getElementById('save').submit();
+	}
+</script>
+
+	<?php  echo  "
+      </td><td></td>
+	</tr>
+		
+<tr>		
+<td>
+			</td>
+			<td>	
+			<div class='am-u-lg-6'>
+		<button type='button' class='am-btn am-btn-success' onclick='get()'>保存设置</button>
 		</div>
+		</td>
+		 <td></td>
+		</tr>
+    </tbody>
+	</form>
+</table>";
+}
+if(isset($_GET['save'])&&isset($_POST['path'])){
+	$path=$_POST['path'];
+	$text=$_POST['es']; 
+	if(rwfile($path,'w',$text)){
+		echo "
+		<table class='am-table am-table-striped am-table-centered'>
+ <thead>
+        <tr>
+            <th>服务器插件设置</th>
+        </tr>
+    </thead>
+	<tbody>
+	<tr>
+	<td>保存成功!<br>你可以<a href='manage.php?plugin'>返回文件列表</a>或<a href='manage.php?pfile={$path}'>继续编辑</a></td>
+	</tr>
+	</tbody>
+	</table>
+	";
+	}else{
+			echo "
+		<table class='am-table am-table-striped am-table-centered'>
+ <thead>
+        <tr>
+            <th>服务器插件设置</th>
+        </tr>
+    </thead>
+	<tbody>
+	<tr>
+	<td>保存失败!<br>你可以<a href='manage.php?plugin'>返回文件列表</a></td>
+	</tr>
+	</tbody>
+	</table>
+	";
+	}
+}
+if(isset($_GET['shop'])){
+	echo "
+	
+	<table class='am-table am-table-bordered'>
+    <thead>
+        <tr>
+            <th>插件名称</th>
+            <th>描述</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+	<tr>
+	<td><a href='manage.php?plugin'>返回文件列表</a></td><td></td><td></td>
+	</tr>
+	";
+$fp=str_replace("\\","/",dirname(__FILE__));
+	pshop($fp."/plugins/");
+	echo "
+    </tbody>
+</table>
+	";
+	
+}
+if(isset($_GET['map'])){
+	echo "
+	<div class='am-u-sm-12'>
+	<section class='am-panel am-panel-default'>
+  <header class='am-panel-hd'>
+    <h3 class='am-panel-title'>上传地图</h3>
+  </header>
+  <div class='am-panel-bd'>
+     <form class='am-form' action='' enctype='multipart/form-data' method='post'>
+      <input type='file' id='doc-ipt-file-1' name='upfile'>
+      <p class='am-form-help'>请把地图文件压缩成ZIP格式,上传后请到设置选项,更改设置</p>
+	   <button type='submit' class='am-btn am-btn-warning'>上传</button>
+          </form>
   </div>
-    <footer class="admin-content-footer">
+</section></div>";
+
+}
+}else{
+	echo "<script>location.href='list.php?err1';</script>";  
+	exit();
+}
+
+
+?>
+</div>
+<footer class="admin-content-footer">
       <hr>
       <p class="am-padding-left">© 2016 Power By 7gugu.</p>
     </footer>
-  </div>
-  <div class="am-modal am-modal-no-btn" tabindex="-1" id="your-modal">
-  <div class="am-modal-dialog">
-    <div class="am-modal-hd">修改成功
-      <a href="javascript: void(0)" class="am-close am-close-spin" data-am-modal-close>&times;</a>
-    </div>
-    <div class="am-modal-bd">
-      文件修改成功
-    </div>
-  </div>
 </div>
   <!-- content end -->
-
 </div>
 
 <a href="#" class="am-icon-btn am-icon-th-list am-show-sm-only admin-menu" data-am-offcanvas="{target: '#admin-offcanvas'}"></a>
