@@ -13,7 +13,7 @@
 - 日志查询
 
 ## 有问题反馈
- *   [Blog](www.7gugu.com)
+ *   [Blog](http://www.7gugu.com)
  *   QQ:763719129
  
   
