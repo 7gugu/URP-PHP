@@ -6,34 +6,34 @@ if (isset($_SESSION["username"])){
 //$password=md5($password); 
 $sql="select * from user where username='{$username}' and password='{$password}'";  
 $rs=query($sql); 
-$rom=mysql_fetch_array($rs);
+$rom=mysqli_fetch_array($rs);
 	if ($password!=$rom['password']){
-	header("Location: login.php?err=1");
+	header("Location: login.php?err=9");
 }
 if(isset($_COOKIE['query'])){
 	$q=$_COOKIE['query'];
-	query($q);
-	$nums=mysql_affected_rows();
-	if($nums>0){
+	$r=query($q);
+	$nums=mysqli_affected_rows($connect);
+	if($r){
 		setcookie('query','',time()-3600*7*24);
 	}
 }
 }else{
-	header("Location:login.php?err=2");
+	header("Location:login.php?err=10");
 	}
 }
-function checkinser($inser){
-	$username=$_SESSION['username'];
+function checkinser($inser,$inserpassword){
+	global $connect;
 	$arr=array();
-	$query= "SELECT * FROM inser WHERE user='{$username}' and inser='{$inser}'";
+	$query= "SELECT * FROM inser WHERE password='{$inserpassword}' and inser='{$inser}'";
   $rs=query($query);
-  $num=mysql_num_rows($rs);
+  $num=mysqli_num_rows($rs);
   if($num){
 	  $arr[0]=true;
   }else{
 	$arr[0]=false;
   }
-  $row=mysql_fetch_array($rs);
+  $row=mysqli_fetch_array($rs);
   $arr[1]=$row['time'];
  return $arr; 
 }

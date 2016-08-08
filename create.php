@@ -9,7 +9,7 @@ $v="n";
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Ucon | manage</title>
+  <title>URP | 创建服务器</title>
   <meta name="description" content="服务器创建">
   <meta name="keywords" content="create">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -35,6 +35,31 @@ $v="n";
   <!-- content start -->
    <div class="admin-content">
     <div class="admin-content-body">
+	<div class="am-cf am-padding am-padding-bottom-0">
+        <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">创建服务器</strong> / <small>请谨慎操作</small></div>
+      </div>
+	  <?php if(isset($_GET['err'])){?>	
+	<div class="am-alert am-alert-warning" data-am-alert>
+  <button type="button" class="am-close">&times;</button>
+  <p>
+  <?php
+  switch($_GET['err']){
+    case 11:
+        echo "[1011]服务器数据同步失败";
+        break;
+    case 13:
+        echo "[1013]激活码错误或错误";
+        break;
+		case 14:
+        echo "[1014]基础文件读写失败";
+        break;
+    default:
+        echo "[XXXX]出现了一个未知错误,请尽快联系管理员解决";
+  }?>
+  </p>
+</div>
+<?php }?>
+	  <hr>
       <div class="am-u-md-8">
 	   <br>
   	
@@ -42,13 +67,16 @@ $v="n";
 if(isset($_GET['c0'])){
 echo $c0;	
 }
-if(isset($_GET['c1'])&&isset($_POST['inser'])){
+if(isset($_GET['c1'])&&isset($_POST['inser'])&&isset($_POST['inserpassword'])){
 	$inser=$_POST['inser'];
-	$a=checkinser($inser);
+	$inserpassword=$_POST['inserpassword'];
+	$a=checkinser($inser,$inserpassword);
 	if($a[0]==false){
-		header("Location:create.php?c0&err=7");//激活码不存在或错误
+		header("Location:create.php?c0&err=13");//激活码不存在或错误
+	exit();
 	}
 	setcookie("inser", $inser, time()+600);
+	setcookie("inserpassword", $inserpassword, time()+600);
 	echo $c1a;
 		gfl(1);
 	echo $c1b;
@@ -58,11 +86,11 @@ if(isset($_GET['c1'])&&isset($_POST['inser'])){
 	
 }
 if(isset($_GET['c2'])&&isset($_POST['cheat'])){
-	$username=$_SESSION['username'];
+	$inserpassword=$_COOKIE['inserpassword'];
 	$inser=$_COOKIE['inser'];
-	$a=checkinser($inser);
+	$a=checkinser($inser,$inserpassword);
 	if($a[0]==false){
-		header("Location:create.php?c0&err=7");//激活码不存在或错误
+		header("Location:create.php?c0&err=13");//激活码不存在或错误
 	}
 	$arr=range(20000,30000);//端口分配范围,肯定够用
   shuffle($arr);
@@ -70,7 +98,7 @@ foreach($arr as $values)
 {
   $query= "SELECT * FROM server WHERE port='{$values}'";
   $rs=query($query);
-  $num=mysql_num_rows($rs);
+  $num=mysqli_num_rows($rs);
   if($num){}else{
 	  $port=$values;
 	  break;
@@ -82,7 +110,7 @@ foreach($arr as $values)
 {
   $query= "SELECT * FROM server WHERE rport='{$values}'";
   $rs=query($query);
-  $num=mysql_num_rows($rs);
+  $num=mysqli_num_rows($rs);
   if($num){}else{
 	  $rport=$values;
 	  break;
@@ -115,28 +143,25 @@ foreach ($numbers as $number) {
 $rpw=getinser(8);
 $sid=$_SESSION['username']."x".$num;
 		if(fcreate($sname,$port,$rport,$rpw,$map,$dif,$pv,$cheat,$sid)==false){
-			header("Location:create.php?c0&err=6");//写入基础文件失败
+			header("Location:create.php?c0&err=14");//写入基础文件失败
 		}else{
-			$rs=query("select * from user where username='{$username}'");
-	        $rom=mysql_fetch_array($rs);
-			$cou=$rom['scout']+1;
-			query("update user set scout ='{$cou}'where username='{$username}'");
-			$uid = mysql_query("select * from server order by id DESC limit 1 ");
-	$uid=mysql_fetch_array($uid);
+			$uid = query("select * from server order by id DESC limit 1 ");
+	$uid=mysqli_fetch_array($uid);
 	if($uid){
 		$uid=$uid['id'];
 	}else{
 	$uid=0;
 	}
 	$uid++;
+	$username=$_SESSION['username'];
 	$q="insert into server(id,user,time,rpw,rport,port,name,state,sid,players,welcome,difficult,mode,map,password,view,cheat)values('$uid','$username','$time','$rpw','$rport','$port','$sname','0','$sid','$players','本服务器由URP强力驱动','$dif','$pv','$map','','$view','$ch')";
 		//echo $q;
-			query($q);
-			$numb=mysql_affected_rows();
+			$r=query($q);
+			$numb=mysqli_affected_rows($connect);
 			query("DELETE FROM inser WHERE inser='{$inser}'");
 			if($numb==0){
-				setcookie('query',$q,time()+3600*24*7);
-				header("Location:create.php?c0&err=8");//sql写入失败
+				setcookie('query',$q,time()+3600*24);
+				header("Location:create.php?c0&err=11");//sql写入失败
 				exit();
 			}
 			echo $c2;

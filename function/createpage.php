@@ -1,12 +1,4 @@
 <?php
-/*$username=$_SESSION['username'];
-	$rs=query("select * from user where username='{$username}'");
-	$row=mysql_fetch_array($rs);
-	$servercout=$row['servercout'];
-	$scout=$row['scout'];
-	$maxc=$scout/$servercout*100;
-	$dis="";
-	if($servercout==$scout){$dis = "disabled";}*/
 	$c0="
 <form class='am-form' name='c0' id='c0' action='create.php?c1' method='post' onsubmit='return check(this)'>
  <script type='text/javascript'>
@@ -14,6 +6,11 @@ function check(form){
 if(form.inser.value==''){
 alert('激活码不能为空！');
 form.inser.focus();
+return false;
+}
+if(form.inserpassword.value==''){
+alert('激活密码不能为空！');
+form.inserpassword.focus();
 return false;
 }
 return true;
@@ -25,6 +22,8 @@ return true;
     <div class='am-form-group'>
         <label for='doc-ipt-email-1'>服务器激活码</label>
         <input id='inser' name='inser' type='text' class='' placeholder='输入激活码'>
+		<br>
+		  <input id='inserpassword' name='inserpassword' type='text' class='' placeholder='输入激活密码'>
       </div>
 	<hr>
 <button type='submit' class='am-btn am-btn-danger' >创建服务器</button>

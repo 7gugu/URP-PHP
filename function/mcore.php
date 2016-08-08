@@ -3,54 +3,54 @@
    函数库
 *****************/
 function rcon($operate,$mode,$port,$rpw){
-	
 //error_reporting(E_ALL);
 //port 服务器Rcon或者启动模块[1935]端口 Rpw Rcon密码 operate 指令
 @set_time_limit(0);
 $address = 'localhost';
-$socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+$socket = @socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
 if ($socket === false) {
 	//echo "socket_create() failed: reason: " . socket_strerror(socket_last_error()) . "\n";
-	echo "URP[2002]Wrong:请速与管理员联系,并截下本文字予管理员";
+	header("Location: manage.php?index&err=1");
 	exit();
 } 
-$result = socket_connect($socket, $address, $port);
+$result = @socket_connect($socket, $address, $port);
 if($result === false) {
 	//echo "socket_connect() failed.\nReason: ($result) " . socket_strerror(socket_last_error($socket)) . "\n";
-echo "URP[2003]Wrong:请速与管理员联系,并截下本文字予管理员";
+    header("Location: manage.php?index&err=2");
 	exit();
 	}	
 	if($mode==1){
 $in = "login {$rpw} \r\n";
-socket_write($socket, $in, strlen($in));
+@socket_write($socket, $in, strlen($in));
 	}
 sleep(1);
 $in=$operate."\r\n";
-socket_write($socket, $in, strlen($in));
+@socket_write($socket, $in, strlen($in));
 sleep(2);
-socket_close($socket);		
+@socket_close($socket);		
 		}
 		
 function manage($sid,$switch){
 	$username=$_SESSION['username'];
 	$userpower=query("select serverid from user where username='{$username}'");
 $ss=query("select * from server where sid='{$sid}'");
-	$ss=mysql_fetch_array($ss);
-	if($username==$ss['user']){
+	$ss=mysqli_fetch_array($ss);
+	if($username==$ss['user']||$_SESSION['sec']==1){
 		if($switch=='start'){
 			$command=$sid;
         rcon($command,0,1935,'');
 		query("update server set state='1'where sid='{$sid}'");
 		header("Location: manage.php?index&suc=1");
 		}elseif($switch=='shutdown'){	
+		sleep(2);
 			$query=query("select * from server where sid='{$sid}'");
-			$rom=mysql_fetch_array($query);
+			$rom=mysqli_fetch_array($query);
 			rcon("shutdown",1,$rom['rport'],$rom['rpw']);
 		query("update server set state='0'where sid='{$sid}'");	
 		header("Location: manage.php?index&suc=2");
 		}elseif($switch=='restart'){
 			$query=query("select * from server where sid='{$sid}'");
-			$rom=mysql_fetch_array($query);
+			$rom=mysqli_fetch_array($query);
 			 rcon("shutdown",1,$rom['rport'],$rom['rpw']);
 		query("update server set state='0'where sid='{$sid}'");
 		$command=$sid;
@@ -59,7 +59,7 @@ $ss=query("select * from server where sid='{$sid}'");
 		header("Location: manage.php?index&suc=3");
 		}
 	}else{
-		header("Location: manage.php?index&error=1");
+		header("Location: manage.php?index&error=3");
 	}
 }
 
@@ -68,10 +68,10 @@ $ss=query("select * from server where sid='{$sid}'");
 			if(is_file( $fpath )){
 				$strContent = file_get_contents($fpath);
 				$re=query("select * from server where sid='{$sid}'");
-				$row=mysql_fetch_array($re);
+				$row=mysqli_fetch_array($re);
 				
 				if($switch=="players"){	
-			$strContent = str_replace('Maxplayers '.$row['players'],'Maxplayers '.$text,$strContent);
+			$strContent = str_ireplace('Maxplayers '.$row['players'],'Maxplayers '.$text,$strContent);
            query("update server set players='{$text}'where sid='{$sid}'");   
 				}
 				if($switch=="rpw"){	
@@ -83,32 +83,33 @@ $strContent .= "<WebConfigurations Enabled=\"false\" Url=\"\" />\n";
 $strContent .= "<WebPermissions Enabled=\"false\" Url=\"\" Interval=\"180\" />\n";
 $strContent .= "<LanguageCode>en</LanguageCode>\n";
 $strContent .= "</RocketSettings>\n";
+//其实可以改进成为循环的,但这段代码是1.0的代码,我就懒得改了
            query("update server set rpw='{$text}'where sid='{$sid}'");   
 				}
 				if($switch=="servername"){	
-			$strContent = str_replace('Name '.$row['name'],'Name '.$text,$strContent);
+			$strContent = str_ireplace('Name '.$row['name'],'Name '.$text,$strContent);
            query("update server set name='{$text}'where sid='{$sid}'");   
 				}
 				if($switch=="welcome"){	
 				//$text=iconv("GB2312","UTF-8//IGNORE",$text);
-			$strContent = str_replace('Welcome '.$row['welcome'],'Welcome '.$text,$strContent);
+			$strContent = str_ireplace('Welcome '.$row['welcome'],'Welcome '.$text,$strContent);
            query("update server set welcome='{$text}'where sid='{$sid}'");   
 				}
 				if($switch=="difficult"){	
-			$strContent = str_replace('Mode '.$row['difficult'],'Mode '.$text,$strContent);
+			$strContent = str_ireplace('Mode '.$row['difficult'],'Mode '.$text,$strContent);
            query("update server set difficult='{$text}'where sid='{$sid}'");   
 				}
 				if($switch=="map"){	
-			$strContent = str_replace('Map '.$row['map'],'Map '.$text,$strContent);
+			$strContent = str_ireplace('Map '.$row['map'],'Map '.$text,$strContent);
            query("update server set map='{$text}'where sid='{$sid}'");   
 				}
 				if($switch=="password"){	
-			$strContent = str_replace('Password '.$row['password'],'Password '.$text,$strContent);
+			$strContent = str_ireplace('Password '.$row['password'],'Password '.$text,$strContent);
            query("update server set password='{$text}'where sid='{$sid}'");   
 				}
 				
 				if($switch=="view"){	
-			$strContent = str_replace('Perspective '.$row['view'],'Perspective '.$text,$strContent);
+			$strContent = str_ireplace('Perspective '.$row['view'],'Perspective '.$text,$strContent);
            query("update server set view='{$text}'where sid='{$sid}'");   
 				}
 		        if($switch=="cheat"){
@@ -122,11 +123,11 @@ $strContent .= "</RocketSettings>\n";
 						}else{
 							$c2="disabled";
 						}						
-			$strContent = str_replace('cheats '.$c1,'cheats '.$c2,$strContent);
+			$strContent = str_ireplace('cheats '.$c1,'cheats '.$c2,$strContent);
            query("update server set cheat='{$text}'where sid='{$sid}'");   
 				}
 		  if($switch=="mode"){	
-			$strContent = str_replace($row['mode'],$text,$strContent);
+			$strContent = str_ireplace($row['mode'],$text,$strContent);
            query("update server set mode='{$text}'where sid='{$sid}'");   
 				}
 				//echo $strContent;
@@ -145,7 +146,6 @@ $strContent .= "</RocketSettings>\n";
  if(!file_exists($filename)){
   die("文件 $filename 不存在！");
  } 
- //将文件名和路径转成windows系统默认的gb2312编码，否则将会读取不到
  $filename = iconv("utf-8","gb2312",$filename);
  $path = iconv("utf-8","gb2312",$path);
  $resource = zip_open($filename);
@@ -154,7 +154,6 @@ $strContent .= "</RocketSettings>\n";
   if (zip_entry_open($resource,$dir_resource)) {
    $file_name = $path.zip_entry_name($dir_resource);
    $file_path = substr($file_name,0,strrpos($file_name, "/"));
-   //如果路径不存在，则创建一个目录，true表示可以创建多级目录
    if(!is_dir($file_path)){
     mkdir($file_path,0777,true);
    }
@@ -293,7 +292,7 @@ $dat .= "Map $map\n";
 $dat .= "Mode $mode\n";
 $dat .= "Perspective both\n";
 $dat .= "$pv\n";
-$dat .= "Welcome 本服务器基于UCON平台\n";
+$dat .= "Welcome 本服务器由URP强力驱动\n";
 $dat .= "Password \n";
 $dat .= "$cheat\n";
 $f=PATHS."\Servers\\$sid\server";
@@ -351,7 +350,9 @@ echo "<option value='".str_replace($path,'',$afile)."'>".str_replace($path,'',$a
 } 
 }
 }elseif($mode==1){
-	foreach(glob(PATHS.'\Maps\*', GLOB_BRACE) as $afile){ 
+	var_dump(glob(PATHS.'\\Maps\\*', GLOB_BRACE));
+	foreach(glob(PATHS.'\\Maps\\*', GLOB_BRACE) as $afile){ 
+	echo "1";
 if(is_dir($afile)) 
 { 
 echo "<option value='".str_replace(PATHS.'\Maps\\','',$afile)."'>".str_replace(PATHS.'\Maps\\','',$afile)."</option>";
@@ -468,7 +469,7 @@ $a=str_replace($path,'',$afile);
    echo "<tr>";
   echo "<td>".$a."</td>";
   $rs=query("select * from plugin where name='{$a}'");
-  $row=mysql_fetch_array($rs);
+  $row=mysqli_fetch_array($rs);
  $fp=str_replace("\\","/",$afile);
   echo "<td>{$row['state']}</td><td><button type='button'  onclick=\"javascript:window.location.href='manage.php?shop&move=$fp'\" class='am-btn am-btn-secondary'>
 		添加到服务器</button></td>

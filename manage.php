@@ -32,7 +32,7 @@ if(isset($_POST['players'])){
 	$ser=$_COOKIE['ser'];
 	udfile($ser,"players",$_POST['players'],"Server//Commands.dat");
 	udfile($ser,"rpw",$_POST['rpw'],"Rocket//Rocket.config.xml");
-	echo "<script>location.href='manage.php?index';</script>";  
+	echo "<script>location.href='manage.php?index&suc=4';</script>";  
 	exit();
 }
 if(isset($_POST['servername'])){
@@ -45,29 +45,36 @@ if(isset($_POST['servername'])){
 	udfile($ser,"password",$_POST['password'],"Server//Commands.dat");
 	udfile($ser,"view",$_POST['view'],"Server//Commands.dat");
 	udfile($ser,"cheat",$_POST['cheat'],"Server//Commands.dat");
-	echo "<script>location.href='manage.php?information';</script>";  
+	echo "<script>location.href='manage.php?information&suc=4';</script>";  
 	exit();
 }
 //获取数据
 if(isset($_COOKIE['ser'])){
+	if(isset($_SESSION['sec'])&&$_SESSION['sec']==1){
+		$sid=$_COOKIE['ser'];
+	$rs=query("select * from server where sid='{$sid}'");
+	$row=mysqli_fetch_array($rs);
+	}else{
 	$sid=$_COOKIE['ser'];
 	$username=$_SESSION['username'];
 	$rs=query("select * from server where sid='{$sid}' and user ='{$username}'");
-	$row=mysql_fetch_array($rs);
+	$row=mysqli_fetch_array($rs);
+	}
 }else{
-	echo "<script>location.href='list.php?err';</script>";  
+	echo "<script>location.href='list.php?err=4';</script>";  
 	exit();
 }
 //简易控制台
 if(isset($_POST['command'])){
 	$command=$_POST['command'];
+	$command=@iconv('GB2312', 'UTF-8', $command); 
 	$sid=$_COOKIE['ser'];
 	echo strpos($command,'shutdown');
 	if(strpos($command,'shutdown')!=''){
 		query("update server set state='0'where sid='{$sid}'");	
 	}
 	rcon($command,1,$row['rport'],$row['rpw']);
-	echo "<script>location.href='manage.php?order';</script>";  
+	echo "<script>location.href='manage.php?order&suc=5';</script>";  
 	exit();
 }
 //添加插件
@@ -79,22 +86,22 @@ if(isset($_GET['shop'])&&isset($_GET['move'])){
 			$pl=str_replace("\\","/",$d);
 		$plugin=str_replace($pl,"",$move);
 	copy($move,PATHS."/Servers/$ser/Rocket/plugins/$plugin");
-		echo "<script>location.href='manage.php?shop&suc';</script>";  
+		echo "<script>location.href='manage.php?shop&suc=6';</script>"; 	
 	exit();
 }else{
-		echo "<script>location.href='manage.php?shop&err';</script>";  
+		echo "<script>location.href='manage.php?shop&err=5';</script>";  
 	exit();
 }
 }
 //上传地图
-if(isset($_FILES['upfile'])){
+if(isset($_GET['file'])&&isset($_FILES['upfile'])){
 		$sid=$_COOKIE['ser'];
 		$rem=upmap($_FILES['upfile']);
 		$rez=getzip(PATHS.'/Servers/'.$sid.'/Workshop/Maps/'.$_FILES['upfile']['name'],PATHS.'/Servers/'.$sid.'/Workshop/Maps/');
 		if($rez==true&&$rem==true){	
-		header("Location:manage.php?map&suc");//upload successfully
+		header("Location:manage.php?map&suc=7");//upload successfully
 		}else{
-		header("Location:manage.php?map&err");//upload faild
+		header("Location:manage.php?map&err=6");//upload faild
 	}
 }
 
@@ -140,6 +147,71 @@ if(isset($_FILES['upfile'])){
       </div>
     </div>
     <hr>
+	<div class="am-u-sm-6">
+<?php if(isset($_GET['err'])){?>	
+	<div class="am-alert am-alert-warning" data-am-alert>
+  <button type="button" class="am-close">&times;</button>
+  <p>
+  <?php
+  switch($_GET['err']){
+    case 1:
+        echo "[1001]Socket创建失败";
+        break;
+    case 2:
+        echo "[1002]Socket连接失败";
+        break;
+		case 3:
+        echo "[1003]管理服务器失败";
+        break;
+		case 4:
+        echo "[1004]数据获取失败";
+        break;
+		case 5:
+        echo "[1005]添加插件失败";
+        break;
+		case 6:
+        echo "[1006]上传地图失败";
+        break;
+    default:
+        echo "[XXXX]出现了一个未知错误,请尽快联系管理员解决";
+  }?>
+  </p>
+</div>
+<?php }?>
+<?php if(isset($_GET['suc'])){?>	
+	<div class="am-alert am-alert-success" data-am-alert>
+  <button type="button" class="am-close">&times;</button>
+  <p>
+  <?php
+  switch($_GET['suc']){
+    case 1:
+        echo "[2001]开服成功";
+        break;
+    case 2:
+        echo "[2002]关服成功";
+        break;
+		 case 3:
+        echo "[2003]重启成功";
+        break;
+		 case 4:
+        echo "[2004]修改配置成功";
+        break;
+		 case 5:
+        echo "[2005]控制台发送指令成功";
+        break;
+		 case 6:
+        echo "[2006]添加插件成功";
+        break;
+		 case 7:
+        echo "[2007]上传地图成功";
+        break;
+    default:
+        echo "[XXXX]未知行为的成功";
+  }?>
+  </p>
+</div>
+<?php }?>
+	</div>
 <?php
 	if($row!=false){
 	if(isset($_GET['index'])){
@@ -166,7 +238,8 @@ echo "<table class='am-table am-table-striped '>
         <tr>
             <td>操作服务器</td>
             <td>
-			<div class='am-u-lg-6'>
+			<div class='am-u-lg-8'>
+			
 			<button type='submit'  onclick=\"javascript:window.location.href='manage.php?start'\"class='am-btn am-btn-success'{$on}>启动服务器</button>
             <button type='submit' onclick=\"javascript:window.location.href='manage.php?stop'\" class='am-btn am-btn-danger'{$off}>关闭服务器</button> 
             <button type='submit' onclick=\"javascript:window.location.href='manage.php?restart'\" class='am-btn am-btn-warning'{$off}>重启服务器</button> 			
@@ -702,7 +775,7 @@ if(isset($_GET['map'])){
     <h3 class='am-panel-title'>上传地图</h3>
   </header>
   <div class='am-panel-bd'>
-     <form class='am-form' action='' enctype='multipart/form-data' method='post'>
+     <form class='am-form' action='manage.php?file' enctype='multipart/form-data' method='post'>
       <input type='file' id='doc-ipt-file-1' name='upfile'>
       <p class='am-form-help'>请把地图文件压缩成ZIP格式,上传后请到设置选项,更改设置</p>
 	   <button type='submit' class='am-btn am-btn-warning'>上传</button>

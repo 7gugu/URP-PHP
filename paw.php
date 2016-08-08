@@ -2,34 +2,25 @@
 require 'function/corestart.php';
 checkuser();
 $v="n";
-/*
-┏━━┓┏━━┓┏━━┓
-┃┏━┛┃┏━┛┃┏━┛
-┃┗━┓┃┗━┓┃┗━┓
-┃┏┓┃┃┏┓┃┃┏┓┃
-┃┗┛┃┃┗┛┃┃┗┛┃
-┗━━┛┗━━┛┗━━┛
-
-*/
 if(isset($_POST['npw'])){
 	if($_POST['opw']===$_SESSION['password']){
 		if($_POST['npw']==$_POST['cpw']){
 			query("update user set password='{$_POST['cpw']}' where username='{$_SESSION['username']}'");
-			$rows=mysql_affected_rows();
+			$rows=mysqli_affected_rows();
 			if($rows>0){
 			$_SESSION['password']=$_POST['cpw'];
-				echo "<script>location.href='paw.php?suc';</script>"; 
+				echo "<script>location.href='paw.php?suc=8';</script>"; 
 	exit();
 			}else{
-			echo "<script>location.href='paw.php?err';</script>"; 
+			echo "<script>location.href='paw.php?err=7';</script>"; 
 	exit();	
 			}
 		}else{
-			echo "<script>location.href='paw.php?err';</script>"; 
+			echo "<script>location.href='paw.php?err=8';</script>"; 
 	exit();
 		}
 	}else{
-		echo "<script>location.href='paw.php?err';</script>"; 
+		echo "<script>location.href='paw.php?err=9';</script>"; 
 	exit();
 	}
 }
@@ -102,6 +93,42 @@ if(isset($_POST['npw'])){
 			<div class="am-panel am-panel-default">
 			<div class="am-panel-hd">更改密码</div>
 			<div class="am-panel-bd">
+			<?php if(isset($_GET['err'])){?>	
+	<div class="am-alert am-alert-warning" data-am-alert>
+  <button type="button" class="am-close">&times;</button>
+  <p>
+  <?php
+  switch($_GET['err']){
+    case 7:
+        echo "[1007]修改密码失败";
+        break;
+    case 8:
+        echo "[1008]重复密码有误";
+        break;
+		case 9:
+        echo "[1009]权限错误";
+        break;
+    default:
+        echo "[XXXX]出现了一个未知错误,请尽快联系管理员解决";
+  }?>
+  </p>
+</div>
+<?php }?>
+		<?php if(isset($_GET['suc'])){?>	
+	<div class="am-alert am-alert-success" data-am-alert>
+  <button type="button" class="am-close">&times;</button>
+  <p>
+  <?php
+  switch($_GET['suc']){
+    case 8:
+        echo "[2008]修改密码成功";
+        break;
+    default:
+        echo "[XXXX]出现了一个未知错误,请尽快联系管理员解决";
+  }?>
+  </p>
+</div>
+<?php }?>
 			 <div class="am-form-group">
 			<form action="paw.php" method="post" onsubmit="return check();">
 			 <input id='opw' class="am-form-field" name='opw' type='text'  placeholder='输入旧密码'><br>

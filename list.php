@@ -7,19 +7,18 @@ if(isset($_COOKIE['ser'])){
 }
 if(isset($_GET['dels'])&&isset($_GET['id'])){
 	$sid=$_GET['id'];
-//$ok=ddf(PATHS."//Servers//{$sid}//");
-$ok=1;
+$ok=ddf(PATHS."//Servers//{$sid}//");
 if($ok){
 	query("delete from server where sid='{$sid}'");
-	$row=mysql_affected_rows();
+	$row=mysqli_affected_rows();
 if($row>0)
 {
-	header("Location: list.php?s=4");//4删除成功
+	header("Location: list.php?suc=9");//4删除成功
 }else{
-header("Location: list.php?f=4");
+header("Location: list.php?err=11");
 }
 }else{
-header("Location: list.php?f=5");//5文件夹删除失败
+header("Location: list.php?err=12");//5文件夹删除失败
 }
 }
 ?>
@@ -57,7 +56,41 @@ header("Location: list.php?f=5");//5文件夹删除失败
       <div class="am-cf am-padding am-padding-bottom-0">
         <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">产品列表</strong> / <small>购买后的服务器都会在此显示</small></div>
       </div>
-
+	 <div class="am-u-sm-6">
+	<?php if(isset($_GET['err'])){?>	
+	<div class="am-alert am-alert-warning" data-am-alert>
+  <button type="button" class="am-close">&times;</button>
+  <p>
+  <?php
+  switch($_GET['err']){
+    case 11:
+        echo "[1011]服务器状态同步失败";
+        break;
+    case 12:
+        echo "[1012]服务器删除失败";
+        break;
+    default:
+        echo "[XXXX]出现了一个未知错误,请尽快联系管理员解决";
+  }?>
+  </p>
+</div>
+<?php }?>
+		<?php if(isset($_GET['suc'])){?>	
+	<div class="am-alert am-alert-success" data-am-alert>
+  <button type="button" class="am-close">&times;</button>
+  <p>
+  <?php
+  switch($_GET['suc']){
+    case 9:
+        echo "[2009]服务器删除成功";
+        break;
+    default:
+        echo "[XXXX]未知行为执行成功";
+  }?>
+  </p>
+</div>
+<?php }?>
+</div>
       <hr>
 
       <div class="am-g"> 
@@ -83,8 +116,8 @@ header("Location: list.php?f=5");//5文件夹删除失败
 			               <?php
 $perNumber=5;
 @$page=$_GET['page'];
-$count=mysql_query("select count(*) from server");
-$rs=mysql_fetch_array($count); 
+$count=query("select count(*) from server");
+$rs=mysqli_fetch_array($count); 
 $totalNumber=$rs[0];
 $totalPage=ceil($totalNumber/$perNumber);
 if (!isset($page)) {
@@ -92,13 +125,26 @@ if (!isset($page)) {
 }
 $startCount=($page-1)*$perNumber; //分页开始,根据此方法计算出开始的记录
 if($_SESSION['sec']!=1){
-$result=mysql_query("select * from server where user='{$_SESSION['username']}' limit $startCount,$perNumber"); //根据前面的计算出开始的记录和记录数
+$result=query("select * from server where user='{$_SESSION['username']}' limit $startCount,$perNumber"); //根据前面的计算出开始的记录和记录数
 }else{
-	$result=mysql_query("select * from server  limit $startCount,$perNumber"); 
+	$result=query("select * from server  limit $startCount,$perNumber"); 
 }
-?>
-<?php
-while($row = mysql_fetch_array($result))
+$row = mysqli_fetch_array( query("SELECT COUNT(*) FROM server where user='{$_SESSION['username']}'") );
+if($row[0]==0){
+	?>
+	 <tr>
+                <td><input type="checkbox" /></td>
+                <td>0</td>
+                <td></td>
+                <td></td>
+                <td class="am-hide-sm-only">暂无服务器可管理</td>
+                <td class="am-hide-sm-only"></td>
+                <td>
+                </td>
+              </tr>
+	<?php
+}else{
+while($row = mysqli_fetch_array($result))
   
 {
 	 $sname=$row['name']; 
@@ -114,14 +160,15 @@ while($row = mysql_fetch_array($result))
                   <div class="am-btn-toolbar">
 				  
                     <div class="am-btn-group am-btn-group-xs">
-                      <button type="button"class="am-btn am-btn-default am-btn-xs am-text-secondary" onclick="javascript:window.location.href='manage.php?index&ser=<?php echo $row['sid'];?>'"><span class="am-icon-pencil-square-o"></span>产品管理</button>
+                      <button type="button"class="am-btn am-btn-default am-btn-xs am-text-secondary" onclick="javascript:window.location.href='manage.php?index&ser=<?php echo $row['sid'];?>'" <?php if($row['time']<=0){echo "disabled";}?>><span class="am-icon-pencil-square-o"></span>产品管理</button>
                      <button class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only"type="button" onclick="javascript:window.location.href='list.php?dels&&id=<?php echo $row['sid'];?>'"><span class="am-icon-trash-o"></span>删除</button>		
 					</div>
                   
 				  </div>
                 </td>
               </tr>
-<?php }	 ?>
+<?php }	
+} ?>
               </tbody>
             </table>
             <div class="am-cf">
