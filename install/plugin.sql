@@ -1,6 +1,5 @@
 -- phpMyAdmin SQL Dump
--- version phpStudy 2014
--- http://www.phpmyadmin.net
+
 --
 -- 主机: localhost
 -- 生成日期: 2016 年 08 月 06 日 16:13

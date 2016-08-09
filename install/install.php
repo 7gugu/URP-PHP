@@ -103,6 +103,15 @@ exit();
   <!-- sidebar end -->
   <!-- content start -->
   <?php 
+  if(file_exists(dirname(dirname(__FILE__))."/assets/install.lock"))
+{
+	echo "<br><div class='am-u-sm-8'><div class='am-alert am-alert-danger'>";
+    echo "<h3>检测到Install.lock文件,请删除后再继续安装!</h3>
+	<li>若你已安装此程序,点击<a href='../index.php'><code>此处</code></a>返回首页</li>
+	";
+	echo "</div></div>";
+    exit();
+}
   function checkfunc($f,$m = false) {
 	if (function_exists($f)) {
 		return '<font color="green">可用</font>';
