@@ -57,10 +57,6 @@ header("Location: list.php?err=12");//5文件夹删除失败
         <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">产品列表</strong> / <small>购买后的服务器都会在此显示</small></div>
       </div>
 	 <div class="am-u-sm-6">
-	<?php if(isset($_GET['err'])){?>	
-	<div class="am-alert am-alert-warning" data-am-alert>
-  <button type="button" class="am-close">&times;</button>
-  <p>
  <?php if(isset($_GET['err'])){
 msg($_GET['err']);
 	}
