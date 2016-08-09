@@ -12,6 +12,9 @@
 - 地图上传
 - 日志查询
 
+## 安装
+将zip置于网站根目录,解压并重命名为你所需的名字,通过浏览器打开install/install.php按步骤安装即可ouo
+
 ## 有问题反馈
  *   [Blog](http://www.7gugu.com)
  *   QQ:763719129
