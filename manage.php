@@ -148,69 +148,12 @@ if(isset($_GET['file'])&&isset($_FILES['upfile'])){
     </div>
     <hr>
 	<div class="am-u-sm-6">
-<?php if(isset($_GET['err'])){?>	
-	<div class="am-alert am-alert-warning" data-am-alert>
-  <button type="button" class="am-close">&times;</button>
-  <p>
-  <?php
-  switch($_GET['err']){
-    case 1:
-        echo "[1001]Socket创建失败";
-        break;
-    case 2:
-        echo "[1002]Socket连接失败";
-        break;
-		case 3:
-        echo "[1003]管理服务器失败";
-        break;
-		case 4:
-        echo "[1004]数据获取失败";
-        break;
-		case 5:
-        echo "[1005]添加插件失败";
-        break;
-		case 6:
-        echo "[1006]上传地图失败";
-        break;
-    default:
-        echo "[XXXX]出现了一个未知错误,请尽快联系管理员解决";
-  }?>
-  </p>
-</div>
-<?php }?>
-<?php if(isset($_GET['suc'])){?>	
-	<div class="am-alert am-alert-success" data-am-alert>
-  <button type="button" class="am-close">&times;</button>
-  <p>
-  <?php
-  switch($_GET['suc']){
-    case 1:
-        echo "[2001]开服成功";
-        break;
-    case 2:
-        echo "[2002]关服成功";
-        break;
-		 case 3:
-        echo "[2003]重启成功";
-        break;
-		 case 4:
-        echo "[2004]修改配置成功";
-        break;
-		 case 5:
-        echo "[2005]控制台发送指令成功";
-        break;
-		 case 6:
-        echo "[2006]添加插件成功";
-        break;
-		 case 7:
-        echo "[2007]上传地图成功";
-        break;
-    default:
-        echo "[XXXX]未知行为的成功";
-  }?>
-  </p>
-</div>
-<?php }?>
+<?php if(isset($_GET['err'])){
+msg($_GET['err']);
+	}
+	if(isset($_GET['suc'])){	
+msg($_GET['suc'],1);
+ }?>
 	</div>
 <?php
 	if($row!=false){

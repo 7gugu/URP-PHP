@@ -38,27 +38,12 @@ $v="n";
 	<div class="am-cf am-padding am-padding-bottom-0">
         <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">创建服务器</strong> / <small>请谨慎操作</small></div>
       </div>
-	  <?php if(isset($_GET['err'])){?>	
-	<div class="am-alert am-alert-warning" data-am-alert>
-  <button type="button" class="am-close">&times;</button>
-  <p>
-  <?php
-  switch($_GET['err']){
-    case 11:
-        echo "[1011]服务器数据同步失败";
-        break;
-    case 13:
-        echo "[1013]激活码错误或错误";
-        break;
-		case 14:
-        echo "[1014]基础文件读写失败";
-        break;
-    default:
-        echo "[XXXX]出现了一个未知错误,请尽快联系管理员解决";
-  }?>
-  </p>
-</div>
-<?php }?>
+	 <?php if(isset($_GET['err'])){
+msg($_GET['err']);
+	}
+	if(isset($_GET['suc'])){	
+msg($_GET['suc'],1);
+ }?>
 	  <hr>
       <div class="am-u-md-8">
 	   <br>

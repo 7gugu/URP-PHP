@@ -1,6 +1,5 @@
 <?php 
 require 'function/corestart.php';
-ob_start();
 checkuser();
 $v="n";
 ?>

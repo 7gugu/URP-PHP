@@ -61,35 +61,12 @@ header("Location: list.php?err=12");//5文件夹删除失败
 	<div class="am-alert am-alert-warning" data-am-alert>
   <button type="button" class="am-close">&times;</button>
   <p>
-  <?php
-  switch($_GET['err']){
-    case 11:
-        echo "[1011]服务器状态同步失败";
-        break;
-    case 12:
-        echo "[1012]服务器删除失败";
-        break;
-    default:
-        echo "[XXXX]出现了一个未知错误,请尽快联系管理员解决";
-  }?>
-  </p>
-</div>
-<?php }?>
-		<?php if(isset($_GET['suc'])){?>	
-	<div class="am-alert am-alert-success" data-am-alert>
-  <button type="button" class="am-close">&times;</button>
-  <p>
-  <?php
-  switch($_GET['suc']){
-    case 9:
-        echo "[2009]服务器删除成功";
-        break;
-    default:
-        echo "[XXXX]未知行为执行成功";
-  }?>
-  </p>
-</div>
-<?php }?>
+ <?php if(isset($_GET['err'])){
+msg($_GET['err']);
+	}
+	if(isset($_GET['suc'])){	
+msg($_GET['suc'],1);
+ }?>
 </div>
       <hr>
 

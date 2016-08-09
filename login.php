@@ -1,20 +1,30 @@
 <?php 
 require 'function/corestart.php';
-if(isset($_GET['reg'])){
-	if($_POST['username']==""||$_POST['password']==""||$_POST['cpassword']==""||$_POST['email']){
-			echo "<script>alert(\"用户名或密码或邮箱都不能为空\");</script>";
-			sleep(2);
+if(isset($_GET['reg'])&&isset($_POST['email'])){
+	if($_POST['username']==""||$_POST['password']==""||$_POST['cpassword']==""||$_POST['email']==""){
 			echo "<script>location.href='login.php?reg&err=16';</script>";  
+			exit();
 		}
-		if($_POST['password']！=$_POST['cpassword']){
+		if($_POST['password']!=$_POST['cpassword']){
 			echo "<script>alert(\"重复密码有误\");</script>";
 			sleep(2);
 			echo "<script>location.href='login.php?reg&err=17';</script>";  
+			exit();
 		}
 	$user=$_POST['username'];
 	$paw=$_POST['password'];
 	$cpw=$_POST['cpassword'];
 	$email=$_POST['email'];
+	$num=mysqli_fetch_array(query("select count(*) from user where username='{$user}'"));
+	if($num>0){
+		header("Location: login.php?reg&err=18");
+		exit();
+	}
+	$num=mysqli_fetch_array(query("select count(*) from user where email='{$email}'"));
+	if($num>0){
+		header("Location: login.php?reg&err=19");
+		exit();
+	}
 		$uid = query("select * from user order by id DESC limit 1 ");
 	$uid=mysqli_fetch_array($uid);
 	if($uid){
@@ -32,7 +42,7 @@ if(isset($_GET['reg'])){
 	}
 	exit();
 }
-if(isset($_POST{'username'})&&isset($_POST['password'])){
+if(isset($_POST{'username'})&&isset($_POST['password'])&&isset($_GET['log'])){
 		if($_POST['username']==""||$_POST['password']==""){
 			echo "<script>alert(\"用户名或密码都不能为空\");</script>";
 			sleep(2);
@@ -53,9 +63,7 @@ setcookie("wel", '1', time()+3600);
 sleep(3);
 header("location:index.php");
     }else{
-echo "<script>alert('Login failed!')</script>";
-sleep(3);
-header("Location: login.php");
+header("Location: login.php?err=20");
 } 
 }
 ?>
@@ -63,7 +71,7 @@ header("Location: login.php");
 <html>
 <head lang="en">
   <meta charset="UTF-8">
-  <title>UCON | login</title>
+  <title>URP | login</title>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport"
         content="width=device-width, initial-scale=1">
@@ -96,45 +104,19 @@ header("Location: login.php");
   <div class="am-u-lg-6 am-u-md-8 am-u-sm-centered">
   <div class="am-vertical-align" style="height: 150px;">
   <div class="am-vertical-align-middle">
+  <?php if(isset($_GET['reg'])){?>
+  <h3>注册</h3>
+	  <?php
+  }else{?>
     <h3>登录</h3>
-    
+  <?php } ?>
 	</div></div>
-	<?php if(isset($_GET['err'])){?>	
-	<div class="am-alert am-alert-warning" data-am-alert>
-  <button type="button" class="am-close">&times;</button>
-  <p>
-  <?php
-  switch($_GET['err']){
-    case 15:
-        echo "[1015]注册失败";
-        break;
-    case 16:
-        echo "[1016]信息缺失,无法注册";
-        break;
-		case 17:
-        echo "[1017]重复密码不相同";
-        break;
-    default:
-        echo "[XXXX]出现了一个未知错误,请尽快联系管理员解决";
-  }?>
-  </p>
-</div>
-<?php }?>
-<?php if(isset($_GET['suc'])){?>	
-	<div class="am-alert am-alert-success" data-am-alert>
-  <button type="button" class="am-close">&times;</button>
-  <p>
-  <?php
-  switch($_GET['suc']){
-    case 10:
-        echo "[2010]注册成功";
-        break;
-    default:
-        echo "[XXXX]未知行为的成功";
-  }?>
-  </p>
-</div>
-<?php }?>
+	<?php if(isset($_GET['err'])){
+msg($_GET['err']);
+	}
+	if(isset($_GET['suc'])){	
+msg($_GET['suc'],1);
+ }?>
 	<hr>
     <br>
     <br>
@@ -157,7 +139,7 @@ $rom=mysqli_fetch_array($rs);
 	
 	if(isset($_GET['reg'])){?>
     <form method="post" action="login.php?reg" class="am-form">
-      <label for="email">用户名:</label>
+      <label>用户名:</label>
       <input type="text" name="username" id="username" value="">
       <br>
       <label for="password">密码:</label>
@@ -166,15 +148,19 @@ $rom=mysqli_fetch_array($rs);
 	    <label for="password">重复密码:</label>
       <input type="password" name="cpassword" id="cpassword" value="">
       <br>
+	   <label for="email">邮箱:</label>
+      <input type="text" name="email" id="email" value="">
+      <br>
       <br />
       <div class="am-cf">
-        <input type="submit" name="" value="注册" class="am-btn am-btn-primary am-btn-sm am-fl">
-		<button type='button'  onclick="javascript:window.location.href='login.php'" class='am-btn am-btn-success'>登录</button>
-       
+        <input type="submit" name="" value="注册" class="am-btn am-btn-primary am-fl">
+		<div class="am-u-sm-1 am-u-sm-offset-9">
+		<button type='button'  onclick="javascript:window.location.href='login.php'" class='am-btn am-btn-success'>登录>></button>
+       </div>
       </div>
     </form>
 	<?php }else{?>
-	 <form method="post" class="am-form">
+	 <form method="post" action="login.php?log" class="am-form">
       <label for="email">用户名:</label>
       <input type="text" name="username" id="username" value="">
       <br>
@@ -183,9 +169,10 @@ $rom=mysqli_fetch_array($rs);
       <br>
       <br />
       <div class="am-cf">
-        <input type="submit" name="" value="登 录" class="am-btn am-btn-primary am-btn-sm am-fl">
-		<button type='button'  onclick="javascript:window.location.href='login.php?reg'" class='am-btn am-btn-success'>注册</button>
-       
+        <input type="submit" name="" value="登 录" class="am-btn am-btn-primary am-fl">
+		<div class="am-u-sm-1 am-u-sm-offset-9">
+		<button type='button'  onclick="javascript:window.location.href='login.php?reg'" class='am-btn am-btn-success'>注册>></button>
+       </div>
       </div>
     </form>
 	<?php }?>
@@ -194,5 +181,6 @@ $rom=mysqli_fetch_array($rs);
   </div>
 </div>
 </body>
-
+<script src="assets/js/amazeui.min.js"></script>
+<script src="assets/js/app.js"></script>
 </html>
