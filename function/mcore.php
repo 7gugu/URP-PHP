@@ -48,23 +48,19 @@ $ss=query("select * from server where sid='{$sid}'");
 		if($switch=='start'){
 			$command=$sid;
         rcon($command,0,1935,'');
-		query("update server set state='1'where sid='{$sid}'");
 		header("Location: manage.php?index&suc=1");
 		}elseif($switch=='shutdown'){	
 		sleep(2);
 			$query=query("select * from server where sid='{$sid}'");
 			$rom=mysqli_fetch_array($query);
 			rcon("shutdown",1,$rom['rport'],$rom['rpw']);
-		query("update server set state='0'where sid='{$sid}'");	
 		header("Location: manage.php?index&suc=2");
 		}elseif($switch=='restart'){
 			$query=query("select * from server where sid='{$sid}'");
 			$rom=mysqli_fetch_array($query);
 			 rcon("shutdown",1,$rom['rport'],$rom['rpw']);
-		query("update server set state='0'where sid='{$sid}'");
 		$command=$sid;
 		 rcon($command,0,1935,'');
-		query("update server set state='1'where sid='{$sid}'");	
 		header("Location: manage.php?index&suc=3");
 		}
 	}else{
@@ -198,18 +194,18 @@ if($error==0){
 	return true;
 	echo "1";
 }elseif ($error==1){ 
- return "貌似大了点,小点吧!"; 
+// return "貌似大了点,小点吧!"; 
 }elseif ($error==2){ 
- return "请上传低于20mb的zip地图文件"; 
+// return "请上传低于20mb的zip地图文件"; 
 }elseif ($error==3){ 
- return "貌似断网了,压缩包只上传了一半"; 
+// return "貌似断网了,压缩包只上传了一半"; 
 }elseif ($error==4){ 
-return "上传失败啦QWQ"; 
+//return "上传失败啦QWQ"; 
 }else{ 
-return "请不要上传空压缩包好么QAQ"; 
+//return "请不要上传空压缩包好么QAQ"; 
 } 
 }else{ 
-return "请上传ZIP格式的地图压缩包！"; 
+//return "请上传ZIP格式的地图压缩包！"; 
 } 
 } 
 		}	
