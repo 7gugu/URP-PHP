@@ -1,7 +1,7 @@
 -- phpMyAdmin SQL Dump
 --
 -- 主机: localhost
--- 生成日期: 2016 年 08 月 06 日 18:39
+-- 生成日期: 2016 年 08 月 11 日 21:42
 -- 服务器版本: 5.5.40
 -- PHP 版本: 5.3.29
 
@@ -15,7 +15,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- 数据库: `ucon`
+-- 数据库: `urp`
 --
 
 -- --------------------------------------------------------
@@ -32,7 +32,6 @@ CREATE TABLE IF NOT EXISTS `server` (
   `rport` int(11) NOT NULL COMMENT 'rcon port',
   `port` int(11) NOT NULL COMMENT 'game port',
   `name` text CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '服务器名称',
-  `state` int(11) NOT NULL,
   `sid` text CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '服务器文件夹名称',
   `players` int(11) NOT NULL COMMENT '玩家数量',
   `welcome` text NOT NULL COMMENT '欢迎信息',

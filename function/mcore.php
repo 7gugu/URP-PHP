@@ -1,4 +1,4 @@
-﻿<?php 
+<?php 
 /*****************
    函数库
 *****************/
@@ -29,7 +29,16 @@ $in=$operate."\r\n";
 sleep(2);
 @socket_close($socket);		
 		}
-		
+		//检测服务器状态
+		   function check($port){
+			   $ip="localhost";
+			   sleep(5);
+    $sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+  $sock=@ socket_connect($sock,$ip, $port);
+  @socket_close($sock);
+return $sock;
+   }
+   
 function manage($sid,$switch){
 	$username=$_SESSION['username'];
 	$userpower=query("select serverid from user where username='{$username}'");

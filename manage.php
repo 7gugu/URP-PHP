@@ -69,7 +69,7 @@ if(isset($_POST['command'])){
 	$command=$_POST['command'];
 	$command=@iconv('GB2312', 'UTF-8', $command); 
 	$sid=$_COOKIE['ser'];
-	echo strpos($command,'shutdown');
+	//echo strpos($command,'shutdown');
 	if(strpos($command,'shutdown')!=''){
 		query("update server set state='0'where sid='{$sid}'");	
 	}
@@ -158,10 +158,11 @@ msg($_GET['suc'],1);
 <?php
 	if($row!=false){
 	if(isset($_GET['index'])){
-		$on='';
-		$off='';
+		$on="";
+		$off="";
+		$sstate=check($row['rport']);
 		$state="未知";
-		if($row['state']==1){
+		if($sstate){
 		$on="disabled";
 		$state="在线";
 		}else{
