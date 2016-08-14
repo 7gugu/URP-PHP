@@ -72,12 +72,50 @@ if(isset($_GET['update'])&&isset($_POST['password'])){
 if($row>0)
 {
 	header("Location: admin_panel.php?muser&s=4");
-	exit();
 }else{
 header("Location: admin_panel.php?muser&f=4");
-exit();
 }
 }
+}
+//启动rocket update
+if(isset($_GET['stac'])){
+	query("update cron set switch='1'where name='rocket'");
+	header("Location: admin_panel.php?cron");
+}
+if(isset($_GET['stoc'])){
+	query("update cron set switch='0'where name='rocket'");
+	header("Location: admin_panel.php?cron");
+}
+if(isset($_GET['checkr'])&&isset($_POST['key'])){
+	$key=$_POST['key'];
+	$check=check_key($key);
+	if($check){
+query("UPDATE `cron` SET `key`='{$key}' WHERE `name`='rocket'");
+	header("Location: admin_panel.php?cron");
+}else{
+	header("Location: admin_panel.php?cron&fr");
+}
+}
+if(isset($_GET['star'])){
+	query("update cron set switch='1'where name='restart'");
+	header("Location: admin_panel.php?cron");
+}
+if(isset($_GET['stor'])){
+	query("update cron set switch='0'where name='restart'");
+	header("Location: admin_panel.php?cron");
+}
+if(isset($_POST['time'])){
+	if($_POST['time']==""||$_POST['time']==0){
+		query("update cron set switch='0'where name='cron'");
+		query("update cron set time=''where name='cron'");
+	}else{
+		$time=$_POST['time'];
+		$time=$time*3600;
+		query("update cron set switch='1'where name='cron'");
+		query("update cron set time='{$time}'where name='cron'");
+	}
+	header("Location: admin_panel.php?cron");
+	
 }
 ?>
 <!doctype html>
@@ -333,23 +371,93 @@ echo "<li class='am-disabled'><a href='admin_panel.php?muser&page=";echo $page+1
         </div>
 </div>
       </div>";
-   }elseif(isset($_GET['mode'])){
-	     echo " 
-      <div class='am-g'>
-        <div class='am-u-sm-12'>
-        <div class='am-article-hd'>
-    <h1 class='am-article-title'>敬请期待[模块]</h1>
-  </div>         
-        </div>
-      </div>
-    </div>
-   ";
    }elseif(isset($_GET['cron'])){
 	   echo " 
       <div class='am-g'>
         <div class='am-u-sm-12'>
         <div class='am-article-hd'>
-    <h1 class='am-article-title'>敬请期待[计划任务]</h1>
+    <legend>计划任务[Beta]</legend>
+	<div class='am-u-sm-6'>
+	<section class='am-panel am-panel-default'>
+  <header class='am-panel-hd'>
+    <h3 class='am-panel-title'>Rocket更新</h3>
+  </header>
+  <div class='am-panel-bd'>
+  <h4>状态</h4>";
+  $row=mysqli_fetch_array(query("select * from cron where name='rocket'"));
+  $on=$off="";
+  if($row['switch']==1){
+	  $on="disabled";
+  }else{
+	  $off="disabled";
+  }
+  echo "
+    <button type='button' onclick=\"javascript:window.location.href='admin_panel.php?stac'\" class='am-btn am-btn-success'{$on}>启用</button>
+<button type='button' onclick=\"javascript:window.location.href='admin_panel.php?stoc'\" class='am-btn am-btn-danger'{$off}>禁用</button>
+<hr>
+  <h4>Rocket秘钥</h4>
+  <form class='am-form' method='POST' action='admin_panel.php?checkr'> 
+    <div class='am-input-group'>
+  <span class='am-input-group-label'><i class='am-icon-lock am-icon-fw'></i></span>
+  <input type='text' name='key' class='am-form-field' placeholder='Rocket秘钥'";
+  $row=mysqli_fetch_array(query("select * from cron where name='rocket'"));
+  if($row['key']!==''){
+  echo "value='{$row['key']}'";
+  }
+  echo ">
+</div>";
+ if(isset($_GET['fr'])){
+  echo "<p><font color='red'>秘钥失效或不存在</font></p>";
+  }
+echo "<br>
+<button type='submit' class='am-btn am-btn-success'>保存秘钥</button>
+  </form>
+  </div>
+</section>
+</div>
+<div class='am-u-sm-6'>
+<section class='am-panel am-panel-default'>
+  <header class='am-panel-hd'>
+    <h3 class='am-panel-title'>服务器重启</h3>
+  </header>
+  <div class='am-panel-bd'>
+     <h4>状态</h4>";
+	   $row=mysqli_fetch_array(query("select * from cron where name='restart'"));
+  $ron=$roff="";
+  if($row['switch']==1){
+	  $ron="disabled";
+  }else{
+	  $roff="disabled";
+  }
+	 echo "
+    <button type='button'  onclick=\"javascript:window.location.href='admin_panel.php?star'\" class='am-btn am-btn-success' {$ron}>启用</button>
+<button type='button' onclick=\"javascript:window.location.href='admin_panel.php?stor'\" class='am-btn am-btn-danger'{$roff}>禁用</button>
+  </div>
+</section>
+</div>
+<div class='am-u-sm-6'>
+<section class='am-panel am-panel-default'>
+  <header class='am-panel-hd'>
+    <h3 class='am-panel-title'>任务执行时间";
+	$row=mysqli_fetch_array(query("select * from cron where name='cron'"));
+	if($row['switch']==0){echo "<font color='red'>[已禁用]</font>";}else{echo "<font color='green'>[已启用]</font>";}
+	$time=$row['time']/3600;
+	echo "</h3>
+  </header>
+  <div class='am-panel-bd'>
+     <div class='am-form-group'>
+	 <h3>状态</h3>
+     <div class='am-input-group'>
+	 <span class='am-input-group-label'>循环时间</span>
+	 <form method='POST' action='admin_panel.php'>
+  <input type='text' name='time'  class='am-form-field' value='{$time}'>
+  </div>
+  <p class='am-article-meta'>留空则不启用计划任务,输入框填隔多少小时执行一次任务</p>
+  <button type='submit' class='am-btn am-btn-secondary'>保存</button>
+    </form></div>
+  </div>
+</section>
+</div>
   </div>         
         </div>
       </div>
@@ -372,7 +480,7 @@ echo "<li class='am-disabled'><a href='admin_panel.php?muser&page=";echo $page+1
         <div class='am-u-sm-12'>
         <div class='am-article-hd'>
     <h1 class='am-article-title'>首页</h1>
-    <p class='am-article-meta'>欢迎回来 {$_SESSION['username']},服务器运转正常[不然你怎么看到我Orz]</p>
+    <p>欢迎回来 {$_SESSION['username']},服务器运转正常[不然你怎么看到我Orz]</p>
   </div>
       
             <div class='am-cf'>

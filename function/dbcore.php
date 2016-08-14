@@ -1,6 +1,5 @@
 <?php 
-require 'config/config.php';
-$connect=mysqli_connect(DBIP,DBUSERNAME,DBPASSWORD,DBNAME) or die("数据库连接失败");
+$connect=mysqli_connect(DBIP,DBUSERNAME,DBPASSWORD,DBNAME) ;
  function query($text){
 	global $connect;
 	mysqli_query($connect,"set names 'utf8'");

@@ -32,13 +32,29 @@ sleep(2);
 		//检测服务器状态
 		   function check($port){
 			   $ip="localhost";
-			   sleep(5);
+			   sleep(6);
     $sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
   $sock=@ socket_connect($sock,$ip, $port);
   @socket_close($sock);
 return $sock;
    }
-   
+//检查秘钥的有效性   
+   function check_key($key=""){
+$url="http://api.rocketmod.net/download/unturned/latest/".$key;
+$ch = curl_init($url);
+ob_start();  
+curl_exec($ch);  
+$check = ob_get_contents() ;  
+ob_end_clean(); 
+//$check=@curl_multi_getcontent($ch);
+curl_close($ch);
+if($check=="invalid api key"||$check=="not available"){
+	return false;
+}else{
+	return true;
+}
+}
+
 function manage($sid,$switch){
 	$username=$_SESSION['username'];
 	$userpower=query("select serverid from user where username='{$username}'");
@@ -194,18 +210,18 @@ if($error==0){
 	return true;
 	echo "1";
 }elseif ($error==1){ 
-// return "貌似大了点,小点吧!"; 
+ return "貌似大了点,小点吧!"; 
 }elseif ($error==2){ 
-// return "请上传低于20mb的zip地图文件"; 
+ return "请上传低于20mb的zip地图文件"; 
 }elseif ($error==3){ 
-// return "貌似断网了,压缩包只上传了一半"; 
+ return "貌似断网了,压缩包只上传了一半"; 
 }elseif ($error==4){ 
-//return "上传失败啦QWQ"; 
+return "上传失败啦QWQ"; 
 }else{ 
-//return "请不要上传空压缩包好么QAQ"; 
+return "请不要上传空压缩包好么QAQ"; 
 } 
 }else{ 
-//return "请上传ZIP格式的地图压缩包！"; 
+return "请上传ZIP格式的地图压缩包！"; 
 } 
 } 
 		}	

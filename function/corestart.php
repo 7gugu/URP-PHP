@@ -1,6 +1,7 @@
 <?php 
   if(!file_exists(dirname(dirname(__FILE__))."/assets/install.lock"))
-{?>
+{
+	?>
 <link rel="stylesheet" href="./assets/css/amazeui.min.css"/>
 <br>
 <div class="am-g">
@@ -15,9 +16,10 @@
 </div>
   </div>
 </div>
-<?php    
-    exit();
+<?php   
+exit(); 
 }
+require 'config/config.php';
 require 'dbcore.php';
 require 'ucore.php';
 require 'mcore.php';
