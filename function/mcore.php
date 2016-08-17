@@ -15,8 +15,7 @@ if ($socket === false) {
 } 
 $result = @socket_connect($socket, $address, $port);
 if($result === false) {
-	//echo "socket_connect() failed.\nReason: ($result) " . socket_strerror(socket_last_error($socket)) . "\n";
-    header("Location: manage.php?index&err=2");
+	//echo "socket_connect() failed.\nReason: ($result) " . socket_strerror(socket_last_error($socket)) . "\n";	header("Location: manage.php?index&err=2");
 	exit();
 	}	
 	if($mode==1){
@@ -32,7 +31,7 @@ sleep(2);
 		//检测服务器状态
 		   function check($port){
 			   $ip="localhost";
-			   sleep(6);
+			   sleep(10);
     $sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
   $sock=@ socket_connect($sock,$ip, $port);
   @socket_close($sock);
@@ -64,19 +63,30 @@ $ss=query("select * from server where sid='{$sid}'");
 		if($switch=='start'){
 			$command=$sid;
         rcon($command,0,1935,'');
+		query("update server set state='1'where sid='{$sid}'");	
 		header("Location: manage.php?index&suc=1");
 		}elseif($switch=='shutdown'){	
 		sleep(2);
 			$query=query("select * from server where sid='{$sid}'");
 			$rom=mysqli_fetch_array($query);
+			if(check($rom['rport'])){
 			rcon("shutdown",1,$rom['rport'],$rom['rpw']);
+			}else{
+$port=$rom['port']+1;
+ popen("for /f \"tokens=1-5 delims= \" %%a in ('\"netstat -ano|findstr \"^:{$port}\"\"') do taskkill /pid %%d", 'r');
+			}
+			query("update server set state='0'where sid='{$sid}'");	
 		header("Location: manage.php?index&suc=2");
 		}elseif($switch=='restart'){
 			$query=query("select * from server where sid='{$sid}'");
 			$rom=mysqli_fetch_array($query);
 			 rcon("shutdown",1,$rom['rport'],$rom['rpw']);
+			 	$port=$rom['port']+1;
+ popen("for /f \"tokens=1-5 delims= \" %%a in ('\"netstat -ano|findstr \"^:{$port}\"\"') do taskkill /pid %%d", 'r');
+			 query("update server set state='0'where sid='{$sid}'");	
 		$command=$sid;
 		 rcon($command,0,1935,'');
+		 query("update server set state='1'where sid='{$sid}'");	
 		header("Location: manage.php?index&suc=3");
 		}
 	}else{
@@ -165,7 +175,6 @@ $strContent .= "</RocketSettings>\n";
 		//ZIP解压模块
 		function getzip($filename, $path) {
  if(!file_exists($filename)){
-  die("文件 $filename 不存在！");
  } 
  $filename = iconv("utf-8","gb2312",$filename);
  $path = iconv("utf-8","gb2312",$path);

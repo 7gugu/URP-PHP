@@ -1,7 +1,7 @@
 -- phpMyAdmin SQL Dump
 --
 -- 主机: localhost
--- 生成日期: 2016 年 08 月 11 日 21:42
+-- 生成日期: 2016 年 08 月 18 日 00:07
 -- 服务器版本: 5.5.40
 -- PHP 版本: 5.3.29
 
@@ -40,7 +40,8 @@ CREATE TABLE IF NOT EXISTS `server` (
   `map` text NOT NULL COMMENT '地图',
   `password` text NOT NULL COMMENT '密码',
   `view` text NOT NULL COMMENT '视角',
-  `cheat` text NOT NULL COMMENT '作弊'
+  `cheat` text NOT NULL COMMENT '作弊',
+  `state` int(11) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=gbk;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

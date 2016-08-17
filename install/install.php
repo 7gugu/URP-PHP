@@ -27,6 +27,7 @@ foreach ($_arr as $_value) {
 }
 }
 	loadsql("user.sql");
+	loadsql("cron.sql");
 	loadsql("inser.sql");
 	loadsql("server.sql");
 	loadsql("plugin.sql");

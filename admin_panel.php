@@ -96,14 +96,6 @@ query("UPDATE `cron` SET `key`='{$key}' WHERE `name`='rocket'");
 	header("Location: admin_panel.php?cron&fr");
 }
 }
-if(isset($_GET['star'])){
-	query("update cron set switch='1'where name='restart'");
-	header("Location: admin_panel.php?cron");
-}
-if(isset($_GET['stor'])){
-	query("update cron set switch='0'where name='restart'");
-	header("Location: admin_panel.php?cron");
-}
 if(isset($_POST['time'])){
 	if($_POST['time']==""||$_POST['time']==0){
 		query("update cron set switch='0'where name='cron'");
@@ -412,26 +404,6 @@ echo "<li class='am-disabled'><a href='admin_panel.php?muser&page=";echo $page+1
 echo "<br>
 <button type='submit' class='am-btn am-btn-success'>保存秘钥</button>
   </form>
-  </div>
-</section>
-</div>
-<div class='am-u-sm-6'>
-<section class='am-panel am-panel-default'>
-  <header class='am-panel-hd'>
-    <h3 class='am-panel-title'>服务器重启</h3>
-  </header>
-  <div class='am-panel-bd'>
-     <h4>状态</h4>";
-	   $row=mysqli_fetch_array(query("select * from cron where name='restart'"));
-  $ron=$roff="";
-  if($row['switch']==1){
-	  $ron="disabled";
-  }else{
-	  $roff="disabled";
-  }
-	 echo "
-    <button type='button'  onclick=\"javascript:window.location.href='admin_panel.php?star'\" class='am-btn am-btn-success' {$ron}>启用</button>
-<button type='button' onclick=\"javascript:window.location.href='admin_panel.php?stor'\" class='am-btn am-btn-danger'{$roff}>禁用</button>
   </div>
 </section>
 </div>

@@ -3,15 +3,9 @@ require 'config/config.php';
 require 'function/dbcore.php';
 ignore_user_abort(true);
 set_time_limit(0);
-function restart(){
-while ( $rows = mysqli_fetch_array ( query("select * from server ") ) ) {
-        rcon("shutdown",1,$rows['rport'],$rows['rpw']);
-	    rcon($rows['sid'],0,1935,'');
-}
-}
 function rocket_download($key) {
 $url="http://api.rocketmod.net/download/unturned/latest/".$key;   
-$dir=PAHTS.'rocket.zip';
+$dir=PATHS.'/Rocket.zip';
 $ch = curl_init($url);
 $fp = fopen($dir, "w+");
 curl_setopt($ch, CURLOPT_FILE, $fp);
@@ -21,17 +15,87 @@ curl_close($ch);
 fclose($fp);
 return $res;
 }
-$row=mysqli_fetch_array(query("select * from cron"));
-if($row[3]['switch']==1){
-	sleep($row[3]['time']);
-if($row[1]['switch']==1){
-rocket_download($row[1]['key']);
-getzip("rocket.zip",PAHTS."unturned_data/Managed/");
+	function getzip($filename, $path) {
+ if(!file_exists($filename)){
+ } 
+ $filename = iconv("utf-8","gb2312",$filename);
+ $path = iconv("utf-8","gb2312",$path);
+ $resource = zip_open($filename);
+ $i = 1;
+ while ($dir_resource = zip_read($resource)) {
+  if (zip_entry_open($resource,$dir_resource)) {
+   $file_name = $path.zip_entry_name($dir_resource);
+   $file_path = substr($file_name,0,strrpos($file_name, "/"));
+   if(!is_dir($file_path)){
+    mkdir($file_path,0777,true);
+   }
+   if(!is_dir($file_name)){
+    $file_size = zip_entry_filesize($dir_resource);
+    if($file_size<(1024*1024*6)){
+     $file_content = zip_entry_read($dir_resource,$file_size);
+     file_put_contents($file_name,$file_content);
+    }
+   }
+   zip_entry_close($dir_resource);
+  }
+ }
+ zip_close($resource); 
+ return true;
 }
-if($row[0]['switch']==1){
-	restart();
-}
+function rcon($operate,$mode,$port,$rpw){
+$address = 'localhost';
+$socket = @socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+if ($socket === false) {
+	echo "socket_create() failed: reason: " . socket_strerror(socket_last_error()) . "\n";
+} 
+$result = @socket_connect($socket, $address, $port);
+if($result === false) {
+	echo "socket_connect() failed.\nReason: ($result) " . socket_strerror(socket_last_error($socket)) . "\n";
+	}	
+	if($mode==1){
+$in = "login {$rpw} \r\n";
+@socket_write($socket, $in, strlen($in));
+	}
+sleep(1);
+$in=$operate."\r\n";
+@socket_write($socket, $in, strlen($in));
+sleep(2);
+@socket_close($socket);		
+		}
 
+ function check($port){
+   $ip="localhost";
+	sleep(10);
+    $sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+  $sock=@ socket_connect($sock,$ip, $port);
+  @socket_close($sock);
+return $sock;
+   }
+$cron=mysqli_fetch_array(query("select * from cron where name='cron'"));
+$rocket=mysqli_fetch_array(query("select * from cron where name='rocket'"));
+if($cron['switch']==1){
+sleep($cron['time']);
+	$rs=query("select * from server");
+while($rows = mysqli_fetch_array($rs)){
+	if(check($rows['port'])){
+       rcon("shutdown",1,$rows['rport'],$rows['rpw']);
+}elseif($rows['state']==1){
+	$port=$rows['port']+1;
+exec("for /f \"tokens=1-5 delims= \" %a in ('\"netstat -ano|findstr \"^:{$port}\"\"') do taskkill /f /pid %d");
+ }
+query("update server set state='0'where sid='{$rows['port']}'");
 }
-
+if($rocket['switch']==1){
+rocket_download($rocket['key']);
+getzip(PATHS."/Rocket.zip",PATHS."/unturned_data/Managed/");
+}
+$rs=query("select * from server");
+while($rows = mysqli_fetch_array($rs)){
+	    $rows = mysqli_fetch_array (query("select * from server where port='{$rows['port']}'"));
+		if($rows!=false){
+	   rcon($rows['sid'],0,1935,'');
+	  query("update server set state='0'where sid='{$rows['port']}'");
+		}
+}
+}
 ?>

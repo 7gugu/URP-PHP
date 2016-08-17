@@ -160,9 +160,9 @@ msg($_GET['suc'],1);
 	if(isset($_GET['index'])){
 		$on="";
 		$off="";
-		$sstate=check($row['rport']);
+		$sstate=$row['state'];
 		$state="未知";
-		if($sstate){
+		if($sstate==1){
 		$on="disabled";
 		$state="在线";
 		}else{
