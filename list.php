@@ -13,12 +13,12 @@ if($ok){
 	$row=mysqli_affected_rows();
 if($row>0)
 {
-	header("Location: list.php?suc=9");//4删除成功
+	header("Location: list.php?suc=9");
 }else{
 header("Location: list.php?err=11");
 }
 }else{
-header("Location: list.php?err=12");//5文件夹删除失败
+header("Location: list.php?err=12");
 }
 }
 ?>
