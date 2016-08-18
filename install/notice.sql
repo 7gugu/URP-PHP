@@ -1,7 +1,9 @@
 -- phpMyAdmin SQL Dump
+-- version phpStudy 2014
+-- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2016 年 08 月 18 日 23:19
+-- 生成日期: 2016 年 08 月 18 日 23:20
 -- 服务器版本: 5.5.40
 -- PHP 版本: 5.3.29
 
@@ -21,24 +23,13 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- 表的结构 `cron`
+-- 表的结构 `notice`
 --
 
-CREATE TABLE IF NOT EXISTS `cron` (
-  `name` text NOT NULL,
-  `switch` int(11) NOT NULL,
-  `key` text NOT NULL,
-  `time` text NOT NULL
+CREATE TABLE IF NOT EXISTS `notice` (
+  `id` int(11) NOT NULL,
+  `text` text NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=gbk;
-
---
--- 转存表中的数据 `cron`
---
-
-INSERT INTO `cron` (`name`, `switch`, `key`, `time`) VALUES
-('rocket', 0, '39D55C3F-2894-4FC4-BA7B-40B6496BC969', ''),
-('cron', 0, '', ''),
-('time', 0, '', '');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

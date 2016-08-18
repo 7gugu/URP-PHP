@@ -3,6 +3,9 @@ require 'config/config.php';
 require 'function/dbcore.php';
 ignore_user_abort(true);
 set_time_limit(0);
+if(isset($_GET['cron'])){
+	header("Location:admin_panel.php?cron&suc=11");
+}
 function rocket_download($key) {
 $url="http://api.rocketmod.net/download/unturned/latest/".$key;   
 $dir=PATHS.'/Rocket.zip';
@@ -73,6 +76,7 @@ return $sock;
    }
 $cron=mysqli_fetch_array(query("select * from cron where name='cron'"));
 $rocket=mysqli_fetch_array(query("select * from cron where name='rocket'"));
+$time=mysqli_fetch_array(query("select * from cron where name='time'"));
 if($cron['switch']==1){
 sleep($cron['time']);
 	$rs=query("select * from server");
@@ -83,7 +87,7 @@ while($rows = mysqli_fetch_array($rs)){
 	$port=$rows['port']+1;
 exec("for /f \"tokens=1-5 delims= \" %a in ('\"netstat -ano|findstr \"^:{$port}\"\"') do taskkill /f /pid %d");
  }
-query("update server set state='0'where sid='{$rows['port']}'");
+query("update server set state='0'where port='{$rows['port']}'");
 }
 if($rocket['switch']==1){
 rocket_download($rocket['key']);
@@ -94,8 +98,26 @@ while($rows = mysqli_fetch_array($rs)){
 	    $rows = mysqli_fetch_array (query("select * from server where port='{$rows['port']}'"));
 		if($rows!=false){
 	   rcon($rows['sid'],0,1935,'');
-	  query("update server set state='0'where sid='{$rows['port']}'");
+	  query("update server set state='0'where port='{$rows['port']}'");
 		}
+}
+}
+if($time['switch']==1){
+	$rs=query("select * from server");
+while($rows = mysqli_fetch_array($rs)){
+	$date=$rows['time'];
+	$date=$date-1;
+	if($date<=-5){
+		$sid=$rows['sid'];
+		ddf(PATHS."//Servers//{$sid}//");
+		query("delete from server where sid='{$sid}'");
+	}elseif($date<=0){
+		rcon("save",1,$rows['rport'],$rows['rpw']);
+		$port=$rows['port']+1;
+exec("for /f \"tokens=1-5 delims= \" %a in ('\"netstat -ano|findstr \"^:{$port}\"\"') do taskkill /f /pid %d");
+	}else{
+query("update server set time='{$date}'where port='{$rows['port']}'");
+}
 }
 }
 ?>

@@ -13,13 +13,33 @@ if($ok){
 	$row=mysqli_affected_rows();
 if($row>0)
 {
-	header("Location: list.php?suc=9");
+	header("Location: list.php?s=4");//4删除成功
 }else{
-header("Location: list.php?err=11");
+header("Location: list.php?f=4");
 }
 }else{
-header("Location: list.php?err=12");
+header("Location: list.php?f=5");//5文件夹删除失败
 }
+}
+if(isset($_GET['code'])&&isset($_POST['inser'])&&isset($_POST['inserpassword'])){
+	$inser=$_POST['inser'];
+	$ser=$_GET['code'];
+	$inserpassword=$_POST['inserpassword'];
+	$a=checkinser($inser,$inserpassword);
+	if($a[0]==false){
+		header("Location:list.php?err=13");//激活码不存在或错误
+	}else{
+		$rows=mysqli_fetch_array(query("select * from server where sid='{$ser}' "));
+		if($rows['time']<=0){
+		$time=0+$a[1];
+		}else{
+			$time=$rows['time']+$a[1];
+		}
+		query("update server set time='{$time}'where sid='{$ser}'");
+		query("delete from inser where inser='{$inser}'");
+		header("Location:list.php?suc=12");
+	}
+	
 }
 ?>
 <!doctype html>
@@ -56,14 +76,15 @@ header("Location: list.php?err=12");
       <div class="am-cf am-padding am-padding-bottom-0">
         <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">产品列表</strong> / <small>购买后的服务器都会在此显示</small></div>
       </div>
-	 <div class="am-u-sm-6">
- <?php if(isset($_GET['err'])){
+<div class="am-u-sm-6">
+<?php if(isset($_GET['err'])){
 msg($_GET['err']);
 	}
 	if(isset($_GET['suc'])){	
 msg($_GET['suc'],1);
  }?>
-</div>
+	</div><br>
+
       <hr>
 
       <div class="am-g"> 
@@ -71,8 +92,48 @@ msg($_GET['suc'],1);
           <div class="am-input-group am-input-group-sm">
           <span class="am-input-group-btn">
             <button class="am-btn am-btn-default" type="button" onclick="javascript:window.location.href='create.php?c0'">创建新的服务器</button>
-          </span>
-          </div>
+          </span></div></div><br><hr>
+		   <div class="am-u-sm-12">
+		  <?php
+		  if(isset($_GET['renew'])){
+			  $sid=$_GET['renew'];
+			  $row=mysqli_fetch_array(query("select * from server where sid='{$sid}'"));
+			  ?>
+		  <div class="am-u-sm-6">
+		  <form method="POST" action="list.php?code=<?php echo $sid;?>" onsubmit='return check(this)'>
+		   <script type='text/javascript'>
+function check(form){
+if(form.inser.value==''){
+alert('激活码不能为空！');
+form.inser.focus();
+return false;
+}
+if(form.inserpassword.value==''){
+alert('激活密码不能为空！');
+form.inserpassword.focus();
+return false;
+}
+return true;
+}
+    </script>
+		  <fieldset>
+    <legend>续费[<?php echo $row['name']?>]服务器</legend>
+	  <div class='am-form-group'>
+      <label for='doc-select-1'>激活码</label>
+    <input id='inser' name='inser' type='text' class='am-form-field'>
+    </div>
+	 <div class='am-form-group'>
+       <label for='doc-select-1'>激活密码</label>
+    <input id='inserpassword' name='inserpassword' type='text' class='am-form-field'>
+    </div>
+	<hr>
+<button type='submit' class='am-btn am-btn-success' >续费</button>
+  </fieldset>
+		  </form>
+		  </div>
+		  <?php }
+          ?>
+		  </div>
         </div>
       </div>
 
@@ -118,7 +179,6 @@ if($row[0]==0){
 	<?php
 }else{
 while($row = mysqli_fetch_array($result))
-  
 {
 	 $sname=$row['name']; 
 	?>
@@ -133,8 +193,9 @@ while($row = mysqli_fetch_array($result))
                   <div class="am-btn-toolbar">
 				  
                     <div class="am-btn-group am-btn-group-xs">
-                      <button type="button"class="am-btn am-btn-default am-btn-xs am-text-secondary" onclick="javascript:window.location.href='manage.php?index&ser=<?php echo $row['sid'];?>'" <?php if($row['time']<=0){echo "disabled";}?>><span class="am-icon-pencil-square-o"></span>产品管理</button>
-                     <button class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only"type="button" onclick="javascript:window.location.href='list.php?dels&&id=<?php echo $row['sid'];?>'"><span class="am-icon-trash-o"></span>删除</button>		
+                      <button type="button"class="am-btn am-btn-default am-btn-xs am-text-secondary" <?php if($row['time']<=0){echo "disabled";}else{ echo 'onclick="javascript:window.location.href=\'manage.php?index&ser='.$row['sid'].'\'"';}?>><span class="am-icon-pencil-square-o"></span>产品管理</button>
+                      <button type="button"class="am-btn am-btn-default am-btn-xs am-text-success" onclick="javascript:window.location.href='list.php?renew=<?php echo $row['sid'];?>'" ><span class="am-icon-credit-card"></span>续费</button>
+					 <button class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only"type="button" onclick="javascript:window.location.href='list.php?dels&&id=<?php echo $row['sid'];?>'"><span class="am-icon-trash-o"></span>删除</button>		
 					</div>
                   
 				  </div>

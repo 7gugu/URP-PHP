@@ -109,6 +109,17 @@ if(isset($_POST['time'])){
 	header("Location: admin_panel.php?cron");
 	
 }
+if(isset($_GET['satime'])){
+	query("update cron set switch='1'where name='time'");
+	header("Location: admin_panel.php?cron");
+}
+if(isset($_GET['sotime'])){
+	query("update cron set switch='0'where name='time'");
+	header("Location: admin_panel.php?cron");
+}
+if(isset($_GET['scron'])){
+	header("Location: do.php?cron");
+}
 ?>
 <!doctype html>
 <html class="no-js fixed-layout">
@@ -406,6 +417,18 @@ echo "<br>
   </form>
   </div>
 </section>
+<section class='am-panel am-panel-default'>
+  <header class='am-panel-hd'>
+    <h3 class='am-panel-title'>激活计划任务</h3>
+  </header>
+  <div class='am-panel-bd'>
+     <div class='am-form-group'>
+	 <h3>状态</h3>
+	 <p class='am-article-meta'>由于计划任务为脚本,需要手动激活才可使用,除非关闭服务器,否则脚本将会以最小的资源占用一直运行<p>
+  <button type='submit'  onclick=\"javascript:window.location.href='admin_panel.php?scron'\" class='am-btn am-btn-warning'>激活</button>
+  </div>
+  </div>
+</section>
 </div>
 <div class='am-u-sm-6'>
 <section class='am-panel am-panel-default'>
@@ -427,6 +450,30 @@ echo "<br>
   <p class='am-article-meta'>留空则不启用计划任务,输入框填隔多少小时执行一次任务</p>
   <button type='submit' class='am-btn am-btn-secondary'>保存</button>
     </form></div>
+  </div>
+</section>
+</div>
+<div class='am-u-sm-6'>
+<section class='am-panel am-panel-default'>
+  <header class='am-panel-hd'>
+    <h3 class='am-panel-title'>时间计数</h3>
+  </header>
+  <div class='am-panel-bd'>
+     <div class='am-form-group'>
+	 <h3>状态</h3>";
+	 $dis=mysqli_fetch_array(query("select * from cron where name ='time'"));
+	 $ton="";
+	 $toff="";
+	 if($dis['switch']==0){
+		 $toff="disabled";
+	 }else{
+	 $ton="disabled";
+	 }
+	 echo "
+  <h4 class='am-article-meta'>是否每天扣除服务器可用时间,过期5天后自动删除数据</h4>
+  <button type='submit' onclick=\"javascript:window.location.href='admin_panel.php?satime'\" class='am-btn am-btn-secondary' {$ton}>激活</button>
+  <button type='submit' onclick=\"javascript:window.location.href='admin_panel.php?sotime'\" class='am-btn am-btn-danger' {$toff}>禁用</button>
+    </div>
   </div>
 </section>
 </div>

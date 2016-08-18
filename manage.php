@@ -258,7 +258,9 @@ echo "<table class='am-table am-table-striped '>
             <td>服务器IP</td>
             <td>
 			<div class='am-u-lg-6'>
-			<input id='sip' name='sip' type='text' class='am-form-field' value='192.168.1.1' disabled>
+			<input id='sip' name='sip' type='text' class='am-form-field' value='";
+			echo IP;
+			echo "' disabled>
 			</div>
 			</td>
 			<td>

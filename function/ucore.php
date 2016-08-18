@@ -73,6 +73,12 @@ function msg($num,$mode=0){
 		 case 10:
         echo "[2010]注册成功";
         break;
+		case 11:
+        echo "[2011]cron激活成功";
+        break;
+		case 12:
+        echo "[2012]续费成功";
+        break;
     default:
         echo "[XXXX]未知行为的成功";
   }
@@ -108,6 +114,9 @@ echo "<div class='am-alert am-alert-warning' data-am-alert>
         break;
 		case 9:
         echo "[1009]权限错误";
+        break;
+		 case 10:
+        echo "[1010]Session失效";
         break;
 		 case 11:
         echo "[1011]服务器数据同步失败";
