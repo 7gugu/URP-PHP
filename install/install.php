@@ -26,11 +26,11 @@ foreach ($_arr as $_value) {
     query($_value.';');
 }
 }
+    loadsql("cron.sql");
 	loadsql("user.sql");
-	loadsql("cron.sql");
 	loadsql("inser.sql");
-	loadsql("notice.sql");
 	loadsql("server.sql");
+	loadsql("notice.sql");
 	loadsql("plugin.sql");
 	sleep(1);
 $uid = query("select * from user order by id DESC limit 1 ");

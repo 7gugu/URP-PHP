@@ -16,8 +16,15 @@ echo "
       </ul>
       <div class='am-panel am-panel-default admin-sidebar-panel'>
         <div class='am-panel-bd'>
-          <p><span class='am-icon-tag'></span> wiki</p>
-          <p>我才是帅比—— 7gugu</p>
+          <p><span class='am-icon-bookmark'></span>公告</p>
+          <p>";
+		   $notice=mysqli_fetch_array(query("select * from notice order by rand() limit 1"));
+		   if($notice!=""){
+				echo $notice['text'];
+				 }else{
+					 echo "服务器运作正常";
+				 }
+		  echo "---Admin</p>
         </div>
       </div>
     </div>
@@ -40,7 +47,14 @@ echo "
 	   <div class='am-panel am-panel-default admin-sidebar-panel'>
         <div class='am-panel-bd'>
           <p><span class='am-icon-bookmark'></span> 公告</p>
-          <p>我才是帅比—— 7gugu</p>
+          <p>";
+		   $notice=mysqli_fetch_array(query("select * from notice order by rand() limit 1"));
+		    if($notice!=""){
+				echo $notice['text'];
+				 }else{
+					 echo "服务器运作正常";
+				 }
+		  echo "---Admin</p>
         </div>
       </div>
     </div>
@@ -56,14 +70,21 @@ echo "
         <li><a href='admin_panel.php'><span class='am-icon-home'></span>管理首页</a></li>
         <li><a href='admin_panel.php?inser'><span class='am-icon-table'></span>管理激活码</a></li>
 	    <li><a href='admin_panel.php?muser'><span class='am-icon-sign-out'></span>管理用户</a></li>
-        <li><a href='admin_panel.php?mode'><span class='am-icon-sign-out'></span>管理模块</a></li>
 		 <li><a href='admin_panel.php?cron'><span class='am-icon-sign-out'></span>计划任务</a></li>
 		  <li><a href='admin_panel.php?notice'><span class='am-icon-sign-out'></span>发布公告</a></li>
+		   <li><a href='admin_panel.php?mplugin'><span class='am-icon-sign-out'></span>插件管理</a></li>
       </ul>  
 	   <div class='am-panel am-panel-default admin-sidebar-panel'>
         <div class='am-panel-bd'>
           <p><span class='am-icon-bookmark'></span> 公告</p>
-          <p>我才是帅比—— 7gugu</p>
+          <p>";
+		   $notice=mysqli_fetch_array(query("select * from notice order by rand() limit 1"));
+		    if($notice!=""){
+				echo $notice['text'];
+				 }else{
+					 echo "服务器运作正常";
+				 }
+		  echo "---Admin</p>
         </div>
       </div>
     </div>

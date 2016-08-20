@@ -234,6 +234,24 @@ return "请上传ZIP格式的地图压缩包！";
 } 
 } 
 		}	
+		//插件上传
+			function upplugin($upgfile){
+if(is_uploaded_file($upgfile['tmp_name'])){ 
+$upfile=$upgfile; 
+$fname=$upfile["name"];//上传文件的文件名 
+$tmp_name=$upfile["tmp_name"];//上传文件的临时存放路径 
+$tname=explode(".",$fname);
+if($tname[1]  ==  "dll"  or  $tname[1]  ==  "DLL"){ 
+$error=$upfile["error"];//上传后系统返回的值 
+move_uploaded_file($tmp_name,'plugin/'.$fname); 
+if($error==0){
+	return true;
+} 
+}else{ 
+return false; 
+} 
+} 
+		}	
 		//删除目录
 		function ddf( $dirName )  
 {  
@@ -332,6 +350,11 @@ mkdir ($f,0777,true);
 //echo "文件夹创建成功";
     }else{
   //      echo "文件夹已创建";
+    }
+	$f1=PATHS."\Servers\\$sid\\Rocket\Plugins";
+	if (!file_exists($f1))
+{ 
+mkdir ($f1,0777,true);
     }
 $file=PATHS."\Servers\\$sid\server\Commands.dat";
 $handle=fopen($file,"w+");
@@ -497,7 +520,7 @@ if(!is_dir($afile))
 $a=str_replace($path,'',$afile);
   $name=explode('.',$a);
    echo "<tr>";
-  echo "<td>".$a."</td>";
+  echo "<td>".$name[0]."</td>";
   $rs=query("select * from plugin where name='{$a}'");
   $row=mysqli_fetch_array($rs);
  $fp=str_replace("\\","/",$afile);

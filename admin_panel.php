@@ -58,10 +58,10 @@ if($row>0)
 	if($mfa[0]!=false){
 		query("delete from server where id='{$dels}'");
 	}
-	header("Location: admin_panel.php?inser&s=4");
+	header("Location: admin_panel.php?muser&s=4");
 	exit();
 }else{
-header("Location: admin_panel.php?inser&f=4");
+header("Location: admin_panel.php?muser&f=4");
 exit();
 }
 }
@@ -119,6 +119,65 @@ if(isset($_GET['sotime'])){
 }
 if(isset($_GET['scron'])){
 	header("Location: do.php?cron");
+}
+//公告管理
+if(isset($_GET['notice'])){
+	if(isset($_GET['dels'])){
+	$dels=$_GET['dels'];
+	query("delete from notice where id='{$dels}'");
+	$row=mysqli_affected_rows($connect);
+if($row>0)
+{
+	header("Location: admin_panel.php?notice&s=4");
+}else{
+header("Location: admin_panel.php?notice&f=4");
+}
+}
+if(isset($_GET['add'])&&isset($_POST['text'])){
+	$text=$_POST['text'];
+	$uid = query("select * from notice order by id DESC limit 1 ");
+	$uid=mysqli_fetch_array($uid);
+	if($uid){
+		$uid=$uid['id'];
+	}else{
+	$uid=0;
+	}
+	$uid++;
+	query("insert into notice(id,text)values('$uid','$text')");
+	$row=mysqli_affected_rows($connect);
+if($row>0)
+{
+	header("Location: admin_panel.php?notice&s=5");
+}else{
+header("Location: admin_panel.php?notice&f=5");
+}
+}
+if(isset($_GET['update'])&&isset($_POST['text'])){
+	$text=$_POST['text'];
+	query("update notice set text='{$text}'where id='{$_POST['id']}'");
+	$row=mysqli_affected_rows($connect);
+if($row>0)
+{
+	header("Location: admin_panel.php?notice&s=4");
+}else{
+header("Location: admin_panel.php?notice&f=4");
+}
+}
+}
+//插件管理
+if(isset($_GET['mplugin'])){
+	if(isset($_GET['dels'])){
+		$del=$_GET['dels'];
+		query("delete from plugin where name='{$del}'");
+	$row=mysqli_affected_rows($connect);
+if($row>0)
+{   
+    del("plugins/".$del); 
+	header("Location: admin_panel.php?mplugin&s=4");
+}else{
+header("Location: admin_panel.php?mplugin&f=4");
+}
+	}
 }
 ?>
 <!doctype html>
@@ -483,16 +542,209 @@ echo "<br>
     </div>
    ";
    }elseif(isset($_GET['notice'])){
-	    echo " 
+	  echo "    <div class='am-g'> 
+        <div class='am-u-sm-8'>
+    <legend>管理公告</legend>
+          </div>
+        </div>
+ <div class='am-u-sm-6'>
+		  <form method='POST' action='admin_panel.php?notice&add'>
+		  <fieldset>
+	  <div class='am-form-group'>
+      <label for='doc-select-1'>公告内容</label>
+    <input id='text' name='text' type='text' class='am-form-field'>
+    </div>
+<button type='submit' class='am-btn am-btn-success' >添加公告</button>
+  </fieldset>
+		  </form>
+		  </div>
+		  
       <div class='am-g'>
         <div class='am-u-sm-12'>
-        <div class='am-article-hd'>
-    <h1 class='am-article-title'>敬请期待[公告]</h1>
-  </div>         
+		<hr>
+          <form class='am-form' method='POST' action='admin_panel.php?notice&update'>
+            <table class='am-table am-table-striped am-table-hover table-main'>
+              <thead>
+              <tr>
+                <th class='table-check'><input type='checkbox' /></th><th class='table-id'>ID</th><th class='table-title'>文章</th><th class='table-set'>操作</th>
+              </tr>
+              </thead>
+              <tbody>";
+$perNumber=10;
+@$page=$_GET['page'];
+$count=query('select count(*) from notice');
+$rs=mysqli_fetch_array($count); 
+$totalNumber=$rs[0];
+$totalPage=ceil($totalNumber/$perNumber);
+if (!isset($page)) {
+ $page=1;
+}
+$startCount=($page-1)*$perNumber;
+	$result=query("select * from notice  limit $startCount,$perNumber"); 
+$row = mysqli_fetch_array( query("SELECT COUNT(*) FROM notice ") );
+if($row[0]==0){
+	echo "
+	 <tr>
+                <td><input type='checkbox' /></td>
+                <td>0</td>
+                <td class='am-hide-sm-only'>暂无公告可管理</td>
+                <td>
+                </td>
+              </tr>";
+}else{
+while($row = mysqli_fetch_array($result))
+{
+	
+           echo "   <tr>
+                <td><input type='checkbox' /></td>
+<td> {$row['id']}</td>
+                <td><input id='text' name='text' type='text' class='am-form-field' value='{$row['text']}' ><input name='id' type='hidden'  value='{$row['id']}' >   
+                 </td>
+				<td>
+                  <div class='am-btn-toolbar'>
+                    <div class='am-btn-group am-btn-group-xs'>
+					  <button type='submit'class='am-btn am-btn-default am-btn-xs am-text-secondary' ><span class='am-icon-pencil-square-o'></span>保存更改</button>
+<button class='am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only'type='button' onclick=\"javascript:window.location.href='admin_panel.php?notice&dels={$row['id']}'\"><span class='am-icon-trash-o'></span>删除</button>		
+					</div>
+				  </div>
+                </td>
+              </tr>";
+ }	
+} 
+              echo "</tbody>
+            </table>
+            <div class='am-cf'>
+   共{$totalNumber}条记录
+              <div class='am-fr'>
+                <ul class='am-pagination'>
+				";
+if ($page != 1) { 
+
+         echo "        <li><a href='admin_panel.php?notice&page=";
+		 echo $page-1;
+		 echo"'>«</a></li>";
+		 }else{
+ echo "<li class='am-disabled'><a href='admin_panel.php?notice&page=";
+ echo $page-1;
+ echo "'>«</a></li>"; 
+ }			  
+if ($page<$totalPage) {
+           echo "       <li><a href='admin_panel.php?notice&page=";echo $page+1;echo "'>»</a></li>
+ ";
+ }else{
+echo "<li class='am-disabled'><a href='admin_panel.php?notice&page=";echo $page+1;echo "'>»</a></li>
+ ";}
+             echo "   </ul>
+              </div>
+            </div>
+         
         </div>
-      </div>
-    </div>
-   ";
+</div>
+   </div>";
+   }elseif(isset($_GET['mplugin'])){
+	    echo "    <div class='am-g'> 
+        <div class='am-u-sm-8'>
+    <legend>管理插件</legend>
+          </div>
+        </div>
+ <div class='am-u-sm-6'>
+		  </div>  
+      <div class='am-g'>
+        <div class='am-u-sm-12'>
+		<hr>
+          <form class='am-form' method='POST' action='admin_panel.php?mplugin&update'>
+            <table class='am-table am-table-striped am-table-hover table-main'>
+              <thead>
+              <tr>
+                <th class='table-check'><input type='checkbox' /></th><th class='table-title'>插件</th><th class='table-title'>描述</th><th class='table-set'>操作</th>
+              </tr>
+              </thead>
+              <tbody>";
+		foreach(glob("plugins/*.dll",GLOB_BRACE) as $afile){
+			$uid = query("select * from plugin order by id DESC limit 1 ");
+	$uid=mysqli_fetch_array($uid);
+	if($uid){
+		$uid=$uid['id'];
+	}else{
+	$uid=0;
+	}
+	$uid++;
+$a=str_replace('plugins/','',$afile);
+  $cou=mysqli_fetch_array(query("select count(*) from plugin where name='{$a}'"));
+if($cou[0]==0){
+	query("insert into plugin(id,name,state)values('$uid','$a','')");
+}
+		}		
+$perNumber=10;
+@$page=$_GET['page'];
+$count=query('select count(*) from plugin');
+$rs=mysqli_fetch_array($count); 
+$totalNumber=$rs[0];
+$totalPage=ceil($totalNumber/$perNumber);
+if (!isset($page)) {
+ $page=1;
+}
+$startCount=($page-1)*$perNumber;
+	$result=query("select * from plugin  limit $startCount,$perNumber"); 
+$row = mysqli_fetch_array( query("SELECT COUNT(*) FROM plugin ") );
+if($row[0]==0){
+	echo "
+	 <tr>
+                <td><input type='checkbox' /></td>
+                <td class='am-hide-sm-only'>暂无插件可管理</td>
+                <td></td>
+				<td></td>
+              </tr>";
+}else{
+while($row = mysqli_fetch_array($result))
+{
+	
+           echo "   <tr>
+                <td><input type='checkbox' /></td>
+<td> {$row['name']}</td>
+                <td><input id='text' name='text' type='text' class='am-form-field' value='{$row['state']}' ><input name='name' type='hidden'  value='{$row['name']}' >   
+                 </td>
+				<td>
+                  <div class='am-btn-toolbar'>
+                    <div class='am-btn-group am-btn-group-xs'>
+					  <button type='submit'class='am-btn am-btn-default am-btn-xs am-text-secondary' ><span class='am-icon-pencil-square-o'></span>保存更改</button>
+					  <button class='am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only'type='button' onclick=\"javascript:window.location.href='admin_panel.php?mplugin&dels={$row['name']}'\"><span class='am-icon-trash-o'></span>删除</button>		
+					</div>
+				  </div>
+                </td>
+              </tr>";
+ }	
+} 
+              echo "</tbody>
+            </table>
+            <div class='am-cf'>
+   共{$totalNumber}条记录
+              <div class='am-fr'>
+                <ul class='am-pagination'>
+				";
+if ($page != 1) { 
+
+         echo "        <li><a href='admin_panel.php?notice&page=";
+		 echo $page-1;
+		 echo"'>«</a></li>";
+		 }else{
+ echo "<li class='am-disabled'><a href='admin_panel.php?notice&page=";
+ echo $page-1;
+ echo "'>«</a></li>"; 
+ }			  
+if ($page<$totalPage) {
+           echo "       <li><a href='admin_panel.php?notice&page=";echo $page+1;echo "'>»</a></li>
+ ";
+ }else{
+echo "<li class='am-disabled'><a href='admin_panel.php?notice&page=";echo $page+1;echo "'>»</a></li>
+ ";}
+             echo "   </ul>
+              </div>
+            </div>
+         
+        </div>
+</div>
+   </div>";
    }else{
   echo " 
       <div class='am-g'>
