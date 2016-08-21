@@ -730,6 +730,38 @@ if(isset($_GET['map'])){
 </section></div>";
 
 }
+if(isset($_GET['log'])){
+	echo "
+	<div class='am-g'> 
+        <div class='am-u-sm-8'>
+    <legend>日志查询</legend>
+          </div>
+        </div>
+ <div class='am-u-sm-12'>
+ <h4><strong>日志为最新日志,若需全部日志请联系管理员</strong><h4>
+ <pre class='am-pre-scrollable'>
+ ";
+ $ser=$_COOKIE['ser'];
+$file = fopen(PATHS."\Servers\\$ser\\Rocket\\Logs\\Rocket.log", "r") or exit("打开log文件失败,请联系管理员!");
+while(!feof($file))
+{
+ $rs=fgets($file);
+ $rs = str_replace ( "[Exception] Rocket.CoreException in Rocket.Core: System.IO.IOException: Write failure ---> System.Net.Sockets.SocketException: 您的主机中的软件中止了一个已建立的连接。", "Error!", $rs ); 
+ $rs=str_replace ("at System.Net.Sockets.Socket.Send (System.Byte[] buf, Int32 offset, Int32 size, SocketFlags flags) [0x00000] in <filename unknown>:0","",$rs);
+ $rs=str_replace ("at System.Net.Sockets.NetworkStream.Write (System.Byte[] buffer, Int32 offset, Int32 size) [0x00000] in <filename unknown>:0 ","",$rs);
+ $rs=str_replace ("  --- End of inner exception stack trace ---","",$rs);
+ $rs=str_replace (" at System.Net.Sockets.NetworkStream.Write (System.Byte[] buffer, Int32 offset, Int32 size) [0x00000] in <filename unknown>:0 ","",$rs);
+ $rs=str_replace ("at Rocket.Core.RCON.RCONServer.Send (System.Net.Sockets.TcpClient client, System.String text) [0x00000] in <filename unknown>:0","",$rs);
+ $rs=str_replace (" at Rocket.Core.RCON.RCONConnection.Send (System.String command, Boolean nonewline) [0x00000] in <filename unknown>:0 ","",$rs);
+ $rs=str_replace ("  at Rocket.Core.RCON.RCONServer.handleConnection (System.Object obj) [0x00000] in <filename unknown>:0 ","",$rs);
+ $rs=trim($rs);
+ echo $rs. "<br />";
+}
+fclose($file);
+echo "
+</pre>
+		  </div>";  
+}
 }else{
 	echo "<script>location.href='list.php?err1';</script>";  
 	exit();

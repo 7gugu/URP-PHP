@@ -11,7 +11,7 @@ echo "
     echo "<li><a href='admin_panel.php'><span class='am-icon-pencil-square-o'></span> 后台管理</a></li>";
 		}
        echo "
-	    <li><a href='paw.php'><span class='am-icon-sign-out'></span> 修改密码</a></li>
+	    <li><a href='paw.php'><span class='am-icon-undo'></span> 修改密码</a></li>
         <li><a href='out.php'><span class='am-icon-sign-out'></span> 注销</a></li>
       </ul>
       <div class='am-panel am-panel-default admin-sidebar-panel'>
@@ -40,9 +40,10 @@ echo "
         <li><a href='list.php'><span class='am-icon-home'></span>返回列表</a></li>
         <li><a href='manage.php?index'><span class='am-icon-check'></span>实时状态</a></li>
 	    <li><a href='manage.php?information'><span class='am-icon-table'></span>信息设置</a></li>
-        <li><a href='manage.php?order'><span class='am-icon-code'></span>指令面板</a></li>
+        <li><a href='manage.php?order'><span class='am-icon-terminal'></span>指令面板</a></li>
 		 <li><a href='manage.php?plugin'><span class='am-icon-plug'></span>插件管理</a></li>
 		  <li><a href='manage.php?map'><span class='am-icon-map-o'></span>上传地图</a></li>
+		  <li><a href='manage.php?log'><span class='am-icon-file'></span>日志查询</a></li>
       </ul>  
 	   <div class='am-panel am-panel-default admin-sidebar-panel'>
         <div class='am-panel-bd'>
@@ -68,11 +69,11 @@ echo "
       <ul class='am-list admin-sidebar-list'>
 	  <li><a href='list.php'><span class='am-icon-sign-out'></span>返回列表</a></li>
         <li><a href='admin_panel.php'><span class='am-icon-home'></span>管理首页</a></li>
-        <li><a href='admin_panel.php?inser'><span class='am-icon-table'></span>管理激活码</a></li>
-	    <li><a href='admin_panel.php?muser'><span class='am-icon-sign-out'></span>管理用户</a></li>
-		 <li><a href='admin_panel.php?cron'><span class='am-icon-sign-out'></span>计划任务</a></li>
-		  <li><a href='admin_panel.php?notice'><span class='am-icon-sign-out'></span>发布公告</a></li>
-		   <li><a href='admin_panel.php?mplugin'><span class='am-icon-sign-out'></span>插件管理</a></li>
+        <li><a href='admin_panel.php?inser'><span class='am-icon-exchange'></span>管理激活码</a></li>
+	    <li><a href='admin_panel.php?muser'><span class='am-icon-users'></span>管理用户</a></li>
+		 <li><a href='admin_panel.php?cron'><span class='am-icon-tag'></span>计划任务</a></li>
+		  <li><a href='admin_panel.php?notice'><span class='am-icon-arrows'></span>发布公告</a></li>
+		   <li><a href='admin_panel.php?mplugin'><span class='am-icon-upload'></span>插件管理</a></li>
       </ul>  
 	   <div class='am-panel am-panel-default admin-sidebar-panel'>
         <div class='am-panel-bd'>

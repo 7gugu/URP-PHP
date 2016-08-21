@@ -15,6 +15,11 @@ if ($socket === false) {
 } 
 $result = @socket_connect($socket, $address, $port);
 if($result === false) {
+	if($port==1935){
+		echo "后端应用连接失败,请联系管理员";
+	}else{
+	return false;
+	}
 	//echo "socket_connect() failed.\nReason: ($result) " . socket_strerror(socket_last_error($socket)) . "\n";	header("Location: manage.php?index&err=2");
 	exit();
 	}	
