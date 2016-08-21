@@ -79,6 +79,33 @@ function msg($num,$mode=0){
 		case 12:
         echo "[2012]续费成功";
         break;
+		case 13:
+        echo "[2013]激活码生成成功";
+        break;
+		case 14:
+        echo "[2014]激活码删除成功";
+        break;
+		case 15:
+        echo "[2015]删除用户成功";
+        break;
+		case 16:
+        echo "[2016]公告删除成功";
+        break;
+		case 17:
+        echo "[2017]公告添加成功";
+        break;
+		case 18:
+        echo "[2018]公告更新成功";
+        break;
+		case 19:
+        echo "[2019]插件删除成功";
+        break;
+		case 20:
+        echo "[2020]插件描述更新成功";
+        break;
+		case 21:
+        echo "[2021]插件上传/更新成功";
+        break;
     default:
         echo "[XXXX]未知行为的成功";
   }
@@ -147,6 +174,9 @@ echo "<div class='am-alert am-alert-warning' data-am-alert>
         break;
 		case 20:
         echo "[1020]用户名或密码有误";
+        break;
+		case 21:
+        echo "[1021]数据库执行失败";
         break;
     default:
         echo "[XXXX]出现了一个未知错误,请尽快联系管理员解决";
