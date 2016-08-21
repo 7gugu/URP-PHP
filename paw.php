@@ -30,7 +30,7 @@ if(isset($_POST['npw'])){
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Ucon | 更改密码</title>
+  <title>URP | 更改密码</title>
   <meta name="description" content="产品列表">
   <meta name="keywords" content="list">
   <meta name="viewport" content="width=device-width, initial-scale=1">

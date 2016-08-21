@@ -1,6 +1,6 @@
 <?php 
 session_start();
-define("PATHS","game");
+define("PATHS","gamepath");
 define("IP","localhost");
 define("DBIP","localhost");
 define("DBUSERNAME","root");

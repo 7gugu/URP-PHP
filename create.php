@@ -139,7 +139,8 @@ $sid=$_SESSION['username']."x".$num;
 	}
 	$uid++;
 	$username=$_SESSION['username'];
-	$q="insert into server(id,user,time,rpw,rport,port,name,sid,players,welcome,difficult,mode,map,password,view,cheat,state)values('$uid','$username','$time','$rpw','$rport','$port','$sname','$sid','$players','本服务器由URP强力驱动','$dif','$pv','$map','','$view','$ch','0')";
+	$q="insert into server(id,user,time,rpw,rport,port,name,state,sid,players,welcome,difficult,mode,map,password,view,cheat)values('$uid','$username','$time','$rpw','$rport','$port','$sname','0','$sid','$players','本服务器由URP强力驱动','$dif','$pv','$map','','$view','$ch')";
+		//echo $q;
 			$r=query($q);
 			$numb=mysqli_affected_rows($connect);
 			query("DELETE FROM inser WHERE inser='{$inser}'");

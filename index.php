@@ -8,8 +8,8 @@ $v="n";
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Ucon | manage</title>
-  <meta name="description" content="这是一个 index 页面">
+  <title>URP | 首页</title>
+  <meta name="description" content="index">
   <meta name="keywords" content="index">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="renderer" content="webkit">
@@ -41,7 +41,7 @@ $v="n";
       <ul class="am-avg-sm-1 am-avg-md-3 am-margin am-padding am-text-center admin-content-list ">
         <li><a href="list.php" class="am-text-success"><span class="am-icon-btn am-icon-server"></span><br/>服务器管理<br/></a></li>
         <li><a href="create.php?c0" class="am-text-warning"><span class="am-icon-btn am-icon-usd"></span><br/>创建服务器<br/></a></li>
-        <li><a href="help.php" class="am-text-danger"><span class="am-icon-btn  am-icon-file-text"></span><br/>使用帮助<br/></a></li>
+        <li><a href="http://www.7gugu.com" class="am-text-danger"><span class="am-icon-btn  am-icon-file-text"></span><br/>作者博客<br/></a></li>
       </ul>
         <div class="am-u-md-12">
           <div class="am-panel am-panel-default">
@@ -51,7 +51,14 @@ $v="n";
                 <li>
                   <div class="admin-task-meta"> Posted  by admin</div>
                   <div class="admin-task-bd">
-                   服务器促销!!!
+                   <?php
+                 $notice=mysqli_fetch_array(query("select * from notice order by rand() limit 1"));
+				 if($notice!=""){
+				echo $notice['text'];
+				 }else{
+					 echo "服务器运作正常";
+				 }
+				   ?>
                   </div>
                 </li>
               </ul>
@@ -71,7 +78,7 @@ $v="n";
 </div>
 <?php 
 if(isset($_COOKIE['wel'])){
-		setcookie("wel","",time()-999999*365);
+		setcookie("wel","",time()-9*365);
 		echo "<script>alert('welcome back {$_SESSION['username']}!')</script>";
 	}
 ?>

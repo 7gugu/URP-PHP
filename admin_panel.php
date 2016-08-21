@@ -172,12 +172,33 @@ if(isset($_GET['mplugin'])){
 	$row=mysqli_affected_rows($connect);
 if($row>0)
 {   
-    del("plugins/".$del); 
+    if(del("plugins/".$del)){ 
 	header("Location: admin_panel.php?mplugin&s=4");
+}else{
+	header("Location: admin_panel.php?mplugin&f=4");
+}
 }else{
 header("Location: admin_panel.php?mplugin&f=4");
 }
 	}
+	if(isset($_GET['update'])&&isset($_POST['text'])){
+	$text=$_POST['text'];
+	query("update plugin set state='{$text}'where name='{$_POST['name']}'");
+	$row=mysqli_affected_rows($connect);
+if($row>0)
+{
+	header("Location: admin_panel.php?mplugin&s=4");
+}else{
+header("Location: admin_panel.php?mplugin&f=4");
+}
+}
+if(isset($_GET['upload'])&&isset($_FILES['upfile'])){
+	if(upplugin($_FILES['upfile'])){
+	header("Location: admin_panel.php?mplugin&s=4");
+}else{
+header("Location: admin_panel.php?mplugin&f=4");
+	}
+}
 }
 ?>
 <!doctype html>
@@ -214,6 +235,7 @@ header("Location: admin_panel.php?mplugin&f=4");
       <div class='am-cf am-padding am-padding-bottom-0'>
         <div class='am-fl am-cf'><strong class='am-text-primary am-text-lg'>管理系统</strong> / <small>System Manage</small></div>
       </div>
+      
       <hr>
    <?php 
    if(isset($_GET['inser'])){
@@ -648,6 +670,11 @@ echo "<li class='am-disabled'><a href='admin_panel.php?notice&page=";echo $page+
           </div>
         </div>
  <div class='am-u-sm-6'>
+ <form class='am-form' action='admin_panel.php?mplugin&upload' enctype='multipart/form-data' method='post'>
+      <input type='file' id='doc-ipt-file-1' name='upfile'>
+      <p class='am-form-help'>请上传标准的dll文件</p>
+	   <button type='submit' class='am-btn am-btn-warning'>上传/更新插件</button>
+          </form><br>
 		  </div>  
       <div class='am-g'>
         <div class='am-u-sm-12'>
@@ -724,19 +751,19 @@ while($row = mysqli_fetch_array($result))
 				";
 if ($page != 1) { 
 
-         echo "        <li><a href='admin_panel.php?notice&page=";
+         echo "        <li><a href='admin_panel.php?mplugin&page=";
 		 echo $page-1;
 		 echo"'>«</a></li>";
 		 }else{
- echo "<li class='am-disabled'><a href='admin_panel.php?notice&page=";
+ echo "<li class='am-disabled'><a href='admin_panel.php?mplugin&page=";
  echo $page-1;
  echo "'>«</a></li>"; 
  }			  
 if ($page<$totalPage) {
-           echo "       <li><a href='admin_panel.php?notice&page=";echo $page+1;echo "'>»</a></li>
+           echo "       <li><a href='admin_panel.php?mplugin&page=";echo $page+1;echo "'>»</a></li>
  ";
  }else{
-echo "<li class='am-disabled'><a href='admin_panel.php?notice&page=";echo $page+1;echo "'>»</a></li>
+echo "<li class='am-disabled'><a href='admin_panel.php?mplugin&page=";echo $page+1;echo "'>»</a></li>
  ";}
              echo "   </ul>
               </div>

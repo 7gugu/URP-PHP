@@ -123,7 +123,7 @@ return true;
     <div class='am-form-group'>
       <label for='doc-ipt-email-1'>服务器正在生成中....</label>
  <div class='am-progress am-progress-striped am-progress-sm am-active '>
-  <div class='am-progress-bar am-progress-bar-secondary'  style='width: 60%'></div>
+  <div class='am-progress-bar am-progress-bar-secondary'  style='width: 100%'></div>
 </div>
 <p>在服务器生成完成之前你有如下选择:</p>
 <ul>

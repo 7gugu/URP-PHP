@@ -45,7 +45,6 @@ ob_start();
 curl_exec($ch);  
 $check = ob_get_contents() ;  
 ob_end_clean(); 
-//$check=@curl_multi_getcontent($ch);
 curl_close($ch);
 if($check=="invalid api key"||$check=="not available"){
 	return false;
@@ -211,39 +210,29 @@ $ftype=$upfile["type"];//上传文件的类型
 $fsize=$upfile["size"];//上传文件的大小 
 $tmp_name=$upfile["tmp_name"];//上传文件的临时存放路径 
 $tname=explode(".",$fname);
-if($tname[1]  ==  "zip"  or  $tname[1]  ==  "ZIP"){ 
+if($tname[count($tname)-1]  ==  "zip"  or  $tname[count($tname)-1]  ==  "ZIP"){ 
 $error=$upfile["error"];//上传后系统返回的值 
 $sid=$_COOKIE['ser'];
 move_uploaded_file($tmp_name,PATHS.'//Servers/'.$sid.'/Workshop/Maps/'.$fname); 
 if($error==0){
 	return true;
-	echo "1";
-}elseif ($error==1){ 
- return "貌似大了点,小点吧!"; 
-}elseif ($error==2){ 
- return "请上传低于20mb的zip地图文件"; 
-}elseif ($error==3){ 
- return "貌似断网了,压缩包只上传了一半"; 
-}elseif ($error==4){ 
-return "上传失败啦QWQ"; 
 }else{ 
-return "请不要上传空压缩包好么QAQ"; 
-} 
-}else{ 
-return "请上传ZIP格式的地图压缩包！"; 
+return false; 
 } 
 } 
-		}	
+		}
+		}		
 		//插件上传
 			function upplugin($upgfile){
+if (!file_exists("plugins/")){mkdir ("plugins/",0777,true);}
 if(is_uploaded_file($upgfile['tmp_name'])){ 
 $upfile=$upgfile; 
 $fname=$upfile["name"];//上传文件的文件名 
 $tmp_name=$upfile["tmp_name"];//上传文件的临时存放路径 
 $tname=explode(".",$fname);
-if($tname[1]  ==  "dll"  or  $tname[1]  ==  "DLL"){ 
+if($tname[count($tname)-1]  ==  "dll"  or  $tname[count($tname)-1]  ==  "DLL"){ 
 $error=$upfile["error"];//上传后系统返回的值 
-move_uploaded_file($tmp_name,'plugin/'.$fname); 
+move_uploaded_file($tmp_name,'./plugins/'.$fname); 
 if($error==0){
 	return true;
 } 
