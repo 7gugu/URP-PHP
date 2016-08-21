@@ -44,6 +44,12 @@ $v="n";
         <li><a href="http://www.7gugu.com" class="am-text-danger"><span class="am-icon-btn  am-icon-file-text"></span><br/>作者博客<br/></a></li>
       </ul>
         <div class="am-u-md-12">
+		<?php if(isset($_GET['err'])){
+msg($_GET['err']);
+	}
+	if(isset($_GET['suc'])){	
+msg($_GET['suc'],1);
+ }?>
           <div class="am-panel am-panel-default">
             <div class="am-panel-hd am-cf">公告</div>
             <div id="collapse-panel-4" class="am-panel-bd am-collapse am-in">

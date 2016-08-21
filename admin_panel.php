@@ -3,11 +3,11 @@ require 'function/corestart.php';
 checkuser();
 if(isset($_SESSION['sec'])){
 	if($_SESSION['sec']<1){
-		header("Location: index.php?f=4");
+		header("Location: index.php?err=9");
 		exit();
 	}
 }else{
-	header("Location: index.php?f=4");
+	header("Location: index.php?err=9");
 	exit();
 }
 $v="a";
@@ -28,7 +28,7 @@ if(isset($_GET['cinser'])&&isset($_POST['time'])){
 	$sql="insert into inser(id,password,time,inser)values('$uid','$inserpassword','$time','$inser')";
 	query($sql);	
 }
-header("Location: admin_panel.php?inser");
+header("Location: admin_panel.php?inser&suc=13");
 exit();
 }
 //激活码删除
@@ -38,10 +38,10 @@ if(isset($_GET['inser'])&&isset($_GET['dels'])){
 	$row=mysqli_affected_rows();
 if($row>0)
 {
-	header("Location: admin_panel.php?inser&s=4");
+	header("Location: admin_panel.php?inser&suc=14");
 	exit();
 }else{
-header("Location: admin_panel.php?inser&f=4");
+header("Location: admin_panel.php?inser&err=21");
 exit();
 }
 }
@@ -58,10 +58,10 @@ if($row>0)
 	if($mfa[0]!=false){
 		query("delete from server where id='{$dels}'");
 	}
-	header("Location: admin_panel.php?muser&s=4");
+	header("Location: admin_panel.php?muser&suc=15");
 	exit();
 }else{
-header("Location: admin_panel.php?muser&f=4");
+header("Location: admin_panel.php?muser&err=21");
 exit();
 }
 }
@@ -71,9 +71,9 @@ if(isset($_GET['update'])&&isset($_POST['password'])){
 	$row=mysqli_affected_rows($connect);
 if($row>0)
 {
-	header("Location: admin_panel.php?muser&s=4");
+	header("Location: admin_panel.php?muser&suc=8");
 }else{
-header("Location: admin_panel.php?muser&f=4");
+header("Location: admin_panel.php?muser&err=21");
 }
 }
 }
@@ -128,9 +128,9 @@ if(isset($_GET['notice'])){
 	$row=mysqli_affected_rows($connect);
 if($row>0)
 {
-	header("Location: admin_panel.php?notice&s=4");
+	header("Location: admin_panel.php?notice&suc=16");
 }else{
-header("Location: admin_panel.php?notice&f=4");
+header("Location: admin_panel.php?notice&err=21");
 }
 }
 if(isset($_GET['add'])&&isset($_POST['text'])){
@@ -147,9 +147,9 @@ if(isset($_GET['add'])&&isset($_POST['text'])){
 	$row=mysqli_affected_rows($connect);
 if($row>0)
 {
-	header("Location: admin_panel.php?notice&s=5");
+	header("Location: admin_panel.php?notice&suc=17");
 }else{
-header("Location: admin_panel.php?notice&f=5");
+header("Location: admin_panel.php?notice&err=21");
 }
 }
 if(isset($_GET['update'])&&isset($_POST['text'])){
@@ -158,9 +158,9 @@ if(isset($_GET['update'])&&isset($_POST['text'])){
 	$row=mysqli_affected_rows($connect);
 if($row>0)
 {
-	header("Location: admin_panel.php?notice&s=4");
+	header("Location: admin_panel.php?notice&suc=18");
 }else{
-header("Location: admin_panel.php?notice&f=4");
+header("Location: admin_panel.php?notice&err=21");
 }
 }
 }
@@ -173,12 +173,12 @@ if(isset($_GET['mplugin'])){
 if($row>0)
 {   
     if(del("plugins/".$del)){ 
-	header("Location: admin_panel.php?mplugin&s=4");
+	header("Location: admin_panel.php?mplugin&suc=19");
 }else{
-	header("Location: admin_panel.php?mplugin&f=4");
+	header("Location: admin_panel.php?mplugin&err=21");
 }
 }else{
-header("Location: admin_panel.php?mplugin&f=4");
+header("Location: admin_panel.php?mplugin&err=21");
 }
 	}
 	if(isset($_GET['update'])&&isset($_POST['text'])){
@@ -187,16 +187,16 @@ header("Location: admin_panel.php?mplugin&f=4");
 	$row=mysqli_affected_rows($connect);
 if($row>0)
 {
-	header("Location: admin_panel.php?mplugin&s=4");
+	header("Location: admin_panel.php?mplugin&suc=20");
 }else{
-header("Location: admin_panel.php?mplugin&f=4");
+header("Location: admin_panel.php?mplugin&err=21");
 }
 }
 if(isset($_GET['upload'])&&isset($_FILES['upfile'])){
 	if(upplugin($_FILES['upfile'])){
-	header("Location: admin_panel.php?mplugin&s=4");
+	header("Location: admin_panel.php?mplugin&suc=21");
 }else{
-header("Location: admin_panel.php?mplugin&f=4");
+header("Location: admin_panel.php?mplugin&err=21");
 	}
 }
 }
@@ -235,8 +235,15 @@ header("Location: admin_panel.php?mplugin&f=4");
       <div class='am-cf am-padding am-padding-bottom-0'>
         <div class='am-fl am-cf'><strong class='am-text-primary am-text-lg'>管理系统</strong> / <small>System Manage</small></div>
       </div>
-      
       <hr>
+	  <div class="am-u-sm-6">
+<?php if(isset($_GET['err'])){
+msg($_GET['err']);
+	}
+	if(isset($_GET['suc'])){	
+msg($_GET['suc'],1);
+ }?>
+	</div>
    <?php 
    if(isset($_GET['inser'])){
 	   echo "    <div class='am-g'> 
