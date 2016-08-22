@@ -327,9 +327,10 @@ function getinser($length){
    return $str;
   }
   
-function fcreate($sname,$port,$rport,$rpw,$map,$mode,$pv,$cheat,$sid){ 
+function fcreate($sname,$port,$rport,$rpw,$map,$mode,$pv,$cheat,$sid,$players){ 
 	$dat = "Name $sname\n";
 $dat .= "Port $port\n";
+$dat .= "maxplayers $players\n";
 $dat .= "Map $map\n";
 $dat .= "Mode $mode\n";
 $dat .= "Perspective both\n";

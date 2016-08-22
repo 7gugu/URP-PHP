@@ -127,7 +127,7 @@ foreach ($numbers as $number) {
 }
 $rpw=getinser(8);
 $sid=$_SESSION['username']."x".$num;
-		if(fcreate($sname,$port,$rport,$rpw,$map,$dif,$pv,$cheat,$sid)==false){
+		if(fcreate($sname,$port,$rport,$rpw,$map,$dif,$pv,$cheat,$sid,$players)==false){
 			header("Location:create.php?c0&err=14");//写入基础文件失败
 		}else{
 			$uid = query("select * from server order by id DESC limit 1 ");
