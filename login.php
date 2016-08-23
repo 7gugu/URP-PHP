@@ -11,10 +11,19 @@ if(isset($_GET['reg'])&&isset($_POST['email'])){
 			echo "<script>location.href='login.php?reg&err=17';</script>";  
 			exit();
 		}
-	$user=$_POST['username'];
+			$user=$_POST['username'];
 	$paw=$_POST['password'];
 	$cpw=$_POST['cpassword'];
 	$email=$_POST['email'];
+		if(!preg_match('/^[\w\x80-\xff]{4,15}$/', $user)){
+    exit('错误：用户名不符合规定。<a href="javascript:history.back(-1);">返回</a>');
+}
+if(strlen($paw) < 6){
+    exit('错误：密码长度不符合规定。<a href="javascript:history.back(-1);">返回</a>');
+}
+if(!preg_match('/^w+([-+.]w+)*@w+([-.]w+)*.w+([-.]w+)*$/', $email)){
+    exit('错误：电子邮箱格式错误。<a href="javascript:history.back(-1);">返回</a>');
+}
 	$num=mysqli_fetch_array(query("select count(*) from user where username='{$user}'"));
 	if($num<=0){
 		header("Location: login.php?reg&err=18");
@@ -149,7 +158,7 @@ $rom=mysqli_fetch_array($rs);
       <input type="password" name="cpassword" id="cpassword" value="">
       <br>
 	   <label for="email">邮箱:</label>
-      <input type="text" name="email" id="email" value="">
+      <input type="email" name="email" id="email" value="">
       <br>
       <br />
       <div class="am-cf">
