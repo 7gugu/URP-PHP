@@ -16,12 +16,12 @@ if(isset($_GET['reg'])&&isset($_POST['email'])){
 	$cpw=$_POST['cpassword'];
 	$email=$_POST['email'];
 	$num=mysqli_fetch_array(query("select count(*) from user where username='{$user}'"));
-	if($num>0){
+	if($num<=0){
 		header("Location: login.php?reg&err=18");
 		exit();
 	}
 	$num=mysqli_fetch_array(query("select count(*) from user where email='{$email}'"));
-	if($num>0){
+	if($num<=0){
 		header("Location: login.php?reg&err=19");
 		exit();
 	}

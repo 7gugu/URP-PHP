@@ -121,11 +121,11 @@ return true;
   <fieldset>
     <legend>创建完成[Step-3]</legend>
     <div class='am-form-group'>
-      <label for='doc-ipt-email-1'>服务器正在生成中....</label>
+      <label for='doc-ipt-email-1'>服务器生成完成</label>
  <div class='am-progress am-progress-striped am-progress-sm am-active '>
   <div class='am-progress-bar am-progress-bar-secondary'  style='width: 100%'></div>
 </div>
-<p>在服务器生成完成之前你有如下选择:</p>
+<p>你现在有如下选择:</p>
 <ul>
 <li>
 可到产品页面查看自己的服务器

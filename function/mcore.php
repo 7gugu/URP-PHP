@@ -102,11 +102,12 @@ $port=$rom['port']+1;
 			$fpath = PATHS."\Servers\\{$sid}\\{$file}";
 			if(is_file( $fpath )){
 				$strContent = file_get_contents($fpath);
+				$content = explode("\n", $strContent);
 				$re=query("select * from server where sid='{$sid}'");
 				$row=mysqli_fetch_array($re);
 				
 				if($switch=="players"){	
-			$strContent = str_ireplace('Maxplayers '.$row['players'],'Maxplayers '.$text,$strContent);
+			$content[1]="Maxplayers ".$text;
            query("update server set players='{$text}'where sid='{$sid}'");   
 				}
 				if($switch=="rpw"){	
@@ -122,52 +123,47 @@ $strContent .= "</RocketSettings>\n";
            query("update server set rpw='{$text}'where sid='{$sid}'");   
 				}
 				if($switch=="servername"){	
-			$strContent = str_ireplace('Name '.$row['name'],'Name '.$text,$strContent);
+			$content[0]="Name ".$text;
            query("update server set name='{$text}'where sid='{$sid}'");   
 				}
 				if($switch=="welcome"){	
 				//$text=iconv("GB2312","UTF-8//IGNORE",$text);
-			$strContent = str_ireplace('Welcome '.$row['welcome'],'Welcome '.$text,$strContent);
+			$content[7]="welcome ".$text;
            query("update server set welcome='{$text}'where sid='{$sid}'");   
 				}
 				if($switch=="difficult"){	
-			$strContent = str_ireplace('Mode '.$row['difficult'],'Mode '.$text,$strContent);
+			$content[4]="Mode ".$text;
            query("update server set difficult='{$text}'where sid='{$sid}'");   
 				}
 				if($switch=="map"){	
-			$strContent = str_ireplace('Map '.$row['map'],'Map '.$text,$strContent);
+			$content[3]="Map ".$text;
            query("update server set map='{$text}'where sid='{$sid}'");   
 				}
 				if($switch=="password"){	
-			$strContent = str_ireplace('Password '.$row['password'],'Password '.$text,$strContent);
+			$content[8]="Password ".$text;
            query("update server set password='{$text}'where sid='{$sid}'");   
 				}
 				
 				if($switch=="view"){	
-			$strContent = str_ireplace('Perspective '.$row['view'],'Perspective '.$text,$strContent);
+			$content[5]="Perspective ".$text;
            query("update server set view='{$text}'where sid='{$sid}'");   
 				}
 		        if($switch=="cheat"){
-                     	if($row['cheat']==1){
-							$c1="enabled";
-						}else{
-							$c1="disabled";
-						}	
                         if($text==1){
 							$c2="enabled";
 						}else{
 							$c2="disabled";
 						}						
-			$strContent = str_ireplace('cheats '.$c1,'cheats '.$c2,$strContent);
+			$content[9]="cheats ".$c2;
            query("update server set cheat='{$text}'where sid='{$sid}'");   
 				}
 		  if($switch=="mode"){	
-			$strContent = str_ireplace($row['mode'],$text,$strContent);
+			$content[6]=$text;
            query("update server set mode='{$text}'where sid='{$sid}'");   
 				}
-				//echo $strContent;
+				$con = implode("\n", $content);
 		   $write=fopen($fpath,"w");
-        fwrite($write,$strContent);
+        fwrite($write,$con);
 		  fclose($write);
  //echo "成功";
 }else{
@@ -330,7 +326,7 @@ function getinser($length){
 function fcreate($sname,$port,$rport,$rpw,$map,$mode,$pv,$cheat,$sid,$players){ 
 	$dat = "Name $sname\n";
 $dat .= "Port $port\n";
-$dat .= "maxplayers $players\n";
+$dat .= "Maxplayers $players\n";
 $dat .= "Map $map\n";
 $dat .= "Mode $mode\n";
 $dat .= "Perspective both\n";

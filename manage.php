@@ -508,7 +508,12 @@ if(isset($_GET['plugin'])){
     <tbody>
        
            ";
-		  $ser=$_COOKIE['ser'];
+		   $ser=$_COOKIE['ser'];
+		   $pa=PATHS."\Servers\\".$ser."\Rocket\Permissions.config.xml";
+		   		      echo "<tr><td></td>";
+  echo "<td><strong><font color='red'>权限组管理</font></strong></td>";
+  echo "<td><a href='manage.php?per&pfile=".$pa."' >编辑</a>
+  </td></tr>";
 		   plist(PATHS."/Servers/$ser/Rocket/plugins","dll");
 		  echo  "
       
@@ -541,6 +546,7 @@ if(isset($_GET['po'])){
 	<tbody>
 	<tr>
 	<td>";
+	
 	echo del(PATHS."/Servers/$ser/Rocket/plugins/".$po); 
 	echo "<br><a href='manage.php?plugin'>返回插件列表</a></td>
 	</tr>
@@ -585,9 +591,13 @@ if(isset($_GET['po'])){
 </table>";
 }
 if(isset($_GET['pfile'])){
+	if(isset($_GET['per'])){
+		$fn[1]="Permissions.config.xml";
+	}else{
 	$ser=$_COOKIE['ser'];
 	$fn=str_replace(PATHS."/Servers/$ser/Rocket/plugins/","",$_GET['pfile']);
 	$fn=explode("/",$fn);
+	}
 		echo "
 <table class='am-table am-table-striped '>
  <thead>
