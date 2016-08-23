@@ -149,10 +149,10 @@ $rom=mysqli_fetch_array($rs);
 	if(isset($_GET['reg'])){?>
     <form method="post" action="login.php?reg" class="am-form">
       <label>用户名:</label>
-      <input type="text" name="username" id="username" value="">
+      <input type="text" name="username" id="username" placeholder='用户名长度应为[4-15]位' value="">
       <br>
       <label for="password">密码:</label>
-      <input type="password" name="password" id="password" value="">
+      <input type="password" name="password" id="password" placeholder='密码不应少于6位' value="">
       <br>
 	    <label for="password">重复密码:</label>
       <input type="password" name="cpassword" id="cpassword" value="">
