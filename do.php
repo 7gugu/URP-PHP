@@ -99,7 +99,7 @@ while($rows = mysqli_fetch_array($rs)){
 	    $rows = mysqli_fetch_array (query("select * from server where port='{$rows['port']}'"));
 		if($rows!=false){
 	   rcon($rows['sid'],0,1935,'');
-	  query("update server set state='0'where port='{$rows['port']}'");
+	  query("update server set state='1'where port='{$rows['port']}'");
 		}
 }
 }
