@@ -1,7 +1,7 @@
 <?php 
 require 'config/config.php';
 require 'function/dbcore.php';
-ignore_user_abort(true);
+//ignore_user_abort(true);
 set_time_limit(0);
 if(isset($_GET['cron'])){
 	header("Location:admin_panel.php?cron&suc=11");
@@ -89,6 +89,7 @@ exec("for /f \"tokens=1-5 delims= \" %a in ('\"netstat -ano|findstr \"^:{$port}\
  }
 query("update server set state='0'where port='{$rows['port']}'");
 }
+sleep(300);
 if($rocket['switch']==1){
 rocket_download($rocket['key']);
 getzip(PATHS."/Rocket.zip",PATHS."/unturned_data/Managed/");
