@@ -513,7 +513,7 @@ if(isset($_GET['plugin'])){
 		   		      echo "<tr><td></td>";
   echo "<td><strong><font color='red'>权限组管理</font></strong></td>";
   echo "<td><a href='manage.php?per&pfile=".$pa."' >编辑</a>
-  </td></tr>";
+  </td><td></td></tr>";
 		   plist(PATHS."/Servers/$ser/Rocket/plugins","dll");
 		  echo  "
       
