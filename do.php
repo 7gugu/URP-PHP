@@ -1,7 +1,7 @@
 <?php 
 require 'config/config.php';
 require 'function/dbcore.php';
-ignore_user_abort(true);
+//ignore_user_abort(true);
 set_time_limit(0);
 if(isset($_GET['cron'])){
 	header("Location:admin_panel.php?cron&suc=11");
