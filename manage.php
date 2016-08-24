@@ -677,7 +677,7 @@ if(isset($_GET['save'])&&isset($_POST['path'])){
     </thead>
 	<tbody>
 	<tr>
-	<td>保存成功!<br>你可以<a href='manage.php?plugin'>返回文件列表</a>或<a href='manage.php?pfile={$path}'>继续编辑</a></td>
+	<td>保存成功!<br>你可以<a href='manage.php?plugin'>返回文件列表</a></td>
 	</tr>
 	</tbody>
 	</table>
