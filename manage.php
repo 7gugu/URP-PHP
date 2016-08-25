@@ -206,7 +206,7 @@ echo "<table class='am-table am-table-striped '>
             <td>Rcon密码</td>
             <td>
 			<div class='am-u-lg-6'>
-			<input id='rpw' name='rpw' type='text' class='am-form-field' value='{$row['rpw']}' >
+			<input  type='text' class='am-form-field' value='{$row['rpw']}' >
 			</div>
 			</td>
 			<td>
