@@ -110,18 +110,6 @@ $port=$rom['port']+1;
 			$content[1]="Maxplayers ".$text;
            query("update server set players='{$text}'where sid='{$sid}'");   
 				}
-				if($switch=="rpw"){	
-$strContent = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
-$strContent .= "<RocketSettings xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n";
-$strContent .= "<RCON Enabled=\"true\" Port=\"{$row['rport']}\" Password=\"{$text}\"/>\n";
-$strContent .= "<AutomaticShutdown Enabled=\"false\" Interval=\"0\" />\n";
-$strContent .= "<WebConfigurations Enabled=\"false\" Url=\"\" />\n";
-$strContent .= "<WebPermissions Enabled=\"false\" Url=\"\" Interval=\"180\" />\n";
-$strContent .= "<LanguageCode>en</LanguageCode>\n";
-$strContent .= "</RocketSettings>\n";
-//其实可以改进成为循环的,但这段代码是1.0的代码,我就懒得改了
-           query("update server set rpw='{$text}'where sid='{$sid}'");   
-				}
 				if($switch=="servername"){	
 			$content[0]="Name ".$text;
            query("update server set name='{$text}'where sid='{$sid}'");   

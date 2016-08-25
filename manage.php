@@ -31,7 +31,6 @@ if(isset($_GET['restart'])){
 if(isset($_POST['players'])){
 	$ser=$_COOKIE['ser'];
 	udfile($ser,"players",$_POST['players'],"Server//Commands.dat");
-	udfile($ser,"rpw",$_POST['rpw'],"Rocket//Rocket.config.xml");
 	echo "<script>location.href='manage.php?index&suc=4';</script>";  
 	exit();
 }
