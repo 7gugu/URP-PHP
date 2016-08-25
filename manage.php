@@ -72,7 +72,9 @@ if(isset($_POST['command'])){
 	if(strpos($command,'shutdown')!=''){
 		query("update server set state='0'where sid='{$sid}'");	
 	}
+	$row=mysqli_fetch_array(query("select * from server where sid='{$sid}'"));
 	rcon($command,1,$row['rport'],$row['rpw']);
+	//echo gettype(rcon($command,1,$row['rport'],$row['rpw']));
 	echo "<script>location.href='manage.php?order&suc=5';</script>";  
 	exit();
 }
@@ -206,7 +208,7 @@ echo "<table class='am-table am-table-striped '>
             <td>Rcon密码</td>
             <td>
 			<div class='am-u-lg-6'>
-			<input type='text' class='am-form-field' value='{$row['rpw']}' >
+			<input  type='text' class='am-form-field' value='{$row['rpw']}' >
 			</div>
 			</td>
 			<td>
@@ -323,17 +325,17 @@ if(isset($_GET['information'])){
 				 echo"
           <option value='normal'>Normal</option>
           <option value='easy'>Easy</option>
-		   <option value='hard'>Difficult</option>
+		 <option value='hard'>Difficult</option>
 		    <option value='gold'>Gold</option>";
 			 }elseif($row['difficult']=='easy'){
 				 echo"
 				 <option value='easy'>Easy</option>
           <option value='normal'>Normal</option>
-		    <option value='hard'>Difficult</option>
+		 <option value='hard'>Difficult</option>
 		    <option value='gold'>Gold</option>";
 			 }elseif($row['difficult']=='difficult'){
 				 echo"
-				 <option value='hard'>Difficult</option>
+			<option value='hard'>Difficult</option>
           <option value='normal'>Normal</option>
           <option value='easy'>Easy</option>
 		    <option value='gold'>Gold</option>";
@@ -342,7 +344,7 @@ if(isset($_GET['information'])){
 				<option value='gold'>Gold</option>
           <option value='normal'>Normal</option>
           <option value='easy'>Easy</option>
-		  <option value='hard'>Difficult</option>"; 
+		   <option value='hard'>Difficult</option>"; 
 			 }
 			echo"
         </select>
@@ -511,8 +513,8 @@ if(isset($_GET['plugin'])){
 		   $pa=PATHS."\Servers\\".$ser."\Rocket\Permissions.config.xml";
 		   		      echo "<tr><td></td>";
   echo "<td><strong><font color='red'>权限组管理</font></strong></td>";
-  echo "<td><a href='manage.php?per&pfile=".$pa."' >编辑</a>
-  </td></tr>";
+  echo "<td><a href='manage.php?per&pfile=".$pa."' >编辑</a>          
+  </td><td></td></tr>";
 		   plist(PATHS."/Servers/$ser/Rocket/plugins","dll");
 		  echo  "
       
@@ -676,7 +678,7 @@ if(isset($_GET['save'])&&isset($_POST['path'])){
     </thead>
 	<tbody>
 	<tr>
-	<td>保存成功!<br>你可以<a href='manage.php?plugin'>返回文件列表</a>或<a href='manage.php?pfile={$path}'>继续编辑</a></td>
+	<td>保存成功!<br>你可以<a href='manage.php?plugin'>返回文件列表</a></td>
 	</tr>
 	</tbody>
 	</table>
@@ -755,14 +757,14 @@ $file = fopen(PATHS."\Servers\\$ser\\Rocket\\Logs\\Rocket.log", "r") or exit("�
 while(!feof($file))
 {
  $rs=fgets($file);
- $rs = str_replace ( "[Exception] Rocket.CoreException in Rocket.Core: System.IO.IOException: Write failure ---> System.Net.Sockets.SocketException: 您的主机中的软件中止了一个已建立的连接。", "Error!", $rs ); 
+/* $rs = str_replace ( "[Exception] Rocket.CoreException in Rocket.Core: System.IO.IOException: Write failure ---> System.Net.Sockets.SocketException: 您的主机中的软件中止了一个已建立的连接。", "Error!", $rs ); 
  $rs=str_replace ("at System.Net.Sockets.Socket.Send (System.Byte[] buf, Int32 offset, Int32 size, SocketFlags flags) [0x00000] in <filename unknown>:0","",$rs);
  $rs=str_replace ("at System.Net.Sockets.NetworkStream.Write (System.Byte[] buffer, Int32 offset, Int32 size) [0x00000] in <filename unknown>:0 ","",$rs);
  $rs=str_replace ("  --- End of inner exception stack trace ---","",$rs);
  $rs=str_replace (" at System.Net.Sockets.NetworkStream.Write (System.Byte[] buffer, Int32 offset, Int32 size) [0x00000] in <filename unknown>:0 ","",$rs);
  $rs=str_replace ("at Rocket.Core.RCON.RCONServer.Send (System.Net.Sockets.TcpClient client, System.String text) [0x00000] in <filename unknown>:0","",$rs);
  $rs=str_replace (" at Rocket.Core.RCON.RCONConnection.Send (System.String command, Boolean nonewline) [0x00000] in <filename unknown>:0 ","",$rs);
- $rs=str_replace ("  at Rocket.Core.RCON.RCONServer.handleConnection (System.Object obj) [0x00000] in <filename unknown>:0 ","",$rs);
+ $rs=str_replace ("  at Rocket.Core.RCON.RCONServer.handleConnection (System.Object obj) [0x00000] in <filename unknown>:0 ","",$rs);*/
  $rs=trim($rs);
  echo $rs. "<br />";
 }
@@ -771,6 +773,20 @@ echo "
 </pre>
 		  </div>";  
 }
+	if(isset($_GET['players'])){
+		echo "
+	<div class='am-g'> 
+        <div class='am-u-sm-8'>
+    <legend>在线玩家</legend>
+          </div>
+        </div>
+ <div class='am-u-sm-12'>
+ 
+ <h2><strong>在线玩家:";
+ players();
+ echo "</strong><h2><hr></div>
+ ";
+	}	
 }else{
 	echo "<script>location.href='list.php?err1';</script>";  
 	exit();
