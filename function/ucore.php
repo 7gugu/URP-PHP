@@ -178,6 +178,9 @@ echo "<div class='am-alert am-alert-warning' data-am-alert>
 		case 21:
         echo "[1021]数据库执行失败";
         break;
+        case 22:
+        echo "[1022]服务器名字长度不足(需大于5个字)";
+        break;
     default:
         echo "[XXXX]出现了一个未知错误,请尽快联系管理员解决";
   }

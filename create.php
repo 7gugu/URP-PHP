@@ -110,6 +110,9 @@ foreach($arr as $values)
 		$cheat="cheats enabled";
 	}
 	$sname=$_POST['servername'];
+	if(strlen($sname)<=5){
+		header("Location:create.php?c0&err=22");//
+	}
 	$map=$_POST['map'];
 	$time=$_POST['time'];
 	$dif=$_POST['dif'];
