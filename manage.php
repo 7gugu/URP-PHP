@@ -206,7 +206,7 @@ echo "<table class='am-table am-table-striped '>
             <td>Rcon密码</td>
             <td>
 			<div class='am-u-lg-6'>
-			<input  type='text' class='am-form-field' value='{$row['rpw']}' >
+			<input type='text' class='am-form-field' value='{$row['rpw']}' >
 			</div>
 			</td>
 			<td>
@@ -323,17 +323,17 @@ if(isset($_GET['information'])){
 				 echo"
           <option value='normal'>Normal</option>
           <option value='easy'>Easy</option>
-		   <option value='difficult'>Difficult</option>
+		   <option value='hard'>Difficult</option>
 		    <option value='gold'>Gold</option>";
 			 }elseif($row['difficult']=='easy'){
 				 echo"
 				 <option value='easy'>Easy</option>
           <option value='normal'>Normal</option>
-		   <option value='difficult'>Difficult</option>
+		    <option value='hard'>Difficult</option>
 		    <option value='gold'>Gold</option>";
 			 }elseif($row['difficult']=='difficult'){
 				 echo"
-				 <option value='difficult'>Difficult</option>
+				 <option value='hard'>Difficult</option>
           <option value='normal'>Normal</option>
           <option value='easy'>Easy</option>
 		    <option value='gold'>Gold</option>";
@@ -342,7 +342,7 @@ if(isset($_GET['information'])){
 				<option value='gold'>Gold</option>
           <option value='normal'>Normal</option>
           <option value='easy'>Easy</option>
-		   <option value='difficult'>Difficult</option>"; 
+		  <option value='hard'>Difficult</option>"; 
 			 }
 			echo"
         </select>
@@ -512,7 +512,7 @@ if(isset($_GET['plugin'])){
 		   		      echo "<tr><td></td>";
   echo "<td><strong><font color='red'>权限组管理</font></strong></td>";
   echo "<td><a href='manage.php?per&pfile=".$pa."' >编辑</a>
-  </td><td></td></tr>";
+  </td></tr>";
 		   plist(PATHS."/Servers/$ser/Rocket/plugins","dll");
 		  echo  "
       
@@ -676,7 +676,7 @@ if(isset($_GET['save'])&&isset($_POST['path'])){
     </thead>
 	<tbody>
 	<tr>
-	<td>保存成功!<br>你可以<a href='manage.php?plugin'>返回文件列表</a></td>
+	<td>保存成功!<br>你可以<a href='manage.php?plugin'>返回文件列表</a>或<a href='manage.php?pfile={$path}'>继续编辑</a></td>
 	</tr>
 	</tbody>
 	</table>
