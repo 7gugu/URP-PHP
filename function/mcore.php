@@ -110,6 +110,18 @@ $port=$rom['port']+1;
 			$content[1]="Maxplayers ".$text;
            query("update server set players='{$text}'where sid='{$sid}'");   
 				}
+				if($switch=="rpw"){	
+$strContent = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
+$strContent .= "<RocketSettings xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n";
+$strContent .= "<RCON Enabled=\"true\" Port=\"{$row['rport']}\" Password=\"{$text}\"/>\n";
+$strContent .= "<AutomaticShutdown Enabled=\"false\" Interval=\"0\" />\n";
+$strContent .= "<WebConfigurations Enabled=\"false\" Url=\"\" />\n";
+$strContent .= "<WebPermissions Enabled=\"false\" Url=\"\" Interval=\"180\" />\n";
+$strContent .= "<LanguageCode>en</LanguageCode>\n";
+$strContent .= "</RocketSettings>\n";
+//其实可以改进成为循环的,但这段代码是1.0的代码,我就懒得改了
+           query("update server set rpw='{$text}'where sid='{$sid}'");   
+				}
 				if($switch=="servername"){	
 			$content[0]="Name ".$text;
            query("update server set name='{$text}'where sid='{$sid}'");   
@@ -402,15 +414,32 @@ function rwfile($path,$switch,$text){
 }
 			}elseif($switch=="w"){
 								if(is_file( $fpath )){
-        $write=fopen($fpath,"w");
-        fwrite($write,$text);
-        fclose($write);
+		$text=trim($text,"\xEF\xBB\xBF");
+	$charset[1] = substr($text, 0, 1);  
+$charset[2] = substr($text, 1, 1);  
+$charset[3] = substr($text, 2, 1);  
+if (ord($charset[1]) == 239 && ord($charset[2]) == 187 && ord($charset[3]) == 191) {   
+   $text = substr($text, 3);
+}
+        file_put_contents($fpath,$text);
  return true;
 }else{
 	return false;
 }
 			}
 		}
+//玩家数量
+function players(){
+	$sname=$_COOKIE['ser'];
+	$file=file_get_contents(PATHS."/Servers/$sname/Rocket/Logs/Rocket.log");
+	$p=0;
+
+		$p=$p+substr_count($file,"Connecting");
+		if(substr_count($file,"Disconnecting")){
+			$p=$p-substr_count($file,"Disconnecting");
+		}
+	echo $p."人";
+}
 //插件文件列表
 function plist($path,$mode){ 
 
