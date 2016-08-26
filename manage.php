@@ -333,7 +333,7 @@ if(isset($_GET['information'])){
           <option value='normal'>Normal</option>
 		 <option value='hard'>Difficult</option>
 		    <option value='gold'>Gold</option>";
-			 }elseif($row['difficult']=='difficult'){
+			 }elseif($row['difficult']=='hard'){
 				 echo"
 			<option value='hard'>Difficult</option>
           <option value='normal'>Normal</option>
@@ -620,27 +620,24 @@ if(isset($_GET['pfile'])){
 		   <style type="text/css" media="screen">
   pre{
 	  padding:30%;
-      height: 100%;
-	  margin: 0; 
+	  hight:100%;
   }
+
   </style>
 		     <script src="assets/ace/ace.js" type="text/javascript" charset="utf-8"></script>
 			 <input type='hidden' value='<?php echo $_GET['pfile']; ?>' name='path' id='path'></input>
-            <pre id="editor" name="editor">	
-		<?php 
-		$data=rwfile($_GET['pfile'],'r','');
-echo htmlspecialchars($data);
-	 ?> 
-</pre>
+            <pre id="editor"><?php echo rwfile($_GET['pfile'],'r','');?></pre>
 <input type="hidden" id="es" name='es' value=''/>
 <script>
     var editorr = ace.edit("editor");
-    editorr.setTheme("assets/ace/theme/twilight");
-    editorr.session.setMode("ace/mode/xml");
-	   editor.getSession().setWrapLimitRange(null, null);
-    editor.getSession().setUseWrapMode(true);
+
+    editorr.getSession().setMode("ace/mode/xml");
+	   editorr.getSession().setWrapLimitRange(null, null);
+   // editorr.getSession().setUseWrapMode(true);
     //不显示垂直衬线
-    editor.renderer.setShowPrintMargin(false);
+    editorr.renderer.setShowPrintMargin(false);
+	
+	editorr.focus();
 	function get(){
 		document.getElementById("es").value=editorr.getValue();
 		document.getElementById('save').submit();

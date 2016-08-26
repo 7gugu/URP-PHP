@@ -410,10 +410,21 @@ function rwfile($path,$switch,$text){
 			if($switch=="r"){
 				if(is_file( $fpath )){
  $text = file_get_contents( $fpath );
+ 	$text=trim($text,"\0\t");
+		$text=trim($text,"\xEF\xBB\xBF");
+	$charset[1] = substr($text, 0, 1);  
+$charset[2] = substr($text, 1, 1);  
+$charset[3] = substr($text, 2, 1);  
+if (ord($charset[1]) == 239 && ord($charset[2]) == 187 && ord($charset[3]) == 191) {   
+   $text = substr($text, 3);
+  
+}
+$text=htmlspecialchars($text);
  return $text;
 }
 			}elseif($switch=="w"){
 								if(is_file( $fpath )){
+		$text=trim($text," ");
 		$text=trim($text,"\xEF\xBB\xBF");
 	$charset[1] = substr($text, 0, 1);  
 $charset[2] = substr($text, 1, 1);  
