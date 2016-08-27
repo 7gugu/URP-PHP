@@ -570,6 +570,23 @@ $a=str_replace($path,'',$afile);
 }
 } 
 }
+function pmod($path){
+$file=glob($path."/*",GLOB_BRACE);
+foreach($file as $afile){ 
+   echo "<tr>";
+echo "<td><a href='";
+$afile=str_replace($path."/",'',$afile);
+if(is_dir($path."/".$afile)){
+	$p=$path."/".$afile;
+	echo "manage.php?mod&p={$p}";
+}else{
+	echo "#";
+}
+echo "'>$afile</a></td><td></td><td><button type='button'  onclick=\"javascript:window.location.href='manage.php?mod&del={$afile}'\" class='am-btn am-btn-secondary'>
+		删除文件</button></td>
+  </tr>"; 
+}
+}
 
 		/*
 		Ucon 2.0 manage core

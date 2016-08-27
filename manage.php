@@ -582,7 +582,7 @@ if(isset($_GET['po'])){
 	<form>
     <tbody>
        <tr>
-	   <td><a href='manage.php?plugin'>返回上一级</a></td>
+	   <td><a href=\"javascript:history.go(-1);\">返回上一级</a></td>
 	   <td></td>
 	   <td></td>
 	   <td></td>
@@ -625,7 +625,7 @@ if(isset($_GET['pfile'])){
 	<form action='manage.php?save' method='POST' id='save'>
     <tbody>
        <tr>
-	   <td> <a href='manage.php?plugin'> 返回上一级</a></td>
+	   <td> <a href=\"javascript:history.go(-1);\"> 返回上一级</a></td>
 	   	   <td></td> <td></td>
 	   </tr>
 	   <tr><td>文件名:<br>{$fn[1]}<br></td>
@@ -812,7 +812,30 @@ echo "
 	   <button type='submit' class='am-btn am-btn-warning'>上传</button>
           </form>
   </div>
-</section></div>";
+</section>
+<hr>
+<table class='am-table am-table-bordered'>
+    <thead>
+        <tr>
+            <th>文件名</th>
+            <th></th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+	";
+	$sid=$_COOKIE['ser'];
+	if(isset($_GET['p'])){
+		$p=$_GET['p'];
+		pmod($p);
+		echo "<td><a href=\"javascript:history.go(-1);\">返回上一层</a></td><td></td><td></td>";
+	}else{
+	pmod(PATHS."\Servers\\$sid\Workshop\Content");
+	}
+	echo "
+    </tbody>
+</table>
+</div>";
 
 }
 }else{
