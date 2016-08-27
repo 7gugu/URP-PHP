@@ -73,10 +73,12 @@ $ss=query("select * from server where sid='{$sid}'");
 		sleep(2);
 			$query=query("select * from server where sid='{$sid}'");
 			$rom=mysqli_fetch_array($query);
+			if(check($rom['rport'])){
 			rcon("shutdown",1,$rom['rport'],$rom['rpw']);
+			}else{
 $port=$rom['port']+1;
  popen("for /f \"tokens=1-5 delims= \" %%a in ('\"netstat -ano|findstr \"^:{$port}\"\"') do taskkill /pid %%d", 'r');
-			
+			}
 			query("update server set state='0'where sid='{$sid}'");	
 		header("Location: manage.php?index&suc=2");
 		}elseif($switch=='restart'){
@@ -200,6 +202,27 @@ $strContent .= "</RocketSettings>\n";
  zip_close($resource); 
  return true;
 }
+//地图上传模块
+		function upmod($upgfile){
+if(is_uploaded_file($upgfile['tmp_name'])){ 
+$upfile=$upgfile; 
+$fname=$upfile["name"];//上传文件的文件名 
+$ftype=$upfile["type"];//上传文件的类型 
+$fsize=$upfile["size"];//上传文件的大小 
+$tmp_name=$upfile["tmp_name"];//上传文件的临时存放路径 
+$tname=explode(".",$fname);
+if($tname[count($tname)-1]  ==  "zip"  or  $tname[count($tname)-1]  ==  "ZIP"){ 
+$error=$upfile["error"];//上传后系统返回的值 
+$sid=$_COOKIE['ser'];
+move_uploaded_file($tmp_name,PATHS.'//Servers/'.$sid.'/Workshop/Content/'.$fname); 
+if($error==0){
+	return true;
+}else{ 
+return false; 
+} 
+} 
+		}
+		}
 	//地图上传模块
 		function upmap($upgfile){
 if(is_uploaded_file($upgfile['tmp_name'])){ 
