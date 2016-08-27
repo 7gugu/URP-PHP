@@ -827,8 +827,8 @@ echo "
 	$sid=$_COOKIE['ser'];
 	if(isset($_GET['p'])){
 		$p=$_GET['p'];
-		pmod($p);
 		echo "<td><a href=\"javascript:history.go(-1);\">返回上一层</a></td><td></td><td></td>";
+	    pmod($p);
 	}else{
 	pmod(PATHS."\Servers\\$sid\Workshop\Content");
 	}
