@@ -160,10 +160,12 @@ if (!isset($page)) {
 $startCount=($page-1)*$perNumber; //分页开始,根据此方法计算出开始的记录
 if($_SESSION['sec']!=1){
 $result=query("select * from server where user='{$_SESSION['username']}' limit $startCount,$perNumber"); //根据前面的计算出开始的记录和记录数
+$row = mysqli_fetch_array( query("SELECT COUNT(*) FROM server where user='{$_SESSION['username']}'") );
+    
 }else{
 	$result=query("select * from server  limit $startCount,$perNumber"); 
+	$row = mysqli_fetch_array( query("SELECT COUNT(*) FROM server where user='{$_SESSION['username']}'") );
 }
-$row = mysqli_fetch_array( query("SELECT COUNT(*) FROM server where user='{$_SESSION['username']}'") );
 if($row[0]==0){
 	?>
 	 <tr>
