@@ -73,12 +73,10 @@ $ss=query("select * from server where sid='{$sid}'");
 		sleep(2);
 			$query=query("select * from server where sid='{$sid}'");
 			$rom=mysqli_fetch_array($query);
-			if(check($rom['rport'])){
 			rcon("shutdown",1,$rom['rport'],$rom['rpw']);
-			}else{
 $port=$rom['port']+1;
  popen("for /f \"tokens=1-5 delims= \" %%a in ('\"netstat -ano|findstr \"^:{$port}\"\"') do taskkill /pid %%d", 'r');
-			}
+			
 			query("update server set state='0'where sid='{$sid}'");	
 		header("Location: manage.php?index&suc=2");
 		}elseif($switch=='restart'){
