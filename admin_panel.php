@@ -184,7 +184,9 @@ header("Location: admin_panel.php?mplugin&err=21");
 	if(isset($_GET['update'])&&isset($_POST['text'])){
 	$text=$_POST['text'];
 	query("update plugin set state='{$text}'where name='{$_POST['name']}'");
+	echo "update plugin set state='{$text}'where name='{$_POST['name']}'";
 	$row=mysqli_affected_rows($connect);
+	echo $row;exit();
 if($row>0)
 {
 	header("Location: admin_panel.php?mplugin&suc=20");
@@ -254,7 +256,6 @@ msg($_GET['suc'],1);
 	  <div class='am-form-group'>
       <label for='doc-select-1'>生成数量</label>
       <select name='num' id='doc-select-1'>
-      <option value='1'>1个</option>
         <option value='5'>5个</option>
         <option value='10'>10个</option>
         <option value='20'>20个</option>
@@ -269,7 +270,6 @@ msg($_GET['suc'],1);
         <option value='90'>一个季度[90]</option>
 		<option value='183'>半年[183]</option>
 		<option value='365'>一年[365]</option>
-		<option value='999'>永久[无限]</option>
       </select>
       <span class='am-form-caret'></span>
     </div>
@@ -317,13 +317,13 @@ if($row[0]==0){
 }else{
 while($row = mysqli_fetch_array($result))
 {
-	if($row['time']==999){$time="无限";}else{$time=$row['time'];}
+	
            echo "   <tr>
                 <td><input type='checkbox' /></td>
 <td> {$row['id']}</td>
                 <td><a href='#'> {$row['inser']}</a></td>
 <td><a href='#'>{$row['password']}</a></td>
-                <td class='am-hide-sm-only'>{$time}</td>
+                <td class='am-hide-sm-only'>{$row['time']}</td>
                 <td>
                   <div class='am-btn-toolbar'>
 				  
@@ -507,6 +507,41 @@ echo "<br>
   </form>
   </div>
 </section>
+<section class='am-panel am-panel-default'>
+  <header class='am-panel-hd'>
+    <h3 class='am-panel-title'>激活计划任务</h3>
+  </header>
+  <div class='am-panel-bd'>
+     <div class='am-form-group'>
+	 <h3>状态</h3>
+	 <p class='am-article-meta'>由于计划任务为脚本,需要手动激活才可使用,除非关闭服务器,否则脚本将会以最小的资源占用一直运行<p>
+  <button type='submit'  onclick=\"javascript:window.location.href='admin_panel.php?scron'\" class='am-btn am-btn-warning'>激活</button>
+  </div>
+  </div>
+</section>
+</div>
+<div class='am-u-sm-6'>
+<section class='am-panel am-panel-default'>
+  <header class='am-panel-hd'>
+    <h3 class='am-panel-title'>任务执行时间";
+	$row=mysqli_fetch_array(query("select * from cron where name='cron'"));
+	if($row['switch']==0){echo "<font color='red'>[已禁用]</font>";}else{echo "<font color='green'>[已启用]</font>";}
+	$time=$row['time']/3600;
+	echo "</h3>
+  </header>
+  <div class='am-panel-bd'>
+     <div class='am-form-group'>
+	 <h3>状态</h3>
+     <div class='am-input-group'>
+	 <span class='am-input-group-label'>循环时间</span>
+	 <form method='POST' action='admin_panel.php'>
+  <input type='text' name='time'  class='am-form-field' value='{$time}'>
+  </div>
+  <p class='am-article-meta'>留空则不启用计划任务,输入框填隔多少小时执行一次任务</p>
+  <button type='submit' class='am-btn am-btn-secondary'>保存</button>
+    </form></div>
+  </div>
+</section>
 </div>
 <div class='am-u-sm-6'>
 <section class='am-panel am-panel-default'>
@@ -653,7 +688,6 @@ echo "<li class='am-disabled'><a href='admin_panel.php?notice&page=";echo $page+
       <div class='am-g'>
         <div class='am-u-sm-12'>
 		<hr>
-          <form class='am-form' method='POST' action='admin_panel.php?mplugin&update'>
             <table class='am-table am-table-striped am-table-hover table-main'>
               <thead>
               <tr>
@@ -700,7 +734,9 @@ if($row[0]==0){
 while($row = mysqli_fetch_array($result))
 {
 	
-           echo "   <tr>
+           echo "   
+		    <form class='am-form' method='POST' action='admin_panel.php?mplugin&update'>
+		   <tr>
                 <td><input type='checkbox' /></td>
 <td> {$row['name']}</td>
                 <td><input id='text' name='text' type='text' class='am-form-field' value='{$row['state']}' ><input name='name' type='hidden'  value='{$row['name']}' >   
@@ -713,7 +749,9 @@ while($row = mysqli_fetch_array($result))
 					</div>
 				  </div>
                 </td>
-              </tr>";
+              </tr>
+			   </form>
+			  ";
  }	
 } 
               echo "</tbody>
