@@ -106,6 +106,9 @@ function msg($num,$mode=0){
 		case 21:
         echo "[2021]插件上传/更新成功";
         break;
+        case 22:
+        echo "[2022]MOD上传成功";
+        break;
     default:
         echo "[XXXX]未知行为的成功";
   }
@@ -180,6 +183,9 @@ echo "<div class='am-alert am-alert-warning' data-am-alert>
         break;
         case 22:
         echo "[1022]服务器名字长度不足(需大于5个字)";
+        break;
+        case 23:
+        echo "[2023]MOD上传失败";
         break;
     default:
         echo "[XXXX]出现了一个未知错误,请尽快联系管理员解决";
