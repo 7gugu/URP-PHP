@@ -110,6 +110,7 @@ if(isset($_GET['mod'])&&isset($_FILES['upfile'])){
 		$sid=$_COOKIE['ser'];
 		$rem=upmod($_FILES['upfile']);
 		$rez=getzip(PATHS.'/Servers/'.$sid.'/Workshop/Content/'.$_FILES['upfile']['name'],PATHS.'/Servers/'.$sid.'/Workshop/Content/');
+		unlink(PATHS.'/Servers/'.$sid.'/Workshop/Content/'.$_FILES['upfile']['name']);
 		if($rez==true&&$rem==true){	
 		header("Location:manage.php?mod&suc=22");//upload successfully
 		}else{
