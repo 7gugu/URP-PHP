@@ -81,6 +81,8 @@ if($cron['switch']==1){
 sleep($cron['time']);
 	$rs=query("select * from server");
 while($rows = mysqli_fetch_array($rs)){
+    rcon("我们将于10s后重启服务器!!!",1,$rows['rport'],$rows['rpw']);
+    sleep(10);
 	if(check($rows['port'])){
        rcon("shutdown",1,$rows['rport'],$rows['rpw']);
 }elseif($rows['state']==1){
