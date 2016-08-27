@@ -105,7 +105,17 @@ if(isset($_GET['file'])&&isset($_FILES['upfile'])){
 		header("Location:manage.php?map&err=6");//upload faild
 	}
 }
-
+//上传mod
+if(isset($_GET['mod'])&&isset($_FILES['upfile'])){
+		$sid=$_COOKIE['ser'];
+		$rem=upmap($_FILES['upfile']);
+		$rez=getzip(PATHS.'/Servers/'.$sid.'/Workshop/Content/'.$_FILES['upfile']['name'],PATHS.'/Servers/'.$sid.'/Workshop/Content/');
+		if($rez==true&&$rem==true){	
+		header("Location:manage.php?mod&suc=22");//upload successfully
+		}else{
+		header("Location:manage.php?mod&err=23");//upload faild
+	}
+}
 ?>
 <!doctype html>
 <html class="no-js fixed-layout">
@@ -184,10 +194,13 @@ echo "<table class='am-table am-table-striped '>
             <td>操作服务器</td>
             <td>
 			<div class='am-u-lg-8'>
-			
+			";
+			echo "
 			<button type='submit'  onclick=\"javascript:window.location.href='manage.php?start'\"class='am-btn am-btn-success'{$on}>启动服务器</button>
             <button type='submit' onclick=\"javascript:window.location.href='manage.php?stop'\" class='am-btn am-btn-danger'{$off}>关闭服务器</button> 
             <button type='submit' onclick=\"javascript:window.location.href='manage.php?restart'\" class='am-btn am-btn-warning'{$off}>重启服务器</button> 			
+			";
+			echo "
 			</div>
 			</td>
 			<td>
@@ -784,6 +797,23 @@ echo "
  echo "</strong><h2><hr></div>
  ";
 	}	
+	if(isset($_GET['mod'])){
+	echo "
+	<div class='am-u-sm-12'>
+	<section class='am-panel am-panel-default'>
+  <header class='am-panel-hd'>
+    <h3 class='am-panel-title'>上传MOD</h3>
+  </header>
+  <div class='am-panel-bd'>
+     <form class='am-form' action='manage.php?mod' enctype='multipart/form-data' method='post'>
+      <input type='file' id='doc-ipt-file-1' name='upfile'>
+      <p class='am-form-help'>请把MOD文件压缩成ZIP格式</p>
+	   <button type='submit' class='am-btn am-btn-warning'>上传</button>
+          </form>
+  </div>
+</section></div>";
+
+}
 }else{
 	echo "<script>location.href='list.php?err1';</script>";  
 	exit();
