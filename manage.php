@@ -96,6 +96,7 @@ if(isset($_GET['shop'])&&isset($_GET['move'])){
 }
 //上传地图
 if(isset($_GET['file'])&&isset($_FILES['upfile'])){
+	
 		$sid=$_COOKIE['ser'];
 		$rem=upmap($_FILES['upfile']);
 		$rez=getzip(PATHS.'/Servers/'.$sid.'/Workshop/Maps/'.$_FILES['upfile']['name'],PATHS.'/Servers/'.$sid.'/Workshop/Maps/');
@@ -106,7 +107,17 @@ if(isset($_GET['file'])&&isset($_FILES['upfile'])){
 	}
 }
 //上传mod
-if(isset($_GET['mod'])&&isset($_FILES['upfile'])){
+if(isset($_GET['mod'])){
+	if(isset($_GET['del'])){
+		if(is_dir(PATHS."/Servers/".$_COOKIE['ser']."/Workshop/Content/".$_GET['del'])){
+			ddf(PATHS."/Servers/".$_COOKIE['ser']."/Workshop/Content/".$_GET['del']);
+		}else{
+			unlink(PATHS."/Servers/".$_COOKIE['ser']."/Workshop/Content/".$_GET['del']);
+		}
+		header("Location:manage.php?mod&suc=24");
+	}
+	if(isset($_FILES['upfile'])){
+		set_time_limit(0);
 		$sid=$_COOKIE['ser'];
 		$rem=upmod($_FILES['upfile']);
 		$rez=getzip(PATHS.'/Servers/'.$sid.'/Workshop/Content/'.$_FILES['upfile']['name'],PATHS.'/Servers/'.$sid.'/Workshop/Content/');
@@ -116,6 +127,7 @@ if(isset($_GET['mod'])&&isset($_FILES['upfile'])){
 		}else{
 		header("Location:manage.php?mod&err=23");//upload faild
 	}
+}
 }
 ?>
 <!doctype html>

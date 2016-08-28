@@ -202,7 +202,7 @@ $strContent .= "</RocketSettings>\n";
  zip_close($resource); 
  return true;
 }
-//地图上传模块
+//mod上传模块
 		function upmod($upgfile){
 if(is_uploaded_file($upgfile['tmp_name'])){ 
 $upfile=$upgfile; 
@@ -215,6 +215,21 @@ if($tname[count($tname)-1]  ==  "zip"  or  $tname[count($tname)-1]  ==  "ZIP"){
 $error=$upfile["error"];//上传后系统返回的值 
 $sid=$_COOKIE['ser'];
 move_uploaded_file($tmp_name,PATHS.'//Servers/'.$sid.'/Workshop/Content/'.$fname); 
+/*if($error==0){
+	return true;
+	echo "1";
+}elseif ($error==1){ 
+ echo "貌似大了点,小点吧!"; 
+}elseif ($error==2){ 
+ echo "请上传低于20mb的zip地图文件"; 
+}elseif ($error==3){ 
+ echo "貌似断网了,压缩包只上传了一半"; 
+}elseif ($error==4){ 
+echo "上传失败啦QWQ"; 
+}else{ 
+echo "请不要上传空压缩包好么QAQ"; 
+} 
+exit();*/
 if($error==0){
 	return true;
 }else{ 
@@ -575,6 +590,9 @@ $file=glob($path."/*",GLOB_BRACE);
 foreach($file as $afile){ 
    echo "<tr>";
 echo "<td><a href='";
+$pa=str_replace("\\","/",$path);
+$pat=str_replace("\\","/",PATHS);
+$pa=str_replace($pat."/Servers/".$_COOKIE['ser']."/Workshop/Content/",'',$pa);
 $afile=str_replace($path."/",'',$afile);
 if(is_dir($path."/".$afile)){
 	$p=$path."/".$afile;
@@ -582,7 +600,8 @@ if(is_dir($path."/".$afile)){
 }else{
 	echo "#";
 }
-echo "'>$afile</a></td><td></td><td><button type='button'  onclick=\"javascript:window.location.href='manage.php?mod&del={$afile}'\" class='am-btn am-btn-secondary'>
+$pa=$pa."/".$afile;
+echo "'>$afile</a></td><td></td><td><button type='button'  onclick=\"javascript:window.location.href='manage.php?mod&del={$pa}'\" class='am-btn am-btn-secondary'>
 		删除文件</button></td>
   </tr>"; 
 }
