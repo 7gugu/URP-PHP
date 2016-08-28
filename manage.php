@@ -106,7 +106,7 @@ if(isset($_GET['file'])&&isset($_FILES['upfile'])){
 		header("Location:manage.php?map&err=6");//upload faild
 	}
 }
-//上传mod
+//mod
 if(isset($_GET['mod'])){
 	if(isset($_GET['del'])){
 		if(is_dir(PATHS."/Servers/".$_COOKIE['ser']."/Workshop/Content/".$_GET['del'])){
@@ -171,7 +171,7 @@ if(isset($_GET['mod'])){
       </div>
     </div>
     <hr>
-	<div class="am-u-sm-6">
+	<div class="am-u-sm-12">
 <?php if(isset($_GET['err'])){
 msg($_GET['err']);
 	}

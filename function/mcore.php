@@ -587,9 +587,9 @@ $a=str_replace($path,'',$afile);
 }
 function pmod($path){
 $file=glob($path."/*",GLOB_BRACE);
-foreach($file as $afile){ 
-   echo "<tr>";
-echo "<td><a href='";
+if(count($file)){
+foreach($file as $afile){	
+   echo "<tr><td><a href='";
 $pa=str_replace("\\","/",$path);
 $pat=str_replace("\\","/",PATHS);
 $pa=str_replace($pat."/Servers/".$_COOKIE['ser']."/Workshop/Content/",'',$pa);
@@ -597,12 +597,18 @@ $afile=str_replace($path."/",'',$afile);
 if(is_dir($path."/".$afile)){
 	$p=$path."/".$afile;
 	echo "manage.php?mod&p={$p}";
+	$pa=$afile;
 }else{
 	echo "#";
+	$pa=$pa."/".$afile;
 }
-$pa=$pa."/".$afile;
 echo "'>$afile</a></td><td></td><td><button type='button'  onclick=\"javascript:window.location.href='manage.php?mod&del={$pa}'\" class='am-btn am-btn-secondary'>
 		删除文件</button></td>
+  </tr>"; 
+}
+  }else{
+	  echo "<tr>";
+echo "<td></td><td>无MOD可管理</td><td></td>
   </tr>"; 
 }
 }

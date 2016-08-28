@@ -109,6 +109,9 @@ function msg($num,$mode=0){
         case 22:
         echo "[2022]MOD上传成功";
         break;
+		case 23:
+        echo "[2023]文件删除成功";
+        break;
     default:
         echo "[XXXX]未知行为的成功";
   }
