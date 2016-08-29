@@ -110,7 +110,7 @@ if(isset($_GET['file'])&&isset($_FILES['upfile'])){
 if(isset($_GET['mod'])){
 	if(isset($_GET['del'])){
 		if(is_dir(PATHS."/Servers/".$_COOKIE['ser']."/Workshop/Content/".$_GET['del'])){
-			ddf(PATHS."/Servers/".$_COOKIE['ser']."/Workshop/Content/".$_GET['del']);
+			deldir(PATHS."/Servers/".$_COOKIE['ser']."/Workshop/Content/".$_GET['del']);
 		}else{
 			unlink(PATHS."/Servers/".$_COOKIE['ser']."/Workshop/Content/".$_GET['del']);
 		}
