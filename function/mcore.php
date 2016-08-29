@@ -74,6 +74,8 @@ $ss=query("select * from server where sid='{$sid}'");
 			$query=query("select * from server where sid='{$sid}'");
 			$rom=mysqli_fetch_array($query);
 			if(check($rom['rport'])){
+				rcon("save",1,$rom['rport'],$rom['rpw']);
+				sleep(1);
 			rcon("shutdown",1,$rom['rport'],$rom['rpw']);
 			}else{
 $port=$rom['port']+1;

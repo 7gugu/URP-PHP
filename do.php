@@ -74,16 +74,17 @@ sleep(2);
   @socket_close($sock);
 return $sock;
    }
+   query("update server set switch='1'where name='update'");
 $cron=mysqli_fetch_array(query("select * from cron where name='cron'"));
 $rocket=mysqli_fetch_array(query("select * from cron where name='rocket'"));
 $time=mysqli_fetch_array(query("select * from cron where name='time'"));
 if($cron['switch']==1){
-sleep($cron['time']);
+//sleep($cron['time']);
 	$rs=query("select * from server");
 while($rows = mysqli_fetch_array($rs)){
-    rcon("我们将于10s后重启服务器!!!",1,$rows['rport'],$rows['rpw']);
-    sleep(10);
 	if(check($rows['port'])){
+		rcon("save",1,$rows['rport'],$rows['rpw']);
+		sleep(1);
        rcon("shutdown",1,$rows['rport'],$rows['rpw']);
 }elseif($rows['state']==1){
 	$port=$rows['port']+1;
@@ -96,6 +97,7 @@ if($rocket['switch']==1){
 rocket_download($rocket['key']);
 getzip(PATHS."/Rocket.zip",PATHS."/unturned_data/Managed/");
 }
+
 $rs=query("select * from server");
 while($rows = mysqli_fetch_array($rs)){
 	    $rows = mysqli_fetch_array (query("select * from server where port='{$rows['port']}'"));
@@ -123,4 +125,5 @@ query("update server set time='{$date}'where port='{$rows['port']}'");
 }
 }
 }
+   query("update server set switch='0'where name='update'");
 ?>
