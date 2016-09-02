@@ -188,7 +188,7 @@ $err=$_GET['err'];
 			<td>Socket: fsockopen()</td>
 			<td>必须</td>
 			<td><?php echo checkfunc('fsockopen',true); ?></td>
-			<td>Socket，例如模拟多线程签到</td>
+			<td>Socket，用以模拟控制台</td>
 		</tr>
 		<tr>
 			<td>Zip</td>
@@ -364,7 +364,7 @@ if($buf=="OK"){
   <?php }else{
 	  echo "<li><h3><font color='red'>验证失败</font><h3></li>";
   ?>
-  	    <button class='am-btn am-btn-secondary' type='button' onclick="javascript:window.location.href='install.php?step4&f'">验证>></button>
+  	    <button class='am-btn am-btn-secondary' type='button' onclick="javascript:window.location.href='install.php?step4'">验证>></button>
   <?php } ?>
   </ul>
 </div>
