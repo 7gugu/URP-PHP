@@ -44,7 +44,6 @@ echo "
 		 <li><a href='manage.php?plugin'><span class='am-icon-plug'></span>插件管理</a></li>
 		  <li><a href='manage.php?map'><span class='am-icon-map-o'></span>上传地图</a></li>
 		  <li><a href='manage.php?mod'><span class='am-icon-wrench'></span>上传MOD</a></li>
-		  <li><a href='manage.php?log'><span class='am-icon-file'></span>日志查询</a></li>
 		  <li><a href='manage.php?players'><span class='am-icon-user'></span>在线玩家</a></li>
       </ul>  
 	   <div class='am-panel am-panel-default admin-sidebar-panel'>
