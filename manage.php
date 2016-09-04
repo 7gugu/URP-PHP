@@ -161,35 +161,6 @@ exit();
   <link rel="stylesheet" href="assets/css/amazeui.min.css"/>
   <link rel="stylesheet" href="assets/css/admin.css">
 </head>
-<script language="javascript"> 
-var xmlHttp; 
-function createXMLHttpRequest(){ 
-if(window.ActiveXObject){ 
-xmlHttp = new ActiveXObject("microsoft.XMLHTTP"); 
-} 
-else if(window.XMLHttpRequest){ 
-xmlHttp = new XMLHttpRequest(); 
-} 
-
-} 
-function sendRequest(){ 
-createXMLHttpRequest(); 
-var name = '<?php echo $_COOKIE['ser'];?>'; 
-url = "manage.php?read="+name; 
-xmlHttp.onreadystatechange = callback; 
-xmlHttp.open('GET',url,true); 
-xmlHttp.send(null); 
-} 
-function callback(){ 
-if(xmlHttp.readyState == 4){ 
-if(xmlHttp.status == 200){ 
-document.getElementById("showcommand").innerHTML = xmlHttp.responseText; 
-document.getElementById('showcommand').scrollTop=document.getElementById('showcommand').scrollHeight;
-} 
-} 
-} 
-
-</script> 
 <body>
  <!-- header start -->
 <?php require 'function/header.php';?>
@@ -548,14 +519,40 @@ if(isset($_GET['order'])){
 	} 
 	echo " method='POST'  >
 <div class='am-form-group'>
-<script>
+<script language='javascript'> 
+var xmlHttp; 
+function createXMLHttpRequest(){ 
+if(window.ActiveXObject){ 
+xmlHttp = new ActiveXObject('microsoft.XMLHTTP'); 
+} 
+else if(window.XMLHttpRequest){ 
+xmlHttp = new XMLHttpRequest(); 
+} 
+
+} 
+function sendRequest(){ 
+createXMLHttpRequest(); 
+var name = '{$_COOKIE['ser']}'; 
+url = 'manage.php?read='+name; 
+xmlHttp.onreadystatechange = callback; 
+xmlHttp.open('GET',url,true); 
+xmlHttp.send(null); 
+} 
+function callback(){ 
+if(xmlHttp.readyState == 4){ 
+if(xmlHttp.status == 200){ 
+document.getElementById('showcommand').innerHTML = xmlHttp.responseText; 
+document.getElementById('showcommand').scrollTop=document.getElementById('showcommand').scrollHeight;
+} 
+} 
+} 
 window.onload=sendRequest();
 </script>
 			<div class='am-u-sm-12 '>
       <label for='doc-ipt-file-1'>命令行</label>
 	   <pre id='showcommand' class='am-pre-scrollable'>
 	   </pre>
-      <input id='command' name='command' type='text' id='doc-ipt-file-1' >
+      <input id='command' name='command' type='text' onkeydown='sendRequest()' id='doc-ipt-file-1' >
 	       <p class='am-form-help'>我们推荐您使用Windows自带的Telnet来连接服务器,此处仅仅是提供一个入口给大家临时使用</p>
            <button type='submit' class='am-btn am-btn-success' {$dis}>发送</button>   
 	   
