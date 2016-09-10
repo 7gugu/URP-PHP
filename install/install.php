@@ -9,10 +9,18 @@ if(isset($_GET['i'])&&isset($_POST['gamepos'])){
 	$gamepos=str_ireplace("unturned.exe","",$_POST['gamepos']);
 		$sql  = str_ireplace("define(\"PATHS\",\"gamepath\");","define(\"PATHS\",\"{$gamepos}\");", file_get_contents(SYSTEM_ROOT.'/config/config.php'));
 		$sql  = str_ireplace("define(\"DBIP\",\"localhost\");","define(\"DBIP\",\"{$_POST['dbip']}\");",$sql);
+		if($_POST['ip']!=""){
         $sql  = str_ireplace("define(\"IP\",\"localhost\");","define(\"IP\",\"{$_POST['ip']}\");",$sql); 		
+		}
 		$sql  = str_ireplace("define(\"DBUSERNAME\",\"root\");","define(\"DBUSERNAME\",\"{$_POST['dbusername']}\");",$sql); 
 		$sql  = str_ireplace("define(\"DBPASSWORD\",\"root\");","define(\"DBPASSWORD\",\"{$_POST['dbpassword']}\");",$sql); 
 		$sql  = str_ireplace("define(\"DBNAME\",\"urp\");","define(\"DBNAME\",\"{$_POST['dbname']}\");",$sql); 
+		if($_POST['dbport']==""||$_POST['dbport']==3306){
+		    	$sql  = str_ireplace("define(\"DBPORT\",\"port\");","define(\"DBPORT\",\"3306\");",$sql); 
+		}else{
+		    	$sql  = str_ireplace("define(\"DBPORT\",\"port\");","define(\"DBPORT\",\"{$_POST['dbport']}\");",$sql); 
+		}
+		
 		file_put_contents(SYSTEM_ROOT.'/config/config.php',$sql);
 		$connect=mysqli_connect(DBIP,DBUSERNAME,DBPASSWORD,DBNAME) or die(header("Location: install.php?step3&err=1"));
  function query($text){
@@ -250,10 +258,15 @@ $err=$_GET['err'];
 	<span class="am-input-group-label">数据库名</span>
   <input type="text" name="dbname" class="am-form-field" placeholder="数据库名">
   </div>
+  <br>
+	<div class="am-input-group">
+	<span class="am-input-group-label">数据库端口</span>
+  <input type="text" name="dbport" class="am-form-field" placeholder="数据库端口" value="3306">
+  </div>
   <hr>
   <div class="am-input-group">
   <span class="am-input-group-label">Unturned文件夹位置</span>
-  <input type="text" name="gamepos" class="am-form-field" placeholder="需要全路径">
+  <input type="text" name="gamepos" class="am-form-field" placeholder="需要全路径,如:D:\Unturned\Unturned.exe">
    <span class="am-input-group-label">\Unturned.exe</span>
 		</div>
 		<hr>
@@ -270,7 +283,7 @@ $err=$_GET['err'];
   <input type="text" name="email" class="am-form-field" placeholder="管理员邮箱">
 		</div><br>
 		<div class="am-input-group">
-  <span class="am-input-group-label">服务器IP</span>
+  <span class="am-input-group-label">服务器IP[可选]</span>
   <input type="text" name="ip" class="am-form-field" placeholder="服务器IP">
 		</div><br>
 		<button class='am-btn am-btn-success'type='submit'>下一步>></button>

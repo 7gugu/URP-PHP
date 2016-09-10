@@ -6,5 +6,6 @@ define("DBIP","localhost");
 define("DBUSERNAME","root");
 define("DBPASSWORD","root");
 define("DBNAME","urp");
+define("DBNAME","port");
 
 ?>

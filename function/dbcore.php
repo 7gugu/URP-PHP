@@ -1,5 +1,5 @@
 <?php 
-$connect=mysqli_connect(DBIP,DBUSERNAME,DBPASSWORD,DBNAME) ;
+$connect=mysqli_connect(DBIP,DBUSERNAME,DBPASSWORD,DBNAME,DBPORT) ;
  function query($text){
 	global $connect;
 	mysqli_query($connect,"set names 'utf8'");
