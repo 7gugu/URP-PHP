@@ -6,7 +6,8 @@ if(isset($_GET['i'])&&isset($_POST['gamepos'])){
 	define('DBUSERNAME',$_POST['dbusername']);
 	define('DBPASSWORD',$_POST['dbpassword']);
 	define('DBNAME',$_POST['dbname']);
-		$sql  = str_ireplace("define(\"PATHS\",\"gamepath\");","define(\"PATHS\",\"{$_POST['gamepos']}\".\"\Unturned\");", file_get_contents(SYSTEM_ROOT.'/config/config.php'));
+	$gamepos=str_ireplace("unturned.exe","",$_POST['gamepos']);
+		$sql  = str_ireplace("define(\"PATHS\",\"gamepath\");","define(\"PATHS\",\"{$gamepos}\");", file_get_contents(SYSTEM_ROOT.'/config/config.php'));
 		$sql  = str_ireplace("define(\"DBIP\",\"localhost\");","define(\"DBIP\",\"{$_POST['dbip']}\");",$sql);
         $sql  = str_ireplace("define(\"IP\",\"localhost\");","define(\"IP\",\"{$_POST['ip']}\");",$sql); 		
 		$sql  = str_ireplace("define(\"DBUSERNAME\",\"root\");","define(\"DBUSERNAME\",\"{$_POST['dbusername']}\");",$sql); 
@@ -253,7 +254,7 @@ $err=$_GET['err'];
   <div class="am-input-group">
   <span class="am-input-group-label">Unturned文件夹位置</span>
   <input type="text" name="gamepos" class="am-form-field" placeholder="需要全路径">
-   <span class="am-input-group-label">\Unturned</span>
+   <span class="am-input-group-label">\Unturned.exe</span>
 		</div>
 		<hr>
 		  <div class="am-input-group">
