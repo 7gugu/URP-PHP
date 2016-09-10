@@ -202,6 +202,30 @@ header("Location: admin_panel.php?mplugin&err=21");
 	}
 }
 }
+//rocket update
+if(isset($_GET['rocket'])){
+    set_time_limit(0);
+$rocket=mysqli_fetch_array(query("select * from cron where name='rocket'"));
+	$rs=query("select * from server");
+while($rows = mysqli_fetch_array($rs)){
+	if($rows['state']==1){
+	$port=$rows['port']+1;
+exec("for /f \"tokens=1-5 delims= \" %a in ('\"netstat -ano|findstr \"^:{$port}\"\"') do taskkill /f /pid %d");
+ }
+query("update server set state='0'where port='{$rows['port']}'");
+}
+rocket_download($rocket['key']);
+getzip(PATHS."/Rocket.zip",PATHS."/unturned_data/Managed/");
+$rs=query("select * from server");
+while($rows = mysqli_fetch_array($rs)){
+	    $rows = mysqli_fetch_array (query("select * from server where port='{$rows['port']}'"));
+		if($rows!=false){
+	   rcon($rows['sid'],0,1935,'');
+	  query("update server set state='1'where port='{$rows['port']}'");
+		}
+}
+header("Location: admin_panel.php?cron&suc=24");
+}
 ?>
 <!doctype html>
 <html class="no-js fixed-layout">
@@ -498,8 +522,12 @@ echo "<li class='am-disabled'><a href='admin_panel.php?muser&page=";echo $page+1
   echo "value='{$row['key']}'";
   }
   echo ">
-</div>";
-echo "<br>
+</div><br>";
+if($row['key']!==''){
+    echo "<a href='admin_panel.php?rocket'>立即更新Rocket</a>";
+}
+echo "
+<br>
 <button type='submit' class='am-btn am-btn-success'>保存秘钥</button>
   </form>
   </div>

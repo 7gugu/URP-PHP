@@ -112,6 +112,9 @@ function msg($num,$mode=0){
 		case 23:
         echo "[2023]文件删除成功";
         break;
+        case 24:
+        echo "[2024]ROCKET更新成功";
+        break;
     default:
         echo "[XXXX]未知行为的成功";
   }
