@@ -2,6 +2,18 @@
 /*****************
    函数库
 *****************/
+function rocket_download($key) {
+$url="http://api.rocketmod.net/download/unturned/latest/".$key;   
+$dir=PATHS.'/Rocket.zip';
+$ch = curl_init($url);
+$fp = fopen($dir, "w+");
+curl_setopt($ch, CURLOPT_FILE, $fp);
+curl_setopt($ch, CURLOPT_HEADER, 0);
+$res=curl_exec($ch);
+curl_close($ch);
+fclose($fp);
+return $res;
+}
 function rcon($operate,$mode,$port,$rpw){
 //error_reporting(E_ALL);
 //port 服务器Rcon或者启动模块[1935]端口 Rpw Rcon密码 operate 指令

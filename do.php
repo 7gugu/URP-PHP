@@ -1,49 +1,11 @@
 <?php 
 require 'config/config.php';
 require 'function/dbcore.php';
+require 'function/mcore.php';
 //ignore_user_abort(true);
 set_time_limit(0);
 if(isset($_GET['cron'])){
 	header("Location:admin_panel.php?cron&suc=11");
-}
-function rocket_download($key) {
-$url="http://api.rocketmod.net/download/unturned/latest/".$key;   
-$dir=PATHS.'/Rocket.zip';
-$ch = curl_init($url);
-$fp = fopen($dir, "w+");
-curl_setopt($ch, CURLOPT_FILE, $fp);
-curl_setopt($ch, CURLOPT_HEADER, 0);
-$res=curl_exec($ch);
-curl_close($ch);
-fclose($fp);
-return $res;
-}
-	function getzip($filename, $path) {
- if(!file_exists($filename)){
- } 
- $filename = iconv("utf-8","gb2312",$filename);
- $path = iconv("utf-8","gb2312",$path);
- $resource = zip_open($filename);
- $i = 1;
- while ($dir_resource = zip_read($resource)) {
-  if (zip_entry_open($resource,$dir_resource)) {
-   $file_name = $path.zip_entry_name($dir_resource);
-   $file_path = substr($file_name,0,strrpos($file_name, "/"));
-   if(!is_dir($file_path)){
-    mkdir($file_path,0777,true);
-   }
-   if(!is_dir($file_name)){
-    $file_size = zip_entry_filesize($dir_resource);
-    if($file_size<(1024*1024*6)){
-     $file_content = zip_entry_read($dir_resource,$file_size);
-     file_put_contents($file_name,$file_content);
-    }
-   }
-   zip_entry_close($dir_resource);
-  }
- }
- zip_close($resource); 
- return true;
 }
 function rcon($operate,$mode,$port,$rpw){
 $address = 'localhost';
