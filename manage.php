@@ -222,10 +222,10 @@ echo "<table class='am-table am-table-striped '>
             <td>
 			<div class='am-u-lg-8'>
 			";
-			echo "
-			<button type='submit'  onclick=\"javascript:window.location.href='manage.php?start'\"class='am-btn am-btn-success'{$on}>启动服务器</button>
-            <button type='submit' onclick=\"javascript:window.location.href='manage.php?stop'\" class='am-btn am-btn-danger'{$off}>关闭服务器</button> 
-            <button type='submit' onclick=\"javascript:window.location.href='manage.php?restart'\" class='am-btn am-btn-warning'{$off}>重启服务器</button> 			
+echo "
+			<input type='submit'  onclick=\"javascript:this.disabled=true;this.value='启动中·.....';window.location.href='manage.php?start';\" class='am-btn am-btn-success ' value='启动服务器'{$on} ></input>
+            <button type='submit' onclick=\"javascript:this.disabled=true;this.value='关闭中·.....';window.location.href='manage.php?stop'\" class='am-btn am-btn-danger'{$off}>关闭服务器</button> 
+            <button type='submit' onclick=\"javascript:this.disabled=true;this.value='重启中·.....';window.location.href='manage.php?restart'\" class='am-btn am-btn-warning'{$off}>重启服务器</button> 			
 			";
 			echo "
 			</div>
