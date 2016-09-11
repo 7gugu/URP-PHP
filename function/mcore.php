@@ -116,12 +116,11 @@ $port=$rom['port']+1;
 			$fpath = PATHS."\Servers\\{$sid}\\{$file}";
 			if(is_file( $fpath )){
 				$strContent = file_get_contents($fpath);
-				$content = explode("\n", $strContent);
 				$re=query("select * from server where sid='{$sid}'");
 				$row=mysqli_fetch_array($re);
 				
 				if($switch=="players"){	
-			$content[1]="Maxplayers ".$text;
+			$strContent = str_ireplace('Maxplayers '.$row['players'],'Maxplayers '.$text,$strContent);
            query("update server set players='{$text}'where sid='{$sid}'");   
 				}
 				if($switch=="rpw"){	
@@ -137,47 +136,52 @@ $strContent .= "</RocketSettings>\n";
            query("update server set rpw='{$text}'where sid='{$sid}'");   
 				}
 				if($switch=="servername"){	
-			$content[0]="Name ".$text;
+			$strContent = str_ireplace('Name '.$row['name'],'Name '.$text,$strContent);
            query("update server set name='{$text}'where sid='{$sid}'");   
 				}
 				if($switch=="welcome"){	
 				//$text=iconv("GB2312","UTF-8//IGNORE",$text);
-			$content[7]="welcome ".$text;
+			$strContent = str_ireplace('Welcome '.$row['welcome'],'Welcome '.$text,$strContent);
            query("update server set welcome='{$text}'where sid='{$sid}'");   
 				}
 				if($switch=="difficult"){	
-			$content[4]="Mode ".$text;
+			$strContent = str_ireplace('Mode '.$row['difficult'],'Mode '.$text,$strContent);
            query("update server set difficult='{$text}'where sid='{$sid}'");   
 				}
 				if($switch=="map"){	
-			$content[3]="Map ".$text;
+			$strContent = str_ireplace('Map '.$row['map'],'Map '.$text,$strContent);
            query("update server set map='{$text}'where sid='{$sid}'");   
 				}
 				if($switch=="password"){	
-			$content[8]="Password ".$text;
+			$strContent = str_ireplace('Password '.$row['password'],'Password '.$text,$strContent);
            query("update server set password='{$text}'where sid='{$sid}'");   
 				}
 				
 				if($switch=="view"){	
-			$content[5]="Perspective ".$text;
+			$strContent = str_ireplace('Perspective '.$row['view'],'Perspective '.$text,$strContent);
            query("update server set view='{$text}'where sid='{$sid}'");   
 				}
 		        if($switch=="cheat"){
+                     	if($row['cheat']==1){
+							$c1="enabled";
+						}else{
+							$c1="disabled";
+						}	
                         if($text==1){
 							$c2="enabled";
 						}else{
 							$c2="disabled";
 						}						
-			$content[9]="cheats ".$c2;
+			$strContent = str_ireplace('cheats '.$c1,'cheats '.$c2,$strContent);
            query("update server set cheat='{$text}'where sid='{$sid}'");   
 				}
 		  if($switch=="mode"){	
-			$content[6]=$text;
+			$strContent = str_ireplace($row['mode'],$text,$strContent);
            query("update server set mode='{$text}'where sid='{$sid}'");   
 				}
-				$con = implode("\n", $content);
+				//echo $strContent;
 		   $write=fopen($fpath,"w");
-        fwrite($write,$con);
+        fwrite($write,$strContent);
 		  fclose($write);
  //echo "成功";
 }else{
