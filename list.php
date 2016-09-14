@@ -41,6 +41,20 @@ if(isset($_GET['code'])&&isset($_POST['inser'])&&isset($_POST['inserpassword']))
 	}
 	
 }
+if(isset($_GET['udate'])&&isset($_POST['date'])){
+$date=$_POST['date'];
+if($date==""){
+	$date=0;
+}
+$sid=$_GET['udate'];
+	query("update server set time='{$date}'where sid='{$sid}'");
+    $row=mysqli_affected_rows($connect);
+	if($row>0){
+		header("Location:list.php?suc");
+	}else{
+		header("Location:list.php?err");
+	}
+	}
 ?>
 <!doctype html>
 <html class="no-js fixed-layout">
@@ -131,7 +145,32 @@ return true;
   </fieldset>
 		  </form>
 		  </div>
+		   <?php if($_SESSION['sec']==1){ ?>
+		  <div class="am-u-sm-6">
+		  <form method="POST" action="list.php?udate=<?php echo $sid;?>" onsubmit='return check(this)'>
+		   <script type='text/javascript'>
+function check(form){
+if(form.date.value==''){
+alert('时间不能为空！');
+form.date.focus();
+return false;
+}
+return true;
+}
+    </script>
+		  <fieldset>
+    <legend>修改[<?php echo $row['name']?>]服务器可用时间</legend>
+	 <div class='am-form-group'>
+       <label for='doc-select-1'>可用时间</label>
+    <input id='date' name='date' type='text' value="<?php echo $row['time'];?>" class='am-form-field'>
+    </div>
+	<hr>
+<button type='submit' class='am-btn am-btn-success' >更新</button>
+  </fieldset>
+		  </form>
+		  </div>
 		  <?php }
+		  }
           ?>
 		  </div>
         </div>
