@@ -385,6 +385,12 @@ if(isset($_GET['information'])){
           <option value='normal'>Normal</option>
           <option value='easy'>Easy</option>
 		   <option value='hard'>Difficult</option>"; 
+			 }else{
+			      echo"
+				 <option value='easy'>Easy</option>
+          <option value='normal'>Normal</option>
+		 <option value='hard'>Difficult</option>
+		    <option value='gold'>Gold</option>";
 			 }
 			echo"
         </select>
