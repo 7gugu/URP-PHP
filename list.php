@@ -50,9 +50,9 @@ $sid=$_GET['udate'];
 	query("update server set time='{$date}'where sid='{$sid}'");
     $row=mysqli_affected_rows($connect);
 	if($row>0){
-		header("Location:list.php?suc");
+		header("Location:list.php?suc=25");
 	}else{
-		header("Location:list.php?err");
+		header("Location:list.php?err=24");
 	}
 	}
 ?>
