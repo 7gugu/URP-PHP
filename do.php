@@ -7,26 +7,7 @@ set_time_limit(0);
 if(isset($_GET['cron'])){
 	header("Location:admin_panel.php?cron&suc=11");
 }
-function rcon($operate,$mode,$port,$rpw){
-$address = 'localhost';
-$socket = @socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
-if ($socket === false) {
-	echo "socket_create() failed: reason: " . socket_strerror(socket_last_error()) . "\n";
-} 
-$result = @socket_connect($socket, $address, $port);
-if($result === false) {
-	echo "socket_connect() failed.\nReason: ($result) " . socket_strerror(socket_last_error($socket)) . "\n";
-	}	
-	if($mode==1){
-$in = "login {$rpw} \r\n";
-@socket_write($socket, $in, strlen($in));
-	}
-sleep(1);
-$in=$operate."\r\n";
-@socket_write($socket, $in, strlen($in));
-sleep(2);
-@socket_close($socket);		
-		}
+
 
  function check($port){
    $ip="localhost";
