@@ -115,6 +115,9 @@ function msg($num,$mode=0){
         case 24:
         echo "[2024]ROCKET更新成功";
         break;
+         case 25:
+        echo "[2025]服务器可用时间更新成功";
+        break;
     default:
         echo "[XXXX]未知行为的成功";
   }
@@ -192,6 +195,9 @@ echo "<div class='am-alert am-alert-warning' data-am-alert>
         break;
         case 23:
         echo "[2023]MOD上传失败";
+        break;
+        case 24:
+        echo "[2024]服务器可用时间更新失败";
         break;
     default:
         echo "[XXXX]出现了一个未知错误,请尽快联系管理员解决";
