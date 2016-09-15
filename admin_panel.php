@@ -184,9 +184,9 @@ header("Location: admin_panel.php?mplugin&err=21");
 	if(isset($_GET['update'])&&isset($_POST['text'])){
 	$text=$_POST['text'];
 	query("update plugin set state='{$text}'where name='{$_POST['name']}'");
-	echo "update plugin set state='{$text}'where name='{$_POST['name']}'";
+//	echo "update plugin set state='{$text}'where name='{$_POST['name']}'";
 	$row=mysqli_affected_rows($connect);
-	echo $row;exit();
+//	echo $row;exit();
 if($row>0)
 {
 	header("Location: admin_panel.php?mplugin&suc=20");
@@ -226,13 +226,67 @@ while($rows = mysqli_fetch_array($rs)){
 }
 header("Location: admin_panel.php?cron&suc=24");
 }
+//game update
+if(isset($_GET['game'])){
+	$roms=mysqli_fetch_array(query("select * from cron where name='cmdpath'"));
+	if(isset($_POST['cmduser'])){
+		$cmduser=$_POST['cmduser'];
+	    query("update cron set `key`='{$cmduser}' where `name`='cmduser'");
+	    $row_user=mysqli_affected_rows($connect);
+	}
+	if(isset($_POST['cmdpaw'])){
+		$cmdpaw=$_POST['cmdpaw'];
+	    query("update cron set `key`='{$cmdpaw}' where `name`='cmdpaw'");
+	    $row_paw=mysqli_affected_rows($connect);
+	}
+	if(isset($_POST['cmdpath'])){
+		$cmdpath=$_POST['cmdpath'];
+		if(file_exists($cmdpath."\\steamcmd.exe")){
+			$cmdpath=str_ireplace("\\","/",$cmdpath);
+	    query("update cron set `key`='{$cmdpath}' where `name`='cmdpath'");
+	    $row_path=mysqli_affected_rows($connect);
+	}else{
+		$row_path="error";
+	}
+	if($cmdpath==""){
+		query("update cron set `key`='' where `name`='cmdpath'");
+	    $row_path=mysqli_affected_rows($connect);
+	}
+	
+	}
+	echo $row_path;
+	echo $row_user;
+	echo $row_paw;
+	if($row_user>0&&$row_paw>0&&$row_path!="error"){
+		if($row_path>0){
+			query("update cron set `switch`='1' where `name`='cmdpath'");
+	    $row=mysqli_affected_rows($connect);
+		if($row>0){
+			header("Location: admin_panel.php?cron&suc");
+		}else{
+			header("Location: admin_panel.php?cron&err1");
+		}	
+		}elseif($row_path=="error"){
+			header("Location: admin_panel.php?cron&err&path");
+		}else{
+			header("Location: admin_panel.php?cron&err");
+	}
+	}elseif($row_user==0||$row_paw==0||$row_path==0){
+		if($cmduser!=""&&$cmdpaw!=""&&$cmdpath!=""){
+			query("update cron set `switch`='1' where `name`='cmdpath'");
+		}
+		header("Location: admin_panel.php?cron&suc");
+	}else{
+		header("Location: admin_panel.php?cron&err1");
+	}
+}
 ?>
 <!doctype html>
 <html class="no-js fixed-layout">
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>URP | 系统管理</title>
+  <title>Miaoshop | 系统管理</title>
   <meta name="description" content="系统管理">
   <meta name="keywords" content="list">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -289,6 +343,7 @@ msg($_GET['suc'],1);
 	 <div class='am-form-group'>
       <label for='doc-select-1'>可用时间</label>
       <select name='time' id='doc-select-1'>
+        <option value='1'>一天[1]</option>
         <option value='7'>一周[7]</option>
         <option value='30'>一个月[30]</option>
         <option value='90'>一个季度[90]</option>
@@ -524,7 +579,7 @@ echo "<li class='am-disabled'><a href='admin_panel.php?muser&page=";echo $page+1
   echo ">
 </div><br>";
 if($row['key']!==''){
-    echo "<a href='admin_panel.php?rocket'>立即更新Rocket</a>";
+    echo "<a href='admin_panel.php?rocket'>立即更新Rocket</a><br>";
 }
 echo "
 <br>
@@ -532,8 +587,6 @@ echo "
   </form>
   </div>
 </section>
-</div>
-<div class='am-u-sm-6'>
 <section class='am-panel am-panel-default'>
   <header class='am-panel-hd'>
     <h3 class='am-panel-title'>时间计数</h3>
@@ -554,6 +607,64 @@ echo "
   <button type='submit' onclick=\"javascript:window.location.href='admin_panel.php?satime'\" class='am-btn am-btn-secondary' {$ton}>激活</button>
   <button type='submit' onclick=\"javascript:window.location.href='admin_panel.php?sotime'\" class='am-btn am-btn-danger' {$toff}>禁用</button>
     </div>
+  </div>
+</section>
+</div>
+<div class='am-u-sm-6'>
+<section class='am-panel am-panel-default'>
+  <header class='am-panel-hd'>
+    <h3 class='am-panel-title'>游戏更新</h3>
+  </header>
+  <div class='am-panel-bd'>
+     <div class='am-form-group'>
+	 <h3>状态</h3>
+	  <h4 class='am-article-meta'>保存参数便会启用</h4>
+ <strong>
+ ";
+ $rom=mysqli_fetch_array(query("select * from cron where name='cmdpath'"));
+ if($rom['key']==""){
+	 query("update cron set `switch`='0' where `name`='cmdpath'");
+ }
+ $rom=mysqli_fetch_array(query("select * from cron where name='cmduser'"));
+  if($rom['key']==""){
+	 query("update cron set `switch`='0' where `name`='cmdpath'");
+ }
+ $rom=mysqli_fetch_array(query("select * from cron where name='cmdpaw'"));
+  if($rom['key']==""){
+	 query("update cron set `switch`='0' where `name`='cmdpath'");
+ }
+ $rom=mysqli_fetch_array(query("select * from cron where name='cmdpath'"));
+ if($rom['switch']==1){
+	 echo "<font color='green'>[已激活]</font>";
+ }else{
+	 echo "<font color='red'>[已禁用]</font>";
+ }
+ echo "
+ </strong>
+ <hr>
+	<h3>参数</h3>
+	<form method='POST' action='admin_panel.php?game'>
+	<input type='text' name='cmdpath' class='am-form-field' value='";
+	$rom=mysqli_fetch_array(query("select * from cron where name='cmdpath'"));
+	echo $rom['key'];
+	echo "' placeholder='steamCMD的位置'>
+	<br>
+	<input type='text' name='cmduser' class='am-form-field' value='";
+	$rom=mysqli_fetch_array(query("select * from cron where name='cmduser'"));
+	echo $rom['key'];
+	echo "' placeholder='steam用户名'>
+	<br>
+	<input type='text' name='cmdpaw' class='am-form-field' value='";
+	$rom=mysqli_fetch_array(query("select * from cron where name='cmdpaw'"));
+	echo $rom['key'];
+	echo "' placeholder='steam密码'>
+	<br>
+	<input type='text' name='' class='am-form-field' placeholder='游戏的位置' value='";
+	echo PATHS;
+	echo "'disabled><br>
+	<button type='submit' class='am-btn am-btn-success'>保存设置</button>
+	</form>
+	</div>
   </div>
 </section>
 </div>

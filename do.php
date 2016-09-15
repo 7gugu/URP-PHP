@@ -7,40 +7,25 @@ set_time_limit(0);
 if(isset($_GET['cron'])){
 	header("Location:admin_panel.php?cron&suc=11");
 }
-
-
- function check($port){
-   $ip="localhost";
-	sleep(10);
-    $sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
-  $sock=@ socket_connect($sock,$ip, $port);
-  @socket_close($sock);
-return $sock;
-   }
    query("update server set switch='1'where name='update'");
-$cron=mysqli_fetch_array(query("select * from cron where name='cron'"));
 $rocket=mysqli_fetch_array(query("select * from cron where name='rocket'"));
-$time=mysqli_fetch_array(query("select * from cron where name='time'"));
-if($cron['switch']==1){
-//sleep($cron['time']);
+$cmd=mysqli_fetch_array(query("select * from cron where name='cmd'"));
 	$rs=query("select * from server");
 while($rows = mysqli_fetch_array($rs)){
-	if(check($rows['port'])){
-		rcon("save",1,$rows['rport'],$rows['rpw']);
-		sleep(1);
-       rcon("shutdown",1,$rows['rport'],$rows['rpw']);
-}elseif($rows['state']==1){
 	$port=$rows['port']+1;
-exec("for /f \"tokens=1-5 delims= \" %a in ('\"netstat -ano|findstr \"^:{$port}\"\"') do taskkill /f /pid %d");
- }
+popen("for /f \"tokens=1-5 delims= \" %a in ('\"netstat -ano|findstr \"^:{$port}\"\"') do taskkill /f /pid %d",'r');
 query("update server set state='0'where port='{$rows['port']}'");
 }
+if($cmd['switch']==1){
+	$user=mysqli_fetch_array(query("select * from cron where name='cmduser'"));
+	$paw=mysqli_fetch_array(query("select * from cron where name='cmdpaw'"));
+popen("start ".$cmd['key']."\\steamcmd.exe +login ".$user." ".$paw." +force_install_dir ".PATHS." +app_update 304930 validate +exit","r");
 sleep(300);
+}
 if($rocket['switch']==1){
 rocket_download($rocket['key']);
 getzip(PATHS."/Rocket.zip",PATHS."/unturned_data/Managed/");
 }
-
 $rs=query("select * from server");
 while($rows = mysqli_fetch_array($rs)){
 	    $rows = mysqli_fetch_array (query("select * from server where port='{$rows['port']}'"));
@@ -48,7 +33,6 @@ while($rows = mysqli_fetch_array($rs)){
 	   rcon($rows['sid'],0,1935,'');
 	  query("update server set state='1'where port='{$rows['port']}'");
 		}
-}
 }
 if($time['switch']==1){
 	$rs=query("select * from server");
@@ -62,11 +46,10 @@ while($rows = mysqli_fetch_array($rs)){
 	}elseif($date<=0){
 		rcon("save",1,$rows['rport'],$rows['rpw']);
 		$port=$rows['port']+1;
-exec("for /f \"tokens=1-5 delims= \" %a in ('\"netstat -ano|findstr \"^:{$port}\"\"') do taskkill /f /pid %d");
+popen("for /f \"tokens=1-5 delims= \" %a in ('\"netstat -ano|findstr \"^:{$port}\"\"') do taskkill /f /pid %d",'r');
 	}else{
 query("update server set time='{$date}'where port='{$rows['port']}'");
 }
 }
 }
-   query("update server set switch='0'where name='update'");
 ?>
