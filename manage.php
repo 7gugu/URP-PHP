@@ -133,7 +133,9 @@ if(isset($_GET['mod'])){
 //ajax read
 if(isset($_GET['read'])){
  $ser=$_GET['read'];
-$file = fopen(PATHS."\Servers\\$ser\\Rocket\\Logs\\Rocket.log", "r") or exit("打开log文件失败,请联系管理员!");
+ $path=PATHS."\Servers\\$ser\\Rocket\\Logs\\Rocket.log";
+  $path = iconv("utf-8","gb2312",$path);
+$file = fopen($path, "r") or exit("打开log文件失败,请联系管理员!");
 while(!feof($file))
 {
  $rs=fgets($file);
@@ -360,7 +362,7 @@ if(isset($_GET['information'])){
             <td>游戏难度</td>
             <td>
 			<div class='am-u-lg-6'>
-			 <select name='difficult' id='doc-select-1'>";
+			 <select name='difficult' id='doc-select-1'data-am-selected>";
 			 if($row['difficult']=='normal'){
 				 echo"
           <option value='normal'>Normal</option>
@@ -404,7 +406,7 @@ if(isset($_GET['information'])){
             <td>模式</td>
             <td>
 			<div class='am-u-lg-6'>
-			 <select name='mode' id='doc-select-1'>";
+			 <select name='mode' id='doc-select-1'data-am-selected>";
 			 if($row['mode']=='pvp'){
 				 echo"<option value='pvp'>PVP</option>
           <option value='pve'>PVE</option>
@@ -424,7 +426,7 @@ if(isset($_GET['information'])){
             <td>地图 [{$row['map']}]</td>
             <td>
 			<div class='am-u-lg-6'>
-			 <select name='map' id='doc-select-1'>
+			 <select name='map' id='doc-select-1'data-am-selected>
 			
 			 
 			 ";
@@ -450,7 +452,7 @@ if(isset($_GET['information'])){
             <td>视角</td>
             <td>
 			<div class='am-u-lg-6'>
-	 <select name='view' id='doc-select-1'>";
+	 <select name='view' id='doc-select-1'data-am-selected>";
 	  if($row['view']=='both'){
 				 echo"
 				 <option value='both'>both</option>
@@ -480,7 +482,7 @@ if(isset($_GET['information'])){
             <td>作弊</td>
             <td>
 			<div class='am-u-lg-6'>
-	 <select name='cheat' id='doc-select-1'>";
+	 <select name='cheat' id='doc-select-1'data-am-selected>";
 		   if($row['cheat']=='1'){
 				 echo"<option value='1'>开启</option>
 				 <option value='0'>关闭</option>

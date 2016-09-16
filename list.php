@@ -203,7 +203,7 @@ $row = mysqli_fetch_array( query("SELECT COUNT(*) FROM server where user='{$_SES
     
 }else{
 	$result=query("select * from server  limit $startCount,$perNumber"); 
-	$row = mysqli_fetch_array( query("SELECT COUNT(*) FROM server where user='{$_SESSION['username']}'") );
+	$row = mysqli_fetch_array( query("SELECT COUNT(*) FROM server ") );
 }
 if($row[0]==0){
 	?>

@@ -331,7 +331,7 @@ msg($_GET['suc'],1);
 			  <form method='POST' class='am-form' action='admin_panel.php?cinser'>
 		<fieldset>
     <legend>生成激活码</legend>
-	  <div class='am-form-group'>
+	  <div class='am-form-group'data-am-selected>
       <label for='doc-select-1'>生成数量</label>
       <select name='num' id='doc-select-1'>
         <option value='5'>5个</option>
