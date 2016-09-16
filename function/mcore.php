@@ -661,6 +661,10 @@ function deldir($dir) {
     return false;
   }
 }
+
+function rsupdate($key){
+    
+}
         /*
         Ucon 2.0 manage core
         Power by 7gugu
