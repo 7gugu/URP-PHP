@@ -6,6 +6,7 @@ require 'function/mcore.php';
 set_time_limit(0);
 $rocket=mysqli_fetch_array(query("select * from cron where name='rocket'"));
 $cmd=mysqli_fetch_array(query("select * from cron where name='cmdpath'"));
+$time=mysqli_fetch_array(query("select * from cron where name='time'"));
 $api=json_decode(file_get_contents("http://api.rocketmod.net/status/unturned/".$key),true);
 $server=false;
 $rocketver=false;
