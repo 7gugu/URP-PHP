@@ -28,8 +28,12 @@ if($game['key']!=""&&$rocket['key']!=""){
 }
 $g=$api[0]['gameversion'];
 $r=$api[0]['rocketversion'];
-query("update cron set key='{$g}'where name='gamever'");
-query("update cron set key='{$r}'where name='rocketver'");
+echo "<br>";
+echo "GameVersion:".$g;
+echo "<br>";
+echo "RocketVersion:".$r;
+query("update cron set `key`='{$g}'where `name`='gamever'");
+query("update cron set `key`='{$r}'where `name`='rocketver'");
 //--------工作模块------------
 if($server==true||$rocketver==true||$server==true&&$rocketver==true){
 	$rs=query("select * from server");
