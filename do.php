@@ -15,13 +15,14 @@ $game=mysqli_fetch_array(query("select * from cron where name='gamever'"));
 $rocketver=mysqli_fetch_array(query("select * from cron where name='rocketver'"));
 if($game['key']!=""&&$rocket['key']!=""){
     if($game['key']!="Unturned"){
-    if($api[0]['gameversion']>$game['key']){
+    if($api[0]['gameversion']!=$game['key']){
         $server=true;
+		echo "1";
     }
     }
     if($rocketver['key']!="Unturned"){
-    if($api[0]['rocketversion']>$rocketver['key']){
-        $rocketver=true;
+    if($api[0]['rocketversion']!=$rocketver['key']){
+        $rocketver=true;echo "2";
     }
     }
 }else{
@@ -34,8 +35,12 @@ echo "GameVersion:".$g;
 echo "RocketVersion:".$r;
 query("update cron set `key`='{$g}'where `name`='gamever'");
 query("update cron set `key`='{$r}'where `name`='rocketver'");
+$update=mysqli_fetch_array(query("select * from cron where name='update'"));
+//var_dump($update);//sleep(60);
 //--------工作模块------------
+if($update['switch']==0){
 if($server==true||$rocketver==true||$server==true&&$rocketver==true){
+	query("update cron set `switch`='1' where `name`='update'");
     $rs=query("select * from server");
 while($rows = mysqli_fetch_array($rs)){
     $port=$rows['port']+1;
@@ -53,6 +58,7 @@ sleep(300);
 if($rocket['switch']==1&&$rocketver==true){
 rocket_download($rocket['key']);
 getzip(PATHS."/Rocket.zip",PATHS."/unturned_data/Managed/");
+sleep(60);
 }
 $rs=query("select * from server");
 while($rows = mysqli_fetch_array($rs)){
@@ -67,19 +73,24 @@ while($rows = mysqli_fetch_array($rs)){
     $date=$rows['time'];
 	//echo $date;
     $date=$date-1;
-	//echo $date;
+	echo $date;
     if($date<=-5){
         $sid=$rows['sid'];
-        ddf(PATHS."//Servers//{$sid}//");
-        query("delete from server where sid='{$sid}'");
+       ddf(PATHS."//Servers//{$sid}//");
+       query("delete from server where sid='{$sid}'");
     }elseif($date<=0){
         rcon("save",1,$rows['rport'],$rows['rpw']);
         $port=$rows['port']+1;
+		echo $port."\n";
 popen("for /f \"tokens=1-5 delims= \" %a in ('\"netstat -ano|findstr \"^:{$port}\"\"') do taskkill /f /pid %d",'r');
     }
 query("update server set `time`='{$date}'where `port`='{$rows['port']}'");
 }
-
 }
+query("update cron set `switch`='0' where `name`='update'");
+}
+sleep(10);
+}else{
+	echo "Server update\n";
 }
 ?>

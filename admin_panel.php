@@ -202,30 +202,7 @@ header("Location: admin_panel.php?mplugin&err=21");
 	}
 }
 }
-//rocket update
-if(isset($_GET['rocket'])){
-    set_time_limit(0);
-$rocket=mysqli_fetch_array(query("select * from cron where name='rocket'"));
-	$rs=query("select * from server");
-while($rows = mysqli_fetch_array($rs)){
-	if($rows['state']==1){
-	$port=$rows['port']+1;
-exec("for /f \"tokens=1-5 delims= \" %a in ('\"netstat -ano|findstr \"^:{$port}\"\"') do taskkill /f /pid %d");
- }
-query("update server set state='0'where port='{$rows['port']}'");
-}
-rocket_download($rocket['key']);
-getzip(PATHS."/Rocket.zip",PATHS."/unturned_data/Managed/");
-$rs=query("select * from server");
-while($rows = mysqli_fetch_array($rs)){
-	    $rows = mysqli_fetch_array (query("select * from server where port='{$rows['port']}'"));
-		if($rows!=false){
-	   rcon($rows['sid'],0,1935,'');
-	  query("update server set state='1'where port='{$rows['port']}'");
-		}
-}
-header("Location: admin_panel.php?cron&suc=24");
-}
+
 //game update
 if(isset($_GET['game'])){
 	$roms=mysqli_fetch_array(query("select * from cron where name='cmdpath'"));
@@ -286,7 +263,7 @@ if(isset($_GET['game'])){
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>URP | 系统管理</title>
+  <title>Miaoshop | 系统管理</title>
   <meta name="description" content="系统管理">
   <meta name="keywords" content="list">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -331,9 +308,9 @@ msg($_GET['suc'],1);
 			  <form method='POST' class='am-form' action='admin_panel.php?cinser'>
 		<fieldset>
     <legend>生成激活码</legend>
-	  <div class='am-form-group'data-am-selected>
+	  <div class='am-form-group'>
       <label for='doc-select-1'>生成数量</label>
-      <select name='num' id='doc-select-1'>
+      <select name='num' id='doc-select-1'data-am-selected>
         <option value='5'>5个</option>
         <option value='10'>10个</option>
         <option value='20'>20个</option>
@@ -342,7 +319,7 @@ msg($_GET['suc'],1);
     </div>
 	 <div class='am-form-group'>
       <label for='doc-select-1'>可用时间</label>
-      <select name='time' id='doc-select-1'>
+      <select name='time' id='doc-select-1'data-am-selected>
         <option value='1'>一天[1]</option>
         <option value='7'>一周[7]</option>
         <option value='30'>一个月[30]</option>
@@ -577,12 +554,7 @@ echo "<li class='am-disabled'><a href='admin_panel.php?muser&page=";echo $page+1
   echo "value='{$row['key']}'";
   }
   echo ">
-</div><br>";
-if($row['key']!==''){
-    echo "<a href='admin_panel.php?rocket'>立即更新Rocket</a><br>";
-}
-echo "
-<br>
+</div><br>
 <button type='submit' class='am-btn am-btn-success'>保存秘钥</button>
   </form>
   </div>
