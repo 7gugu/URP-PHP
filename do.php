@@ -39,7 +39,7 @@ $update=mysqli_fetch_array(query("select * from cron where name='update'"));
 //var_dump($update);//sleep(60);
 //--------工作模块------------
 if($update['switch']==0){
-if($server==true||$rocketver==true||$server==true&&$rocketver==true){
+if($server==true||$rocketver==true){
 	query("update cron set `switch`='1' where `name`='update'");
     $rs=query("select * from server");
 while($rows = mysqli_fetch_array($rs)){
@@ -68,7 +68,9 @@ while($rows = mysqli_fetch_array($rs)){
        rcon($rows['sid'],0,1935,'');
       query("update server set `state`='1'where `port`='{$rows['port']}'");
         }
-		
+		$dt=date('YMD',time());
+		if($time['key']!=$dt){
+			query("update cron set `key`='{$dt}'where `name`='time'");
 		if($time['switch']==1){
     $date=$rows['time'];
 	//echo $date;
@@ -86,6 +88,9 @@ popen("for /f \"tokens=1-5 delims= \" %a in ('\"netstat -ano|findstr \"^:{$port}
     }
 query("update server set `time`='{$date}'where `port`='{$rows['port']}'");
 }
+		}else{
+						query("update cron set `key`='{$dt}'where `name`='time'");
+		}
 }
 query("update cron set `switch`='0' where `name`='update'");
 }
