@@ -1,4 +1,5 @@
 <?php 
+error_reporting(E_ALL^E_NOTICE^E_WARNING);
 require 'function/corestart.php';
 $v="m";
 checkuser();
@@ -27,13 +28,13 @@ if(isset($_GET['restart'])){
 	manage($ser,"restart");
 	exit();
 }
-//实时状态
+/*
 if(isset($_POST['players'])){
 	$ser=$_COOKIE['ser'];
 	udfile($ser,"players",$_POST['players'],"Server//Commands.dat");
 	echo "<script>location.href='manage.php?index&suc=4';</script>";  
 	exit();
-}
+}*/
 if(isset($_POST['servername'])){
 	$ser=$_COOKIE['ser'];
 	udfile($ser,"servername",$_POST['servername'],"Server//Commands.dat");
@@ -44,6 +45,7 @@ if(isset($_POST['servername'])){
 	udfile($ser,"password",$_POST['password'],"Server//Commands.dat");
 	udfile($ser,"view",$_POST['view'],"Server//Commands.dat");
 	udfile($ser,"cheat",$_POST['cheat'],"Server//Commands.dat");
+	udfile($ser,"players",$_POST['players'],"Server//Commands.dat");
 	echo "<script>location.href='manage.php?information&suc=4';</script>";  
 	exit();
 }
@@ -134,11 +136,21 @@ if(isset($_GET['mod'])){
 if(isset($_GET['read'])){
  $ser=$_GET['read'];
  $path=PATHS."\Servers\\$ser\\Rocket\\Logs\\Rocket.log";
-  $path = iconv("utf-8","gb2312",$path);
+ $path = iconv("utf-8","gb2312",$path);
 $file = fopen($path, "r") or exit("打开log文件失败,请联系管理员!");
 while(!feof($file))
 {
  $rs=fgets($file);
+ $rs=fgets($file);
+ $rs = str_replace ( "[Exception] Rocket.CoreException in Rocket.Core: System.IO.IOException: Write failure ---> System.Net.Sockets.SocketException: 您的主机中的软件中止了一个已建立的连接。", "[*]", $rs ); 
+ $rs=str_replace ("at System.Net.Sockets.Socket.Send (System.Byte[] buf, Int32 offset, Int32 size, SocketFlags flags) [0x00000] in <filename unknown>:0","[*]",$rs);
+ $rs=str_replace ("at System.Net.Sockets.NetworkStream.Write (System.Byte[] buffer, Int32 offset, Int32 size) [0x00000] in <filename unknown>:0 ","[*]",$rs);
+ $rs=str_replace ("  --- End of inner exception stack trace ---","[*]",$rs);
+ $rs=str_replace (" at System.Net.Sockets.NetworkStream.Write (System.Byte[] buffer, Int32 offset, Int32 size) [0x00000] in <filename unknown>:0 ","[*]",$rs);
+ $rs=str_replace ("at Rocket.Core.RCON.RCONServer.Send (System.Net.Sockets.TcpClient client, System.String text) [0x00000] in <filename unknown>:0","[*]",$rs);
+ $rs=str_replace (" at Rocket.Core.RCON.RCONConnection.Send (System.String command, Boolean nonewline) [0x00000] in <filename unknown>:0 ","[*]",$rs);
+ $rs=str_replace ("  at Rocket.Core.RCON.RCONServer.handleConnection (System.Object obj) [0x00000] in <filename unknown>:0 ","[*]",$rs);
+  $rs=str_replace (" [Exception] Rocket.CoreException in Rocket.Core: System.IO.IOException: Write failure ---> System.Net.Sockets.SocketException: 远程主机强迫关闭了一个现有的连接。","[*]",$rs);
  $rs=trim($rs);
  echo $rs. "<br />";
 }
@@ -151,7 +163,7 @@ exit();
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>URP | 管理服务器</title>
+  <title>喵喵出租屋 | 管理服务器</title>
   <meta name="description" content="manage">
   <meta name="keywords" content="index">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -224,10 +236,10 @@ echo "<table class='am-table am-table-striped '>
             <td>
 			<div class='am-u-lg-8'>
 			";
-echo "
-			<input type='submit'  onclick=\"javascript:this.disabled=true;this.value='启动中·.....';window.location.href='manage.php?start';\" class='am-btn am-btn-success ' value='启动服务器'{$on} ></input>
-            <button type='submit' onclick=\"javascript:this.disabled=true;this.value='关闭中·.....';window.location.href='manage.php?stop'\" class='am-btn am-btn-danger'{$off}>关闭服务器</button> 
-            <button type='submit' onclick=\"javascript:this.disabled=true;this.value='重启中·.....';window.location.href='manage.php?restart'\" class='am-btn am-btn-warning'{$off}>重启服务器</button> 			
+			echo "
+			<input type='submit' onclick=\"javascript:this.disabled=true;this.value='启动中...';window.location.href='manage.php?start'\"class='am-btn am-btn-success' value='启动服务器'{$on}></input>
+            <input type='submit' onclick=\"javascript:this.disabled=true;this.value='关闭中...';window.location.href='manage.php?stop'\" class='am-btn am-btn-danger' value='关闭服务器'{$off}></input> 
+            <input type='submit' onclick=\"javascript:this.disabled=true;this.value='重启中...';window.location.href='manage.php?restart'\" class='am-btn am-btn-warning' value='重启服务器'{$off}></input> 			
 			";
 			echo "
 			</div>
@@ -236,11 +248,21 @@ echo "
 			</td>
         </tr>
 		<form action='manage.php' method='POST'>
-        <tr>
-            <td>服务器最大人数</td>
+		        <tr>
+            <td>可用时间</td>
             <td>
 			<div class='am-u-lg-6'>
-			<input id='players' name='players' type='text' class='am-form-field' value='{$row['players']}'>
+			{$row['time']} 天
+			</div>
+			</td>
+			<td>
+			</td>
+        </tr>
+				<tr>
+            <td>服务器状态</td>
+            <td>
+			<div class='am-u-lg-6'>
+			{$state}
 			</div>
 			</td>
 			<td>
@@ -257,37 +279,6 @@ echo "
 			</td>
         </tr>
         <tr>
-            <td>可用时间</td>
-            <td>
-			<div class='am-u-lg-6'>
-			{$row['time']}
-			</div>
-			</td>
-			<td>
-			</td>
-        </tr>
-        
-		<tr>
-            <td>服务器状态</td>
-            <td>
-			<div class='am-u-lg-6'>
-			{$state}
-			</div>
-			</td>
-			<td>
-			</td>
-        </tr>
-		<tr>
-            <td>游戏端口</td>
-            <td>
-			<div class='am-u-lg-6'>
-			<input id='port' name='port' type='text' class='am-form-field' value='{$row['port']}' disabled>
-			</div>
-			</td>
-			<td>
-			</td>
-        </tr>
-        <tr>
             <td>Rcon端口</td>
             <td>
 			<div class='am-u-lg-6'>
@@ -297,19 +288,33 @@ echo "
 			<td>
 			</td>
         </tr>
+
 		<tr>
             <td>服务器IP</td>
             <td>
 			<div class='am-u-lg-6'>
 			<input id='sip' name='sip' type='text' class='am-form-field' value='";
-			echo IP;
+			echo "电信222.187.223.3
+   联通122.195.189.122";
 			echo "' disabled>
 			</div>
 			</td>
 			<td>
 			</td>
 			
+			
         </tr>
+				<tr>
+            <td>游戏端口</td>
+            <td>
+			<div class='am-u-lg-6'>
+			<input id='port' name='port' type='text' class='am-form-field' value='{$row['port']}' disabled>
+			</div>
+			</td>
+			<td>
+			</td>
+        </tr>
+
 <tr>		
 <td>
 			</td>
@@ -358,11 +363,21 @@ if(isset($_GET['information'])){
 			<td>
 			</td>
         </tr>
+		 <tr>
+            <td>服务器最大人数</td>
+            <td>
+			<div class='am-u-lg-6'>
+			<input id='players' name='players' type='text' class='am-form-field' value='{$row['players']}'>
+			</div>
+			</td>
+			<td>
+			</td>
+        </tr>
         <tr>
             <td>游戏难度</td>
             <td>
 			<div class='am-u-lg-6'>
-			 <select name='difficult' id='doc-select-1'data-am-selected>";
+			 <select name='difficult' id='doc-select-1' data-am-selected>";
 			 if($row['difficult']=='normal'){
 				 echo"
           <option value='normal'>Normal</option>
@@ -387,12 +402,6 @@ if(isset($_GET['information'])){
           <option value='normal'>Normal</option>
           <option value='easy'>Easy</option>
 		   <option value='hard'>Difficult</option>"; 
-			 }else{
-			      echo"
-				 <option value='easy'>Easy</option>
-          <option value='normal'>Normal</option>
-		 <option value='hard'>Difficult</option>
-		    <option value='gold'>Gold</option>";
 			 }
 			echo"
         </select>
@@ -406,7 +415,7 @@ if(isset($_GET['information'])){
             <td>模式</td>
             <td>
 			<div class='am-u-lg-6'>
-			 <select name='mode' id='doc-select-1'data-am-selected>";
+			 <select name='mode' id='doc-select-1' data-am-selected>";
 			 if($row['mode']=='pvp'){
 				 echo"<option value='pvp'>PVP</option>
           <option value='pve'>PVE</option>
@@ -426,7 +435,7 @@ if(isset($_GET['information'])){
             <td>地图 [{$row['map']}]</td>
             <td>
 			<div class='am-u-lg-6'>
-			 <select name='map' id='doc-select-1'data-am-selected>
+			 <select name='map' id='doc-select-1' data-am-selected>
 			
 			 
 			 ";
@@ -557,11 +566,14 @@ document.getElementById('showcommand').scrollTop=document.getElementById('showco
 window.onload=sendRequest();
 </script>
 			<div class='am-u-sm-12 '>
-      <label for='doc-ipt-file-1'>命令行</label>
+      <label for='doc-ipt-file-1'>命令行 <span class='am-icon-user'>在线玩家:</label>";players();
+	  echo "
 	   <pre id='showcommand' class='am-pre-scrollable'>
 	   </pre>
       <input id='command' name='command' type='text' onkeydown='sendRequest()' id='doc-ipt-file-1' >
 	       <p class='am-form-help'>我们推荐您使用Windows自带的Telnet来连接服务器,此处仅仅是提供一个入口给大家临时使用</p>
+ </br>
+		   
            <button type='submit' class='am-btn am-btn-success' {$dis}>发送</button>   
 	   
 	  </div>
@@ -580,7 +592,7 @@ if(isset($_GET['plugin'])){
  <thead>
         <tr>
             <th>服务器插件设置</th>
-            <th></th>
+            <th>文件名:</th>
             <th>操作:</th>
 			<th></th>
         </tr>
@@ -592,14 +604,15 @@ if(isset($_GET['plugin'])){
 		   $pa=PATHS."\Servers\\".$ser."\Rocket\Permissions.config.xml";
 		   		      echo "<tr><td></td>";
   echo "<td><strong><font color='red'>权限组管理</font></strong></td>";
-  echo "<td><a href='manage.php?per&pfile=".$pa."' >编辑</a>          
+  echo "<td><a href='manage.php?per&pfile=".$pa."' >编辑</a>         
   </td><td></td></tr>";
-   $ser=$_COOKIE['ser'];
+  		   $ser=$_COOKIE['ser'];
 		   $pa=PATHS."\Servers\\".$ser."\Config.json";
 		   		      echo "<tr><td></td>";
   echo "<td><strong><font color='red'>Config.json</font></strong></td>";
-  echo "<td><a href='manage.php?con&pfile=".$pa."' >编辑</a>         
+  echo "<td><a href='manage.php?con&pfile=".$pa."' >编辑</a>      
   </td><td></td></tr>";
+
 		   plist(PATHS."/Servers/$ser/Rocket/plugins","dll");
 		  echo  "
       
@@ -616,7 +629,7 @@ if(isset($_GET['plugin'])){
 		</td>
 		</tr>
     </tbody>
-</table>";
+</table>注：刚添加的插件需要重启一次服务器才会生成配置文件";
 }
 if(isset($_GET['po'])){
 	$po=$_GET['po'];
@@ -645,7 +658,7 @@ if(isset($_GET['po'])){
  <thead>
         <tr>
             <th>服务器插件设置</th>
-            <th></th>
+            <th>文件名:</th>
             <th>操作:</th>
 			<th></th>
         </tr>
@@ -654,7 +667,6 @@ if(isset($_GET['po'])){
     <tbody>
        <tr>
 	   <td><a href=\"javascript:history.go(-1);\">返回上一级</a></td>
-	   <td></td>
 	   <td></td>
 	   <td></td>
 	   </tr>
@@ -674,12 +686,16 @@ if(isset($_GET['po'])){
 		</tr>
     </tbody>
 	</form>
-</table>";
+</table>注：configuration.xml为配置文件 en.translation.xml为翻译文件";
 }
 if(isset($_GET['pfile'])){
 	if(isset($_GET['per'])){
 		$fn[1]="Permissions.config.xml";
-	}else{
+	}
+    else if(isset($_GET['con'])){
+		$fn[1]="Config.json";
+	}
+	else{
 	$ser=$_COOKIE['ser'];
 	$fn=str_replace(PATHS."/Servers/$ser/Rocket/plugins/","",$_GET['pfile']);
 	$fn=explode("/",$fn);
@@ -704,7 +720,7 @@ if(isset($_GET['pfile'])){
            ";?>
 		   <style type="text/css" media="screen">
   pre{
-	  padding:30%;
+	  padding:50%;
 	  hight:100%;
   }
 
@@ -816,11 +832,12 @@ if(isset($_GET['map'])){
   <div class='am-panel-bd'>
      <form class='am-form' action='manage.php?file' enctype='multipart/form-data' method='post'>
       <input type='file' id='doc-ipt-file-1' name='upfile'>
-      <p class='am-form-help'>请把地图文件压缩成ZIP格式,上传后请到设置选项,更改设置</p>
+      <p class='am-form-help'>请把地图文件压缩成<strong>ZIP格式</strong>,上传后请到信息设置选项,更改设置</p>
 	   <button type='submit' class='am-btn am-btn-warning'>上传</button>
           </form>
   </div>
-</section></div>";
+</section>创意工坊的地图文件在 Steam文件夹下的 \steamapps\workshop\content\\304930中
+</div>";
 
 }
 if(isset($_GET['log'])){
@@ -879,11 +896,11 @@ echo "
   <div class='am-panel-bd'>
      <form class='am-form' action='manage.php?mod' enctype='multipart/form-data' method='post'>
       <input type='file' id='doc-ipt-file-1' name='upfile'>
-      <p class='am-form-help'>请把MOD文件压缩成ZIP格式</p>
+      <p class='am-form-help'>请把MOD文件压缩成<strong>ZIP格式</strong></p>
 	   <button type='submit' class='am-btn am-btn-warning'>上传</button>
           </form>
   </div>
-</section>
+</section>创意工坊的MOD文件在 Steam文件夹下的 \steamapps\workshop\content\\304930中
 <hr>
 <table class='am-table am-table-bordered'>
     <thead>
