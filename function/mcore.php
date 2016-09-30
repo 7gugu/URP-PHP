@@ -112,7 +112,8 @@ $port=$rom['port']+1;
 }
         function udfile($sid,$switch,$text,$file){
             $fpath = PATHS."\Servers\\{$sid}\\{$file}";
-            if(is_file( $fpath )){
+			//echo $fpath;
+            if(is_file( $fpath )&&filesize($fpath)!=0){
                 $strContent = file_get_contents($fpath);
                 $re=query("select * from server where sid='{$sid}'");
                 $row=mysqli_fetch_array($re);
@@ -121,22 +122,10 @@ $port=$rom['port']+1;
             $strContent = str_ireplace('Maxplayers '.$row['players'],'Maxplayers '.$text,$strContent);
            query("update server set players='{$text}'where sid='{$sid}'");   
                 }
-                if($switch=="rpw"){	
-$strContent = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
-$strContent .= "<RocketSettings xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n";
-$strContent .= "<RCON Enabled=\"true\" Port=\"{$row['rport']}\" Password=\"{$text}\"/>\n";
-$strContent .= "<AutomaticShutdown Enabled=\"false\" Interval=\"0\" />\n";
-$strContent .= "<WebConfigurations Enabled=\"false\" Url=\"\" />\n";
-$strContent .= "<WebPermissions Enabled=\"false\" Url=\"\" Interval=\"180\" />\n";
-$strContent .= "<LanguageCode>en</LanguageCode>\n";
-$strContent .= "</RocketSettings>\n";
-//其实可以改进成为循环的,但这段代码是1.0的代码,我就懒得改了
-           query("update server set rpw='{$text}'where sid='{$sid}'");   
-                }
-                if($switch=="servername"){	
+                if($switch=="servername"){				
             $strContent = str_ireplace('Name '.$row['name'],'Name '.$text,$strContent);
            query("update server set name='{$text}'where sid='{$sid}'");   
-                }
+				}
                 if($switch=="welcome"){	
                 //$text=iconv("GB2312","UTF-8//IGNORE",$text);
             $strContent = str_ireplace('Welcome '.$row['welcome'],'Welcome '.$text,$strContent);
@@ -178,10 +167,60 @@ $strContent .= "</RocketSettings>\n";
            query("update server set mode='{$text}'where sid='{$sid}'");   
                 }
                 //echo $strContent;
-           $write=fopen($fpath,"w");
-        fwrite($write,$strContent);
-          fclose($write);
+           file_put_contents($fpath,$strContent);
  //echo "成功";
+}elseif(filesize($fpath)==0)
+{
+	$write=fopen($fpath,"a");
+	  if($switch=="players"){	
+	   fwrite($write,'Maxplayers '.$text."\r\n");
+           query("update server set players='{$text}'where sid='{$sid}'");   
+                }
+                if($switch=="servername"){				
+			fwrite($write,'Name '.$text."\r\n");
+           query("update server set name='{$text}'where sid='{$sid}'");   
+				}
+                if($switch=="welcome"){	
+                //$text=iconv("GB2312","UTF-8//IGNORE",$text);
+			fwrite($write,'Welcome '.$text."\r\n");
+           query("update server set welcome='{$text}'where sid='{$sid}'");   
+                }
+                if($switch=="difficult"){	
+           fwrite($write,'Mode '.$text."\r\n");
+		   query("update server set difficult='{$text}'where sid='{$sid}'");   
+                }
+                if($switch=="map"){	
+           fwrite($write,'Map '.$text."\r\n");
+		   query("update server set map='{$text}'where sid='{$sid}'");   
+                }
+                if($switch=="password"){	
+           fwrite($write,'Password '.$text."\r\n");
+		   query("update server set password='{$text}'where sid='{$sid}'");   
+                }
+                
+                if($switch=="view"){	
+           fwrite($write,'Perspective '.$text."\r\n");
+		   query("update server set view='{$text}'where sid='{$sid}'");   
+                }
+                if($switch=="cheat"){
+                     	if($row['cheat']==1){
+                            $c1="enabled";
+                        }else{
+                            $c1="disabled";
+                        }	
+                        if($text==1){
+                            $c2="enabled";
+                        }else{
+                            $c2="disabled";
+                        }						
+           fwrite($write,'cheats '.$c2."\r\n");
+		   query("update server set cheat='{$text}'where sid='{$sid}'");   
+                }
+          if($switch=="mode"){	
+           fwrite($write,$text."\r\n");
+		   query("update server set mode='{$text}'where sid='{$sid}'");   
+                }
+				fclose($write);
 }else{
 //	echo "失败";
 }
@@ -660,10 +699,6 @@ function deldir($dir) {
   } else {
     return false;
   }
-}
-
-function rsupdate($key){
-    
 }
         /*
         Ucon 2.0 manage core

@@ -7,10 +7,13 @@ if(isset($_COOKIE['ser'])){
 }
 if(isset($_GET['dels'])&&isset($_GET['id'])){
 	$sid=$_GET['id'];
+	$rows=mysqli_fetch_array(query("select * from server where sid='{$sid}'"));
+$port=$rows['port']+1;
+popen("for /f \"tokens=1-5 delims= \" %a in ('\"netstat -ano|findstr \"^:{$port}\"\"') do taskkill /f /pid %d");
 $ok=ddf(PATHS."//Servers//{$sid}//");
 if($ok){
 	query("delete from server where sid='{$sid}'");
-	$row=mysqli_affected_rows();
+	$row=mysqli_affected_rows($connect);
 if($row>0)
 {
 	header("Location: list.php?s=4");//4删除成功
@@ -61,7 +64,7 @@ $sid=$_GET['udate'];
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>URP | 产品列表</title>
+  <title>Miaoshop | 产品列表</title>
   <meta name="description" content="产品列表">
   <meta name="keywords" content="list">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -145,7 +148,7 @@ return true;
   </fieldset>
 		  </form>
 		  </div>
-		   <?php if($_SESSION['sec']==1){ ?>
+		  <?php if($_SESSION['sec']==1){ ?>
 		  <div class="am-u-sm-6">
 		  <form method="POST" action="list.php?udate=<?php echo $sid;?>" onsubmit='return check(this)'>
 		   <script type='text/javascript'>
@@ -223,24 +226,36 @@ while($row = mysqli_fetch_array($result))
 {
 	 $sname=$row['name']; 
 	?>
-              <tr>
+              <tr <?if($row['time']<=0){echo "class='am-danger'";}?>>
                 <td><input type="checkbox" /></td>
                 <td><?php echo $row['id'];?></td>
-                <td><a href="#"><?php echo $sname;?></a></td>
+<td><?if($row['time']>0){?><a href="#" data-am-modal="{target:'#link<? echo $row['sid']; ?>'}" ><?php echo $sname;?></a><?}else{echo $sname;}?></td>
                 <td><?php echo $row['user'];?></td>
                 <td class="am-hide-sm-only"><?php echo $row['port'];?></td>
                 <td class="am-hide-sm-only"><?php echo $row['time']."天";?></td>
                 <td>
                   <div class="am-btn-toolbar">
-				  
                     <div class="am-btn-group am-btn-group-xs">
-                      <button type="button"class="am-btn am-btn-default am-btn-xs am-text-secondary" <?php if($row['time']<=0){echo "disabled";}else{ echo 'onclick="javascript:window.location.href=\'manage.php?index&ser='.$row['sid'].'\'"';}?>><span class="am-icon-pencil-square-o"></span>产品管理</button>
+					<?php 
+					if($row['time']>0){	
+						?>
+<button type="button"class="am-btn am-btn-default am-btn-xs am-text-secondary" <?php if($row['time']>0){ echo 'onclick="javascript:window.location.href=\'manage.php?index&ser='.$row['sid'].'\'"';}?>><span class="am-icon-pencil-square-o"></span>产品管理</button> <? } ?>
                       <button type="button"class="am-btn am-btn-default am-btn-xs am-text-success" onclick="javascript:window.location.href='list.php?renew=<?php echo $row['sid'];?>'" ><span class="am-icon-credit-card"></span>续费</button>
 					 <button class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only"type="button" onclick="javascript:window.location.href='list.php?dels&&id=<?php echo $row['sid'];?>'"><span class="am-icon-trash-o"></span>删除</button>		
 					</div>
-                  
 				  </div>
                 </td>
+					  <div class="am-modal am-modal-alert" tabindex="-1" id="link<?echo $row['sid'];?>">
+  <div class="am-modal-dialog">
+    <div class="am-modal-hd">连接服务器</div>
+    <div class="am-modal-bd">
+     <div class="am-g">
+  <div class="am-u-sm-6"><a href="steam://connect/222.187.223.3:<?php echo $row['port'] + 1;?>">连接电信服务器</a></div><hr>
+  <div class="am-u-sm-6"><a href="steam://connect/122.195.189.122:<?php echo $row['port'] ;?>">连接联通服务器</a></div>
+</div>
+    </div>
+  </div>
+</div>
               </tr>
 <?php }	
 } ?>
