@@ -46,6 +46,7 @@ if(isset($_POST['servername'])){
 	udfile($ser,"view",$_POST['view'],"Server//Commands.dat");
 	udfile($ser,"cheat",$_POST['cheat'],"Server//Commands.dat");
 	udfile($ser,"players",$_POST['players'],"Server//Commands.dat");
+	udfile($ser,"port",$_POST['port'],"Server//Commands.dat");
 	echo "<script>location.href='manage.php?information&suc=4';</script>";  
 	exit();
 }
@@ -480,6 +481,12 @@ if(isset($_GET['information'])){
 				 <option value='both'>both</option>
           <option value='first'>first</option>
 				";
+			 }else{
+				 echo"
+				 <option value='both'>both</option>
+          <option value='first'>first</option>
+		  <option value='third'>third</option>
+          "; 
 			 }
       echo "  </select>
 			</div>
@@ -512,6 +519,7 @@ if(isset($_GET['information'])){
 			</td>
 		<td>
 		<div class='am-u-lg-6'>
+		<input name='port' type='hidden'  value='{$row['port']}'>
 		<button type='submit' class='am-btn am-btn-success'>保存设置</button>
 		</div>
 		</td>

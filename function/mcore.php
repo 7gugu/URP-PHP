@@ -1,6 +1,7 @@
 <?php 
 /*****************
    函数库
+   Update time:2016/10/01
 *****************/
 function rocket_download($key) {
 $url="http://api.rocketmod.net/download/unturned/latest/".$key;   
@@ -84,14 +85,11 @@ $ss=query("select * from server where sid='{$sid}'");
         sleep(2);
             $query=query("select * from server where sid='{$sid}'");
             $rom=mysqli_fetch_array($query);
-            if(check($rom['rport'])){
                 rcon("save",1,$rom['rport'],$rom['rpw']);
                 sleep(1);
             rcon("shutdown",1,$rom['rport'],$rom['rpw']);
-            }else{
 $port=$rom['port']+1;
- popen("for /f \"tokens=1-5 delims= \" %%a in ('\"netstat -ano|findstr \"^:{$port}\"\"') do taskkill /f /pid %%d", 'r');
-            }
+ system("for /f \"tokens=1-5 delims= \" %a in ('\"netstat -ano|findstr \"^:{$port}\"\"') do taskkill /f /pid %d ");
             query("update server set state='0'where sid='{$sid}'");	
         header("Location: manage.php?index&suc=2");
         }elseif($switch=='restart'){
@@ -99,7 +97,7 @@ $port=$rom['port']+1;
             $rom=mysqli_fetch_array($query);
              rcon("shutdown",1,$rom['rport'],$rom['rpw']);
              	$port=$rom['port']+1;
- popen("for /f \"tokens=1-5 delims= \" %%a in ('\"netstat -ano|findstr \"^:{$port}\"\"') do taskkill /f /pid %%d", 'r');
+ system("for /f \"tokens=1-5 delims= \" %a in ('\"netstat -ano|findstr \"^:{$port}\"\"') do taskkill /f /pid %d ");
              query("update server set state='0'where sid='{$sid}'");	
         $command=$sid;
          rcon($command,0,1935,'');
@@ -198,7 +196,11 @@ $port=$rom['port']+1;
 		   query("update server set password='{$text}'where sid='{$sid}'");   
                 }
                 
-                if($switch=="view"){	
+                if($switch=="port"){	
+           fwrite($write,'Port '.$text."\r\n");
+		  // query("update server set port='{$text}'where sid='{$sid}'");   
+                }
+				  if($switch=="view"){	
            fwrite($write,'Perspective '.$text."\r\n");
 		   query("update server set view='{$text}'where sid='{$sid}'");   
                 }

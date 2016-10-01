@@ -44,7 +44,7 @@ if($server==true||$rocketver==true){
     $rs=query("select * from server");
 while($rows = mysqli_fetch_array($rs)){
     $port=$rows['port']+1;
-popen("for /f \"tokens=1-5 delims= \" %a in ('\"netstat -ano|findstr \"^:{$port}\"\"') do taskkill /f /pid %d",'r');
+ system("for /f \"tokens=1-5 delims= \" %a in ('\"netstat -ano|findstr \"^:{$port}\"\"') do taskkill /f /pid %d ");
 query("update server set state='0'where port='{$rows['port']}'");
 }
 //游戏更新
@@ -78,13 +78,13 @@ while($rows = mysqli_fetch_array($rs)){
 	echo $date;
     if($date<=-5){
         $sid=$rows['sid'];
-       ddf(PATHS."//Servers//{$sid}//");
+      // ddf(PATHS."//Servers//{$sid}//");
        query("delete from server where sid='{$sid}'");
     }elseif($date<=0){
         rcon("save",1,$rows['rport'],$rows['rpw']);
         $port=$rows['port']+1;
 		echo $port."\n";
-popen("for /f \"tokens=1-5 delims= \" %a in ('\"netstat -ano|findstr \"^:{$port}\"\"') do taskkill /f /pid %d",'r');
+ system("for /f \"tokens=1-5 delims= \" %a in ('\"netstat -ano|findstr \"^:{$port}\"\"') do taskkill /f /pid %d ");
     }
 query("update server set `time`='{$date}'where `port`='{$rows['port']}'");
 }
