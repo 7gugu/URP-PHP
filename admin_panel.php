@@ -263,7 +263,7 @@ if(isset($_GET['game'])){
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Miaoshop | 系统管理</title>
+  <title>URP | 系统管理</title>
   <meta name="description" content="系统管理">
   <meta name="keywords" content="list">
   <meta name="viewport" content="width=device-width, initial-scale=1">
