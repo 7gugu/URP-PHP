@@ -1,7 +1,6 @@
 <?php 
 /*****************
    函数库
-   Update time:2016/10/01
 *****************/
 function rocket_download($key) {
 $url="http://api.rocketmod.net/download/unturned/latest/".$key;   
@@ -335,7 +334,7 @@ return false;
 } 
 } 
         }	
-        //删除目录
+       //删除目录
         function ddf( $dirName )  
 {  
 if ( $handle = opendir( "$dirName" ) ) {  
@@ -561,59 +560,38 @@ if($mode=="dll"){
   echo "<td>".$ps."</td>";
   echo "<td>无配置文件</td><td><a href='manage.php?del&po=".$ps."' >删除插件</a></td></tr>";	
         }
-            }
-            
+            }         
         }elseif($ac==0){
               echo "<tr><td></td>";
   echo "<td>无已安装插件</td>";
   echo "<td></td><td>戳下面安装插件</td></tr>";
         }else{
         foreach($arr as $afile){
-            if(is_dir($afile)){
-            continue;	
-            }else{
-    $a=$arr;
-    unset($a[array_search($afile,$a)]);
-    $a=array_values($a);
-        foreach( $a as $s ){	
-            $fn=explode(".",$afile);		
-   if ( strpos( $s , $fn[0] ) !== false ){
-     //  echo "插件:".$afile;
-      //   echo "插件文件夹:".$s."<BR>";
-      $pa=str_replace($path."/","",$afile);
-      $ps=str_replace($path."/","",$s);
-        echo "<tr><td></td>";
-  echo "<td>".$pa."</td>";
+			if(is_dir($afile)){
+				continue;
+			}else{
+			$pfile=str_replace(".dll","",$afile);
+			if(in_array($pfile,$arr)){
+echo "<tr><td></td>";
+  echo "<td>".str_replace($path."/","",$afile)."</td>";
   echo "<td>
-  
-  <a href='manage.php?po=".$ps."' >设置</a></td><td><a href='manage.php?del&po=".$pa."' >删除插件</a>
+  <a href='manage.php?po=".$pfile."' >设置</a></td><td><a href='manage.php?del&po=".$afile."' >删除插件</a>
   </td></tr>";
-        }else
-            if(is_dir($s)==false){	
-        $sn=explode(".",$s);	
-        if(array_search($sn[0],$a) === false){
-            
-            $ps=str_replace($path."/","",$s);
-              echo "<tr><td></td>";
-  echo "<td>".$ps."</td>";
+			}else{
+  echo "<tr><td></td>";
+  echo "<td>".str_replace($path."/","",$afile)."</td>";
   echo "<td>无配置文件</td><td><a href='manage.php?del&po=".$ps."' >删除插件</a></td></tr>";
-        //	 echo "插件:".$s;
-      //   echo "插件文件夹:不存在<BR>";			
-        }
-            }		
-}
-        }
-        }
+			}
+			}
 }		
-    
+		}
     
     
 }elseif($mode=="xml"){
     foreach(glob($path."/*.xml",GLOB_BRACE) as $afile){ 
 if(is_dir($afile)) 
-{ 
-}else{
-    $a=str_replace($path,'',$afile);
+{}else{
+    $a=str_replace($path."/",'',$afile);
   $name=explode('.',$a);
        echo "<tr><td></td>";
   echo "<td>".$a."</td>";
