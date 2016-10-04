@@ -164,7 +164,7 @@ exit();
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>URP | 管理服务器</title>
+  <title>喵喵出租屋 | 管理服务器</title>
   <meta name="description" content="manage">
   <meta name="keywords" content="index">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -217,10 +217,10 @@ msg($_GET['suc'],1);
 		$state="未知";
 		if($sstate==1){
 		$on="disabled";
-		$state="在线";
+		$state="<strong><font color='green'>在线</font></strong>";
 		}else{
 			$off="disabled";
-			$state="离线";
+			$state="<strong><font color='red'>离线</font></strong>";
 		}
 echo "<table class='am-table am-table-striped '>
  <thead>
@@ -237,11 +237,15 @@ echo "<table class='am-table am-table-striped '>
             <td>
 			<div class='am-u-lg-8'>
 			";
+			$arr=mysqli_fetch_array(query("select * from cron where `name`='update'"));
+			if($arr['switch']!=1){
 			echo "
 			<input type='submit' onclick=\"javascript:this.disabled=true;this.value='启动中...';window.location.href='manage.php?start'\"class='am-btn am-btn-success' value='启动服务器'{$on}></input>
             <input type='submit' onclick=\"javascript:this.disabled=true;this.value='关闭中...';window.location.href='manage.php?stop'\" class='am-btn am-btn-danger' value='关闭服务器'{$off}></input> 
             <input type='submit' onclick=\"javascript:this.disabled=true;this.value='重启中...';window.location.href='manage.php?restart'\" class='am-btn am-btn-warning' value='重启服务器'{$off}></input> 			
-			";
+			";}else{
+			echo "<strong><font color='orange'>服务器维护中,请稍候再试......</font></strong>";
+		}
 			echo "
 			</div>
 			</td>
@@ -679,7 +683,7 @@ if(isset($_GET['po'])){
 	   <td></td>
 	   </tr>
            ";
-	plist(PATHS."/Servers/$ser/Rocket/plugins/".$po,"xml");
+	plist($po,"xml");
 	 echo  "
       
 		
@@ -949,7 +953,7 @@ echo "
 </div>
   <!-- content end -->
 </div>
-
+  <!--我感觉我好帅啊啊啊啊!我说的是7gugu,希望有人看得见我-->
 <a href="#" class="am-icon-btn am-icon-th-list am-show-sm-only admin-menu" data-am-offcanvas="{target: '#admin-offcanvas'}"></a>
 
 <script src="assets/js/jquery.min.js"></script>
