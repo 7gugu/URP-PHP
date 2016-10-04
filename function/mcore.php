@@ -2,6 +2,7 @@
 /*****************
    函数库
 *****************/
+//Rocket下载
 function rocket_download($key) {
 $url="http://api.rocketmod.net/download/unturned/latest/".$key;   
 $dir=PATHS.'/Rocket.zip';
@@ -14,6 +15,7 @@ curl_close($ch);
 fclose($fp);
 return $res;
 }
+//Rcon链接
 function rcon($operate,$mode,$port,$rpw){
 //error_reporting(E_ALL);
 //port 服务器Rcon或者启动模块[1935]端口 Rpw Rcon密码 operate 指令
@@ -69,6 +71,7 @@ if($check=="invalid api key"||$check=="not available"){
     return true;
 }
 }
+//管理服务器状态
 function manage($sid,$switch){
     $username=$_SESSION['username'];
     $userpower=query("select serverid from user where username='{$username}'");
@@ -107,6 +110,7 @@ $port=$rom['port']+1;
         header("Location: manage.php?index&error=3");
     }
 }
+//更新配置文件
         function udfile($sid,$switch,$text,$file){
             $fpath = PATHS."\Servers\\{$sid}\\{$file}";
 			//echo $fpath;
@@ -600,6 +604,7 @@ if(is_dir($afile))
 }
 }
 }
+//可用插件列表
 function pshop($path){
 foreach(glob($path."*.dll",GLOB_BRACE) as $afile){ 
 if(!is_dir($afile)) 
@@ -633,6 +638,7 @@ function recurse_copy($src,$dst) {
         }
         closedir($dir);
     }
+    //mod列表
 function pmod($path){
 $file=glob($path."/*",GLOB_BRACE);
 if(count($file)){
@@ -660,6 +666,7 @@ echo "<td></td><td>无MOD可管理</td><td></td>
   </tr>"; 
 }
 }
+//删除模块[请谨慎使用]
 function deldir($dir) {
   $dh=opendir($dir);
   while ($file=readdir($dh)) {
