@@ -1,5 +1,8 @@
 <?php 
 if(isset($_GET['i'])&&isset($_POST['gamepos'])){
+    if($_GET['nosql']){
+        require 'config/config.php';
+    }else{
 	define("PATHS",$_POST['gamepos']."/Unturned");
 	define('SYSTEM_ROOT',dirname(dirname(__FILE__)));
 	define('DBIP',$_POST['dbip']);
@@ -20,8 +23,8 @@ if(isset($_GET['i'])&&isset($_POST['gamepos'])){
 		}else{
 		    	$sql  = str_ireplace("define(\"DBPORT\",\"port\");","define(\"DBPORT\",\"{$_POST['dbport']}\");",$sql); 
 		}
-		
 		file_put_contents(SYSTEM_ROOT.'/config/config.php',$sql);
+    }
 		$connect=mysqli_connect(DBIP,DBUSERNAME,DBPASSWORD,DBNAME) or die(header("Location: install.php?step3&err=1"));
  function query($text){
 	global $connect;
@@ -287,6 +290,7 @@ $err=$_GET['err'];
   <input type="text" name="ip" class="am-form-field" placeholder="服务器IP">
 		</div><br>
 		<button class='am-btn am-btn-success'type='submit'>下一步>></button>
+		<button type='button'  data-am-popover="{content: '若您已配置好config文件', trigger: 'hover focus'}" onclick=\"javascript:window.location.href='manage.php?shop'\" class='am-btn am-btn-secondary'>跳过此步骤</button>
 		<br><br>
 		</form>
 		 <script>
