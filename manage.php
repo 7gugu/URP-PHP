@@ -164,7 +164,7 @@ exit();
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>喵喵出租屋 | 管理服务器</title>
+  <title>URP | 管理服务器</title>
   <meta name="description" content="manage">
   <meta name="keywords" content="index">
   <meta name="viewport" content="width=device-width, initial-scale=1">
