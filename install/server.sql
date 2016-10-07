@@ -41,6 +41,7 @@ CREATE TABLE IF NOT EXISTS `server` (
   `password` text NOT NULL COMMENT '密码',
   `view` text NOT NULL COMMENT '视角',
   `cheat` text NOT NULL COMMENT '作弊',
+  `loadout` text NOT NULL COMMENT '出生装备',
   `state` int(11) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=gbk;
 
