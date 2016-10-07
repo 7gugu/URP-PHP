@@ -47,6 +47,7 @@ if(isset($_POST['servername'])){
 	udfile($ser,"cheat",$_POST['cheat'],"Server//Commands.dat");
 	udfile($ser,"players",$_POST['players'],"Server//Commands.dat");
 	udfile($ser,"port",$_POST['port'],"Server//Commands.dat");
+	udfile($ser,"loadout",$_POST['loadout'],"Server//Commands.dat");
 	echo "<script>location.href='manage.php?information&suc=4';</script>";  
 	exit();
 }
@@ -372,7 +373,7 @@ if(isset($_GET['information'])){
             <td>服务器最大人数</td>
             <td>
 			<div class='am-u-lg-6'>
-			<input id='players' name='players' type='text' class='am-form-field' value='{$row['players']}'>
+			<input id='players' name='players' type='number' class='am-form-field' value='{$row['players']}'>
 			</div>
 			</td>
 			<td>
@@ -457,6 +458,19 @@ if(isset($_GET['information'])){
             <td>
 			<div class='am-u-lg-6'>
 			<input id='password' name='password' value='{$row['password']}' type='text' class='am-form-field' >
+			</div>
+			</td>
+			<td>
+			</td>
+        </tr>
+		<tr>
+            <td>出生装备[用/间隔]</td>
+            <td>
+			<div class='am-u-lg-6'>
+			";
+			$text=str_ireplace("//","/",$row['loadout']);
+			echo"
+			<input id='loadout' name='loadout' value='{$text}' type='text' class='am-form-field' >
 			</div>
 			</td>
 			<td>
