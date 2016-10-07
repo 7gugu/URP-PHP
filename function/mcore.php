@@ -2,7 +2,6 @@
 /*****************
    函数库
 *****************/
-//Rocket下载
 function rocket_download($key) {
 $url="http://api.rocketmod.net/download/unturned/latest/".$key;   
 $dir=PATHS.'/Rocket.zip';
@@ -15,7 +14,6 @@ curl_close($ch);
 fclose($fp);
 return $res;
 }
-//Rcon链接
 function rcon($operate,$mode,$port,$rpw){
 //error_reporting(E_ALL);
 //port 服务器Rcon或者启动模块[1935]端口 Rpw Rcon密码 operate 指令
@@ -71,7 +69,6 @@ if($check=="invalid api key"||$check=="not available"){
     return true;
 }
 }
-//管理服务器状态
 function manage($sid,$switch){
     $username=$_SESSION['username'];
     $userpower=query("select serverid from user where username='{$username}'");
@@ -110,7 +107,6 @@ $port=$rom['port']+1;
         header("Location: manage.php?index&error=3");
     }
 }
-//更新配置文件
         function udfile($sid,$switch,$text,$file){
             $fpath = PATHS."\Servers\\{$sid}\\{$file}";
 			//echo $fpath;
@@ -120,34 +116,100 @@ $port=$rom['port']+1;
                 $row=mysqli_fetch_array($re);
                 
                 if($switch=="players"){	
-            $strContent = str_ireplace('Maxplayers '.$row['players'],'Maxplayers '.$text,$strContent);
+				  if($text==""){
+		  $text=1;
+	  }
+            $strContent = str_ireplace('Maxplayers '.$row['players'],'Maxplayers '.$text,$strContent,$i);
+			if($i==0){
+				$write=fopen($fpath,"a");
+				fwrite($write,'Maxplayers '.$text."\r\n");
+				fclose($write);
+			}else{
+				file_put_contents($fpath,$strContent."\n");
+			}
            query("update server set players='{$text}'where sid='{$sid}'");   
                 }
                 if($switch=="servername"){				
-            $strContent = str_ireplace('Name '.$row['name'],'Name '.$text,$strContent);
+            $strContent = str_ireplace('Name '.$row['name'],'Name '.$text,$strContent,$i);
+			if($i==0){
+				$write=fopen($fpath,"a");
+				fwrite($write,'Name '.$text."\r\n");
+				fclose($write);
+			}else{
+				file_put_contents($fpath,$strContent."\n");
+			}
            query("update server set name='{$text}'where sid='{$sid}'");   
 				}
                 if($switch=="welcome"){	
                 //$text=iconv("GB2312","UTF-8//IGNORE",$text);
-            $strContent = str_ireplace('Welcome '.$row['welcome'],'Welcome '.$text,$strContent);
+            $strContent = str_ireplace('Welcome '.$row['welcome'],'Welcome '.$text,$strContent,$i);
+			if($i==0){
+				$write=fopen($fpath,"a");
+				fwrite($write,'Welcome '.$text."\r\n");
+				fclose($write);
+			}else{
+			file_put_contents($fpath,$strContent."\n");
+			}
            query("update server set welcome='{$text}'where sid='{$sid}'");   
                 }
                 if($switch=="difficult"){	
-            $strContent = str_ireplace('Mode '.$row['difficult'],'Mode '.$text,$strContent);
+            $strContent = str_ireplace('Mode '.$row['difficult'],'Mode '.$text,$strContent,$i);
+			if($i==0){
+				$write=fopen($fpath,"a");
+				fwrite($write,'Mode '.$text."\r\n");
+				fclose($write);
+			}else{
+				file_put_contents($fpath,$strContent."\n");
+			}
            query("update server set difficult='{$text}'where sid='{$sid}'");   
                 }
                 if($switch=="map"){	
-            $strContent = str_ireplace('Map '.$row['map'],'Map '.$text,$strContent);
+            $strContent = str_ireplace('Map '.$row['map'],'Map '.$text,$strContent,$i);
+			if($i==0){
+				$write=fopen($fpath,"a");
+				fwrite($write,'Map '.$text."\r\n");
+				fclose($write);
+			}else{
+				file_put_contents($fpath,$strContent."\n");
+			}
            query("update server set map='{$text}'where sid='{$sid}'");   
                 }
                 if($switch=="password"){	
-            $strContent = str_ireplace('Password '.$row['password'],'Password '.$text,$strContent);
+            $strContent = str_ireplace('Password '.$row['password'],'Password '.$text,$strContent,$i);
+			if($i==0){
+				$write=fopen($fpath,"a");
+				fwrite($write,'Password '.$text."\r\n");
+				fclose($write);
+			}else{
+				file_put_contents($fpath,$strContent."\n");
+			}
            query("update server set password='{$text}'where sid='{$sid}'");   
                 }
                 
                 if($switch=="view"){	
-            $strContent = str_ireplace('Perspective '.$row['view'],'Perspective '.$text,$strContent);
+            $strContent = str_ireplace('Perspective '.$row['view'],'Perspective '.$text,$strContent,$i);
+			if($i==0){
+				$write=fopen($fpath,"a");
+				fwrite($write,'Perspective '.$text."\r\n");
+				fclose($write);
+			}else{
+				file_put_contents($fpath,$strContent."\n");
+			}
            query("update server set view='{$text}'where sid='{$sid}'");   
+                }
+			
+				if($switch=="loadout"){	
+            $strContent = str_ireplace('loadout '.$row['loadout'],'loadout '.$text,$strContent,$i);
+			if($i==0){
+				$write=fopen($fpath,"a");
+				fwrite($write,'loadout '.$text."\r\n");
+				fclose($write);
+				
+			}else{
+				file_put_contents($fpath,$strContent."\n");
+			}
+			$text=str_ireplace("/","\/",$text);
+           query("update server set loadout='{$text}'where sid='{$sid}'");   
                 }
                 if($switch=="cheat"){
                      	if($row['cheat']==1){
@@ -160,20 +222,37 @@ $port=$rom['port']+1;
                         }else{
                             $c2="disabled";
                         }						
-            $strContent = str_ireplace('cheats '.$c1,'cheats '.$c2,$strContent);
+            $strContent = str_ireplace('cheats '.$c1,'cheats '.$c2,$strContent,$i);
+			if($i==0){
+				$write=fopen($fpath,"a+");
+				fwrite($write,'cheats '.$c2."\r\n");
+				fclose($write);
+			}else{
+				file_put_contents($fpath,$strContent."\n");
+			}
+			
            query("update server set cheat='{$text}'where sid='{$sid}'");   
                 }
           if($switch=="mode"){	
-            $strContent = str_ireplace($row['mode'],$text,$strContent);
-           query("update server set mode='{$text}'where sid='{$sid}'");   
+            $strContent = str_ireplace($row['mode'],$text,$strContent,$i);
+			if($i==0){
+				$write=fopen($fpath,"a");
+				fwrite($write,$text."\r\n");
+				fclose($write);
+			}else{
+			file_put_contents($fpath,$strContent."\n");
+			}
+		   query("update server set mode='{$text}'where sid='{$sid}'");   
                 }
                 //echo $strContent;
-           file_put_contents($fpath,$strContent);
  //echo "成功";
 }elseif(filesize($fpath)==0)
 {
 	$write=fopen($fpath,"a");
 	  if($switch=="players"){	
+	  if($text==""){
+		  $text=1;
+	  }
 	   fwrite($write,'Maxplayers '.$text."\r\n");
            query("update server set players='{$text}'where sid='{$sid}'");   
                 }
@@ -190,6 +269,7 @@ $port=$rom['port']+1;
            fwrite($write,'Mode '.$text."\r\n");
 		   query("update server set difficult='{$text}'where sid='{$sid}'");   
                 }
+				
                 if($switch=="map"){	
            fwrite($write,'Map '.$text."\r\n");
 		   query("update server set map='{$text}'where sid='{$sid}'");   
@@ -201,11 +281,29 @@ $port=$rom['port']+1;
                 
                 if($switch=="port"){	
            fwrite($write,'Port '.$text."\r\n");
-		  // query("update server set port='{$text}'where sid='{$sid}'");   
+		  // query("update server set `port`='{$text}'where sid='{$sid}'");   
                 }
 				  if($switch=="view"){	
            fwrite($write,'Perspective '.$text."\r\n");
 		   query("update server set view='{$text}'where sid='{$sid}'");   
+                }
+				 if($switch=="cycle"){
+if($text==""){
+	$text=1;
+}					
+           fwrite($write,'cycle '.$text."\r\n");
+		   query("update server set cycle='{$text}'where sid='{$sid}'");   
+                }
+				 if($switch=="chatrate"){	
+				 if($text==""){
+	$text=1;
+}	
+           fwrite($write,'chatrate '.$text."\r\n");
+		   query("update server set chatrate='{$text}'where sid='{$sid}'");   
+                }
+				if($switch=="loadout"){	
+           fwrite($write,'loadout '.$text."\r\n");
+		   query("update server set loadout='{$text}'where sid='{$sid}'");   
                 }
                 if($switch=="cheat"){
                      	if($row['cheat']==1){
@@ -338,7 +436,10 @@ return false;
 } 
 } 
         }	
-       //删除目录
+		function ddf(){
+			return true;
+		}
+      /*  //删除目录
         function ddf( $dirName )  
 {  
 if ( $handle = opendir( "$dirName" ) ) {  
@@ -362,7 +463,7 @@ if ( $handle = opendir( "$dirName" ) ) {
     return false;
 }  
 }
-}  
+}  */
         //删除dll
     function del($file) {
   if (file_exists($file)) {
@@ -417,7 +518,9 @@ function getinser($length){
    return $str;
   }
   
-function fcreate($sname,$port,$rport,$rpw,$map,$mode,$pv,$cheat,$sid,$players){ 
+function fcreate($sname,$port,$rport,$rpw,$map,$mode,$pv,$cheat,$sid,$players,$loadout){ 
+$loadout=htmlspecialchars($loadout);
+$loadout=str_ireplace("/","//",$loadout);
     $dat = "Name $sname\n";
 $dat .= "Port $port\n";
 $dat .= "Maxplayers $players\n";
@@ -428,6 +531,7 @@ $dat .= "$pv\n";
 $dat .= "Welcome 本服务器由URP强力驱动\n";
 $dat .= "Password \n";
 $dat .= "$cheat\n";
+$dat .= "loadout $loadout\n";
 $f=PATHS."\Servers\\$sid\server";
 if (!file_exists($f))
 { 
@@ -604,7 +708,6 @@ if(is_dir($afile))
 }
 }
 }
-//可用插件列表
 function pshop($path){
 foreach(glob($path."*.dll",GLOB_BRACE) as $afile){ 
 if(!is_dir($afile)) 
@@ -638,7 +741,6 @@ function recurse_copy($src,$dst) {
         }
         closedir($dir);
     }
-    //mod列表
 function pmod($path){
 $file=glob($path."/*",GLOB_BRACE);
 if(count($file)){
@@ -666,7 +768,6 @@ echo "<td></td><td>无MOD可管理</td><td></td>
   </tr>"; 
 }
 }
-//删除模块[请谨慎使用]
 function deldir($dir) {
   $dh=opendir($dir);
   while ($file=readdir($dh)) {
