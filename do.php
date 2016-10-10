@@ -59,7 +59,7 @@ query("update server set state='0'where port='{$rows['port']}'");
 if($cmd['switch']==1&&$server==true){
     $user=mysqli_fetch_array(query("select * from cron where name='cmduser'"));
     $paw=mysqli_fetch_array(query("select * from cron where name='cmdpaw'"));
-popen("start ".$cmd['key']."\\steamcmd.exe +login ".$user['key']." ".$paw['key']." +force_install_dir ".PATHS." +app_update 304930 validate +exit","r");
+system("start ".$cmd['key']."\\steamcmd.exe +login ".$user['key']." ".$paw['key']." +force_install_dir ".PATHS." +app_update 304930 validate +exit","r");
 sleep(300);
 }
 //Rocket更新
@@ -78,6 +78,7 @@ while($rows = mysqli_fetch_array($rs)){
 			}
 			sleep(5);
        rcon($rows['sid'],0,1935,'');
+       //system("start".PATHS."\\Unturned.exe -nographics -batchmode -silent-crashes +secureserver/".$rows['sid']);
       query("update server set `state`='1'where `port`='{$rows['port']}'");
         }
 		$dt=date('YMD',time());
