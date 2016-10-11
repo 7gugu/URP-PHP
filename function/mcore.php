@@ -78,7 +78,7 @@ $ss=query("select * from server where sid='{$sid}'");
         if($switch=='start'){
             $command=$sid;
        // rcon($command,0,1935,'');
-         system("start".PATHS."\\Unturned.exe -nographics -batchmode -silent-crashes +secureserver/".$command);
+         system("start ".PATHS."\\Unturned.exe -nographics -batchmode -silent-crashes +secureserver/".$command);
         query("update server set state='1'where sid='{$sid}'");	
         header("Location: manage.php?index&suc=1");
         }elseif($switch=='shutdown'){	
@@ -101,7 +101,7 @@ $port=$rom['port']+1;
              query("update server set state='0'where sid='{$sid}'");	
         $command=$sid;
        //  rcon($command,0,1935,'');
-                system("start".PATHS."\\Unturned.exe -nographics -batchmode -silent-crashes +secureserver/".$command);
+                system("start ".PATHS."\\Unturned.exe -nographics -batchmode -silent-crashes +secureserver/".$command);
          query("update server set state='1'where sid='{$sid}'");	
         header("Location: manage.php?index&suc=3");
         }
