@@ -77,8 +77,8 @@ while($rows = mysqli_fetch_array($rs)){
 				continue;
 			}
 			sleep(5);
-       //rcon($rows['sid'],0,1935,'');
-       system("start ".PATHS."Unturned.exe -nographics -batchmode -silent-crashes +secureserver/".$rows['sid']);
+       rcon($rows['sid'],0,1935,'');
+       //system("start".PATHS."\\Unturned.exe -nographics -batchmode -silent-crashes +secureserver/".$rows['sid']);
       query("update server set `state`='1'where `port`='{$rows['port']}'");
         }
 		$dt=date('YMD',time());

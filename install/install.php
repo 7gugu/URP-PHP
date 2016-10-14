@@ -57,7 +57,7 @@ $uid = query("select * from user order by id DESC limit 1 ");
 query("insert into user(id,username,password,email,admin)values('{$uid}','{$_POST['username']}','{$_POST['password']}','{$_POST['email']}','1')");
 $nums=mysqli_affected_rows($connect);
 	if($nums){
-//copy(dirname(__FILE__)."/start.exe",PATHS."/start.exe");
+copy(dirname(__FILE__)."/start.exe",PATHS."/start.exe");
 header("Location: install.php?step4");
 	}else{
 header("Location: install.php?step3&err=2");
@@ -346,8 +346,50 @@ $err=$_GET['err'];
     return true;
 	  }
 	  </script>
-		<?php  }elseif(isset($_GET['step4'])){
-			fopen("../assets/install.lock", "w+") or die(header("Location: install.php?step4&err=3"));?>
+		<?php }elseif(isset($_GET['step4'])){
+		function socket(){
+@set_time_limit(0);
+$address = 'localhost';
+$socket = @socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+$result = @socket_connect($socket, $address, 1935);
+sleep(1);
+$in="installtest";
+@socket_write($socket, $in, strlen($in));
+sleep(2);
+$buf = @socket_read($socket,8192);
+if($buf=="OK"){
+	return true;
+}else{
+	return false;
+}
+@socket_close($socket);		
+		}?>
+			<h1 class='am-article-title'>安装后端</h1>
+			<div class="am-g">
+  <div class="am-u-sm-6 am-u-lg-centered">
+  <div class=" am-alert am-alert-secondary" data-am-alert>
+  <h3>注意:</h3>
+  <p>Start.exe在安装完成后,需要一直开启,以此启动服务器</p>
+  <ul>
+    <li>在Unturned文件夹中找到Start.exe运行后,点击下方的验证,来继续下一步操作。</li>
+    <li>若在Unturned文件夹中找不到Start.exe,可手动从install文件夹内复制start.exe到Unturned文件夹中,然后运行并启动验证。</li>
+   <?php
+  if(socket()){
+	  
+	  ?>
+  <li><h3><font color="green">验证成功</font></h3></li>
+  <button class='am-btn am-btn-success'type='button' onclick="javascript:window.location.href='install.php?step5'">下一步>></button>
+  <?php }else{
+	  echo "<li><h3><font color='red'>验证失败</font><h3></li>";
+  ?>
+  	    <button class='am-btn am-btn-secondary' type='button' onclick="javascript:window.location.href='install.php?step4'">验证>></button>
+  <?php } ?>
+  </ul>
+</div>
+  </div>
+</div>
+		<?php }elseif(isset($_GET['step5'])){
+			fopen("../assets/install.lock", "w+") or die(header("Location: install.php?step5&err=3"));?>
 			<h1 class='am-article-title'>安装完成</h1>
 <div class="am-u-sm-6 am-u-lg-centered">
 			<h3>恭喜你,安装已经完成,你现在可以把install目录删除,以防止黑客入侵<br><a href="../index.php">前往首页</a></h3>
