@@ -695,7 +695,7 @@ echo "<tr><td></td>";
 			}else{
   echo "<tr><td></td>";
   echo "<td>".str_replace($path."/","",$afile)."</td>";
-  echo "<td>无配置文件</td><td><a href='manage.php?del&po=".$ps."' >删除插件</a></td></tr>";
+  echo "<td>无配置文件</td><td><a href='manage.php?del&po=".$afile."' >删除插件</a></td></tr>";
 			}
 			}
 }		
