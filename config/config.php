@@ -7,5 +7,5 @@ define("DBUSERNAME","root");
 define("DBPASSWORD","root");
 define("DBNAME","urp");
 define("DBPORT","port");
-
+define("SWAY",true);//启动方式,TRUE为socket启动[推荐],FALSE为php原生函数启动
 ?>

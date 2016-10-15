@@ -77,8 +77,10 @@ $ss=query("select * from server where sid='{$sid}'");
     if($username==$ss['user']||$_SESSION['sec']==1){
         if($switch=='start'){
             $command=$sid;
-        rcon($command,0,1935,'');
-         //system("start".PATHS."\\Unturned.exe -nographics -batchmode -silent-crashes +secureserver/".$command);
+            if(SWAY){ 
+                rcon($command,0,1935,'');}else{
+         system("start".PATHS."\\Unturned.exe -nographics -batchmode -silent-crashes +secureserver/".$command);
+                }
         query("update server set state='1'where sid='{$sid}'");	
         header("Location: manage.php?index&suc=1");
         }elseif($switch=='shutdown'){	
@@ -100,8 +102,11 @@ $port=$rom['port']+1;
  system("for /f \"tokens=1-5 delims= \" %a in ('\"netstat -ano|findstr \"^:{$port}\"\"') do taskkill /f /pid %d ");
              query("update server set state='0'where sid='{$sid}'");	
         $command=$sid;
-         rcon($command,0,1935,'');
-                //system("start".PATHS."\\Unturned.exe -nographics -batchmode -silent-crashes +secureserver/".$command);
+        if(SWAY){ 
+                rcon($command,0,1935,'');}else{
+         system("start".PATHS."\\Unturned.exe -nographics -batchmode -silent-crashes +secureserver/".$command);
+                }
+                
          query("update server set state='1'where sid='{$sid}'");	
         header("Location: manage.php?index&suc=3");
         }
