@@ -299,8 +299,7 @@ echo "<table class='am-table am-table-striped '>
             <td>
 			<div class='am-u-lg-6'>
 			<input id='sip' name='sip' type='text' class='am-form-field' value='";
-			echo "电信222.187.223.3
-   联通122.195.189.122";
+			echo IP;
 			echo "' disabled>
 			</div>
 			</td>
