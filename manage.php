@@ -590,6 +590,7 @@ document.getElementById('showcommand').scrollTop=document.getElementById('showco
 } 
 } 
 window.onload=sendRequest();
+window.setInterval(sendRequest, 5000); 
 </script>
 			<div class='am-u-sm-12 '>
       <label for='doc-ipt-file-1'>命令行 <span class='am-icon-user'>在线玩家:</label>";players();
