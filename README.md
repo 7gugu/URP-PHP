@@ -13,13 +13,21 @@
 - 日志查询
 
 ## 注意
-程序需要.net4.0以及php5.3+的运行环境,推荐在Windows 2008 64位的环境下运行
+程序需要.net4.0以及php5.3+的运行环境,推荐在Windows 2008 64位的环境下运行<br>
+请使用Windows自带的计划任务执行do.php以实现定时运行,并在设定时勾选<br>
+[不储存密码]选项.
 ## 安装
 将zip置于网站根目录,解压并重命名为你所需的名字,通过浏览器打开install/install.php按步骤安装即可ouo
 <br>
-若出现start无法运行时,可以用x86文件夹内的文件替换
+若出现start无法运行时,可以用x86文件夹内的文件替换<br>
+## 启动模式
+<code>
+<?php
+define("SWAY",true);//启动方式,TRUE为socket启动[推荐],FALSE为php原生函数启动
+?>
+</code>
 ## 有问题反馈
  *   [Blog](http://www.7gugu.com)
- *   QQ:763719129
+ *   Email:gz_7gugu@outlook.com
  
   
