@@ -622,9 +622,7 @@ if(isset($_GET['plugin'])){
 			<th></th>
         </tr>
     </thead>
-    <tbody>
-       
-           ";
+    <tbody> ";
 		   $ser=$_COOKIE['ser'];
 		   $pa=PATHS."\Servers\\".$ser."\Rocket\Permissions.config.xml";
 		   		      echo "<tr><td></td>";
