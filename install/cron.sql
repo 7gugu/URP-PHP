@@ -43,6 +43,7 @@ INSERT INTO `cron` (`name`, `switch`, `key`, `text`) VALUES
 ('cmduser', 0, '', ''),
 ('cmdpaw', 0, '', ''),
 ('cmdpath', 0, '', ''),
+('ustate', 0, '', ''),
 ('rocketver', 0, '', '');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
