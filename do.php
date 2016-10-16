@@ -14,7 +14,7 @@ sleep(10);
 $server=false;
 $rocketver=false;
 $game=mysqli_fetch_array(query("select * from cron where name='gamever'"));
-$rocketver=mysqli_fetch_array(query("select * from cron where name='rocketver'"));
+$rocket=mysqli_fetch_array(query("select * from cron where name='rocketver'"));
 /*
 if($api==""){
      exit();
