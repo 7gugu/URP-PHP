@@ -15,11 +15,11 @@ $server=false;
 $rocketver=false;
 $game=mysqli_fetch_array(query("select * from cron where name='gamever'"));
 $rocket=mysqli_fetch_array(query("select * from cron where name='rocketver'"));
-/*
+
 if($api==""){
      exit();
 }
-*/
+
 if($game['key']!=""&&$rocket['key']!=""){
     if($game['key']!="Unturned"){
     if($api[0]['gameversion']!=$game['key']){
@@ -28,7 +28,7 @@ if($game['key']!=""&&$rocket['key']!=""){
     }
     }
     if($rocketver['key']!="Unturned"){
-    if($api[0]['rocketversion']!=$rocketver['key']){
+    if($api[0]['rocketversion']!=$rocket['key']){
         $rocketver=true;echo "2";
     }
     }
