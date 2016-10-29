@@ -213,14 +213,26 @@ msg($_GET['suc'],1);
 	if(isset($_GET['index'])){
 		$on="";
 		$off="";
-		$sstate=$row['state'];
+		if(isset($_GET['suc'])){
+			if($_GET['suc']==1&&$_GET['suc']==3){
+		sleep(10);
+		}
+		}
+		$port=$row['port']+1;
+		$a=exec("for /f \"tokens=1-5 delims= \" %a in ('\"netstat -ano|findstr \"^:{$port}\"\"') do echo  %a");
+		if($a==" UDP"){
+			$sstate="1";
+		}
+		$sid=$row['sid'];
 		$state="未知";
 		if($sstate==1){
 		$on="disabled";
 		$state="<strong><font color='green'>在线</font></strong>";
+		query("update server set state='1'where sid='{$sid}'");
 		}else{
 			$off="disabled";
 			$state="<strong><font color='red'>离线</font></strong>";
+		query("update server set state='0'where sid='{$sid}'");
 		}
 echo "<table class='am-table am-table-striped '>
  <thead>
@@ -436,13 +448,11 @@ if(isset($_GET['information'])){
 			</td>
         </tr>
 		<tr>
-            <td>地图 [{$row['map']}]</td>
+            <td>地图</td>
             <td>
 			<div class='am-u-lg-6'>
-			 <select name='map' id='doc-select-1' data-am-selected>
-			
-			 
-			 ";
+			 <select name='map' id='doc-select-1' data-am-selected>";
+echo "<option value='{$row['map']}'>{$row['map']}</option>";
 		  gfl(0);
 		  gfl(1);
        echo " </select>
@@ -600,19 +610,16 @@ window.setInterval(sendRequest, 5000);
  </br>
 		   
            <button type='submit' class='am-btn am-btn-success' {$dis}>发送</button>   
-	   
 	  </div>
 	  <div class='am-u-sm-4 '>
 	  </div>
     </div>
           </form>
 		  <br><br> <br><br> <br><br>
-	
 	";
 }
 if(isset($_GET['plugin'])){
 	echo "
-	
 <table class='am-table am-table-striped '>
  <thead>
         <tr>
@@ -635,7 +642,6 @@ if(isset($_GET['plugin'])){
   echo "<td><strong><font color='red'>Config.json</font></strong></td>";
   echo "<td><a href='manage.php?con&pfile=".$pa."' >编辑</a>      
   </td><td></td></tr>";
-
 		   plist(PATHS."/Servers/$ser/Rocket/plugins","dll");
 		  echo  "
       
@@ -668,7 +674,6 @@ if(isset($_GET['po'])){
 	<tbody>
 	<tr>
 	<td>";
-	
 	echo del(PATHS."/Servers/$ser/Rocket/plugins/".$po); 
 	echo "<br><a href='manage.php?plugin'>返回插件列表</a></td>
 	</tr>
@@ -696,8 +701,6 @@ if(isset($_GET['po'])){
            ";
 	plist($po,"xml");
 	 echo  "
-      
-		
 <tr>		
 <td>
 			</td>
@@ -757,10 +760,7 @@ if(isset($_GET['pfile'])){
 
     editorr.getSession().setMode("ace/mode/xml");
 	   editorr.getSession().setWrapLimitRange(null, null);
-   // editorr.getSession().setUseWrapMode(true);
-    //不显示垂直衬线
     editorr.renderer.setShowPrintMargin(false);
-	
 	editorr.focus();
 	function get(){
 		document.getElementById("es").value=editorr.getValue();
@@ -879,15 +879,7 @@ $file = fopen(PATHS."\Servers\\$ser\\Rocket\\Logs\\Rocket.log", "r") or exit("�
 while(!feof($file))
 {
  $rs=fgets($file);
-/* $rs = str_replace ( "[Exception] Rocket.CoreException in Rocket.Core: System.IO.IOException: Write failure ---> System.Net.Sockets.SocketException: 您的主机中的软件中止了一个已建立的连接。", "Error!", $rs ); 
- $rs=str_replace ("at System.Net.Sockets.Socket.Send (System.Byte[] buf, Int32 offset, Int32 size, SocketFlags flags) [0x00000] in <filename unknown>:0","",$rs);
- $rs=str_replace ("at System.Net.Sockets.NetworkStream.Write (System.Byte[] buffer, Int32 offset, Int32 size) [0x00000] in <filename unknown>:0 ","",$rs);
- $rs=str_replace ("  --- End of inner exception stack trace ---","",$rs);
- $rs=str_replace (" at System.Net.Sockets.NetworkStream.Write (System.Byte[] buffer, Int32 offset, Int32 size) [0x00000] in <filename unknown>:0 ","",$rs);
- $rs=str_replace ("at Rocket.Core.RCON.RCONServer.Send (System.Net.Sockets.TcpClient client, System.String text) [0x00000] in <filename unknown>:0","",$rs);
- $rs=str_replace (" at Rocket.Core.RCON.RCONConnection.Send (System.String command, Boolean nonewline) [0x00000] in <filename unknown>:0 ","",$rs);
- $rs=str_replace ("  at Rocket.Core.RCON.RCONServer.handleConnection (System.Object obj) [0x00000] in <filename unknown>:0 ","",$rs);*/
- $rs=trim($rs);
+$rs=trim($rs);
  echo $rs. "<br />";
 }
 fclose($file);
@@ -966,7 +958,6 @@ echo "
 </div>
   <!--我感觉我好帅啊啊啊啊!我说的是7gugu,希望有人看得见我-->
 <a href="#" class="am-icon-btn am-icon-th-list am-show-sm-only admin-menu" data-am-offcanvas="{target: '#admin-offcanvas'}"></a>
-
 <script src="assets/js/jquery.min.js"></script>
 <script src="assets/js/amazeui.min.js"></script>
 <script src="assets/js/app.js"></script>
