@@ -28,6 +28,7 @@ if(isset($_GET['restart'])){
 	exit();
 }
 /*
+修改玩家人数
 if(isset($_POST['players'])){
 	$ser=$_COOKIE['ser'];
 	udfile($ser,"players",$_POST['players'],"Server//Commands.dat");
