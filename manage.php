@@ -215,7 +215,7 @@ msg($_GET['suc'],1);
 		$on="";
 		$off="";
 		if(isset($_GET['suc'])){
-			if($_GET['suc']==1&&$_GET['suc']==3){
+			if($_GET['suc']==1||$_GET['suc']==3){
 		sleep(10);
 		}
 		}
