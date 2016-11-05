@@ -65,7 +65,7 @@ sleep(300);
 //Rocket更新
 if($rocket['switch']==1&&$rocketver==true){
 rocket_download($rocket['key']);
-getzip(PATHS."/Rocket.zip",PATHS."/unturned_data/Managed/");
+getzip(PATHS."/Rocket.zip",PATHS."/");
 sleep(60);
 }
 $rs=query("select * from server");
