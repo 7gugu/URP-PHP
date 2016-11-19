@@ -220,14 +220,14 @@ $port=$rom['port']+1;
                 }
                 if($switch=="cheat"){
                      	if($row['cheat']==1){
-                            $c1="enabled";
+                            $c1="enable";
                         }else{
-                            $c1="disabled";
+                            $c1="disable";
                         }	
                         if($text==1){
-                            $c2="enabled";
+                            $c2="enable";
                         }else{
-                            $c2="disabled";
+                            $c2="disable";
                         }						
             $strContent = str_ireplace('cheats '.$c1,'cheats '.$c2,$strContent,$i);
 			if($i==0){

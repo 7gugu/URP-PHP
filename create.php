@@ -17,7 +17,7 @@ $v="n";
   <meta http-equiv="Cache-Control" content="no-siteapp" />
   <link rel="icon" type="image/png" href="/i/favicon.png">
   <link rel="apple-touch-icon-precomposed" href="/i/app-icon72x72@2x.png">
-  <meta name="apple-mobile-web-app-title" content="Amaze UI" />
+  <meta name="apple-mobile-web-app-title" content="URP" />
   <link rel="stylesheet" href="assets/css/amazeui.min.css"/>
   <link rel="stylesheet" href="assets/css/admin.css">
  
@@ -104,10 +104,10 @@ foreach($arr as $values)
 	$cheat=$_POST['cheat'];
 	if($cheat=="off"){
 		$ch=0;
-		$cheat="cheats disabled";
+		$cheat="cheats disable";
 	}else{
 		$ch=1;
-		$cheat="cheats enabled";
+		$cheat="cheats enable";
 	}
 	$sname=$_POST['servername'];
 	if(strlen($sname)<=5){
