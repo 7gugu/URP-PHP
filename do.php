@@ -112,6 +112,7 @@ query("update cron set `switch`='0' where `name`='update'");
 sleep(10);
 }else{
 	echo "Server update\n";sleep(10);
+}
 	$rs=query("select * from server");
 while($rows = mysqli_fetch_array($rs)){
         $rows = mysqli_fetch_array (query("select * from server where port='{$rows['port']}'"));
@@ -136,6 +137,5 @@ query("update server set `time`='{$date}'where `port`='{$rows['port']}'");
 		}else{
 						query("update cron set `key`='{$dt}'where `name`='time'");
 		}
-}
 }
 ?>
