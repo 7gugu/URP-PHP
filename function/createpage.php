@@ -26,7 +26,7 @@ return true;
 		  <input id='inserpassword' name='inserpassword' type='text' class='' placeholder='输入激活密码'>
       </div>
 	<hr>
-<button type='submit' class='am-btn am-btn-danger' >创建服务器</button>
+<button type='button' onclick='javascript:{this.disabled=true;document.item.submit();}' class='am-btn am-btn-danger' >创建服务器</button>
   </fieldset>
 </form>
 ";
@@ -113,7 +113,7 @@ return true;
    </div>  
      </label>
       </div>
-      <p><button type='submit' class='am-btn am-btn-default'>创建</button></p>
+      <p><button type='button' onclick='javascript:{this.disabled=true;document.item.submit();}' class='am-btn am-btn-default'>创建</button></p>
     </fieldset>
 	</form>";
 	$c2="

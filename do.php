@@ -93,7 +93,7 @@ while($rows = mysqli_fetch_array($rs)){
 	echo $date;
     if($date<=-5){
         $sid=$rows['sid'];
-      // ddf(PATHS."//Servers//{$sid}//");
+      // ddf(PATHS."//Servers//{$sid}//"); //到期删除服务器文件夹[慎用!]
        query("delete from server where sid='{$sid}'");
     }elseif($date<=0){
         rcon("save",1,$rows['rport'],$rows['rpw']);
