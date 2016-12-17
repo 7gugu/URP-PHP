@@ -78,7 +78,9 @@ while($rows = mysqli_fetch_array($rs)){
 			}
 			sleep(5);
        if(SWAY){ 
-                rcon($command,0,1935,'');}else{
+                rcon($command,0,1935,'');
+           
+       }else{
          system("start".PATHS."\\Unturned.exe -nographics -batchmode -silent-crashes +secureserver/".$command);
                 }
       query("update server set `state`='1'where `port`='{$rows['port']}'");
