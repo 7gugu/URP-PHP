@@ -1,7 +1,7 @@
 <?php 
 if(isset($_GET['i'])&&isset($_POST['gamepos'])){
     if($_GET['nosql']){
-        require 'config/config.php';
+        require '../config/config.php';
     }else{
 	define("PATHS",$_POST['gamepos']."/Unturned");
 	define('SYSTEM_ROOT',dirname(dirname(__FILE__)));
