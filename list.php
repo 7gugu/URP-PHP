@@ -9,7 +9,7 @@ if(isset($_GET['dels'])&&isset($_GET['id'])){
 	$sid=$_GET['id'];
 	$rows=mysqli_fetch_array(query("select * from server where sid='{$sid}'"));
 $port=$rows['port']+1;
-popen("for /f \"tokens=1-5 delims= \" %a in ('\"netstat -ano|findstr \"^:{$port}\"\"') do taskkill /f /pid %d");
+system("for /f \"tokens=1-5 delims= \" %a in ('\"netstat -ano|findstr \"^:{$port}\"\"') do taskkill /f /pid %d");
 $ok=ddf(PATHS."//Servers//{$sid}//");
 if($ok){
 	query("delete from server where sid='{$sid}'");
@@ -70,11 +70,11 @@ $sid=$_GET['udate'];
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="renderer" content="webkit">
   <meta http-equiv="Cache-Control" content="no-siteapp" />
-  <link rel="icon" type="image/png" href="/i/favicon.png">
+<link rel="icon" type="image/x-icon" href="assets/favicon.ico">
   <link rel="apple-touch-icon-precomposed" href="/i/app-icon72x72@2x.png">
-  <meta name="apple-mobile-web-app-title" content="Amaze UI" />
-  <link rel="stylesheet" href="assets/css/amazeui.min.css"/>
-  <link rel="stylesheet" href="assets/css/admin.css">
+  <meta name="apple-mobile-web-app-title" content="URP" />
+  <link rel="stylesheet" href="assets/css/amazeui.min.css?v=1.0"/>
+  <link rel="stylesheet" href="assets/css/admin.css?v=1.0">
  
 </head>
 <body>
@@ -84,7 +84,7 @@ $sid=$_GET['udate'];
   
 <div class="am-cf admin-main">
   <!-- sidebar start -->
-<?php require 'function/sidebar.php';?>
+<?php require 'function/sidebar.php'; ?>
   <!-- sidebar end -->
 
   <!-- content start -->
@@ -115,6 +115,7 @@ msg($_GET['suc'],1);
 		  if(isset($_GET['renew'])){
 			  $sid=$_GET['renew'];
 			  $row=mysqli_fetch_array(query("select * from server where sid='{$sid}'"));
+			  
 			  ?>
 		  <div class="am-u-sm-6">
 		  <form method="POST" action="list.php?code=<?php echo $sid;?>" onsubmit='return check(this)'>
@@ -185,7 +186,7 @@ return true;
             <table class="am-table am-table-striped am-table-hover table-main">
               <thead>
               <tr>
-                <th class="table-check"><input type="checkbox" /></th><th class="table-id">ID</th><th class="table-title">名称</th><th class="table-type">拥有人</th><th class="table-author am-hide-sm-only">端口</th><th class="table-date am-hide-sm-only">可用时间</th><th class="table-set">操作</th>
+                <th class="table-id am-hide-sm-only">ID</th><th class="table-title">名称</th><th class="table-type">拥有人</th><th class="table-author am-hide-sm-only">端口</th><th class="table-date ">可用时间</th><th class="table-set">操作</th>
               </tr>
               </thead>
               <tbody>
@@ -211,12 +212,11 @@ $row = mysqli_fetch_array( query("SELECT COUNT(*) FROM server where user='{$_SES
 if($row[0]==0){
 	?>
 	 <tr>
-                <td><input type="checkbox" /></td>
                 <td>0</td>
                 <td></td>
                 <td></td>
-                <td class="am-hide-sm-only">暂无服务器可管理</td>
-                <td class="am-hide-sm-only"></td>
+                <td class="">暂无服务器可管理</td>
+                <td class=""></td>
                 <td>
                 </td>
               </tr>
@@ -226,32 +226,41 @@ while($row = mysqli_fetch_array($result))
 {
 	 $sname=$row['name']; 
 	?>
-              <tr <?if($row['time']<=0){echo "class='am-danger'";}?>>
-                <td><input type="checkbox" /></td>
-                <td><?php echo $row['id'];?></td>
-<td><?if($row['time']>0){?><a href="#" data-am-modal="{target:'#link<? echo $row['sid']; ?>'}" ><?php echo $sname;?></a><?}else{echo $sname;}?></td>
+              <tr <?php if($row['time']<=0){echo "class='am-danger'";}?>>
+                <td class="am-hide-sm-only"><?php echo $row['id'];?></td>
+<td><?php
+if($row['time']>0){ 
+?>
+<a href="#" data-am-modal="{target:'#link<?php echo $row['sid']; ?>'}" >
+<?php echo $sname;?>
+</a>
+<?php
+}else{echo $sname;}
+?>
+</td>
                 <td><?php echo $row['user'];?></td>
                 <td class="am-hide-sm-only"><?php echo $row['port'];?></td>
-                <td class="am-hide-sm-only"><?php echo $row['time']."天";?></td>
+                <td class=""><?php echo $row['time']."天";?></td>
                 <td>
                   <div class="am-btn-toolbar">
                     <div class="am-btn-group am-btn-group-xs">
 					<?php 
 					if($row['time']>0){	
 						?>
-<button type="button"class="am-btn am-btn-default am-btn-xs am-text-secondary" <?php if($row['time']>0){ echo 'onclick="javascript:window.location.href=\'manage.php?index&ser='.$row['sid'].'\'"';}?>><span class="am-icon-pencil-square-o"></span>产品管理</button> <? } ?>
+<button type="button"class="am-btn am-btn-default am-btn-xs am-text-secondary" <?php if($row['time']>0){ echo 'onclick="javascript:window.location.href=\'manage.php?index&ser='.$row['sid'].'\'"';}?>><span class="am-icon-pencil-square-o"></span>产品管理</button> 
+<?php } ?>
                       <button type="button"class="am-btn am-btn-default am-btn-xs am-text-success" onclick="javascript:window.location.href='list.php?renew=<?php echo $row['sid'];?>'" ><span class="am-icon-credit-card"></span>续费</button>
 					 <button class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only"type="button" onclick="javascript:window.location.href='list.php?dels&&id=<?php echo $row['sid'];?>'"><span class="am-icon-trash-o"></span>删除</button>		
 					</div>
 				  </div>
                 </td>
-					  <div class="am-modal am-modal-alert" tabindex="-1" id="link<?echo $row['sid'];?>">
+					  <div class="am-modal am-modal-alert" tabindex="-1" id="link<?php echo $row['sid'];?>">
   <div class="am-modal-dialog">
     <div class="am-modal-hd">连接服务器</div>
     <div class="am-modal-bd">
      <div class="am-g">
   <div class="am-u-sm-6"><a href="steam://connect/222.187.223.3:<?php echo $row['port'] + 1;?>">连接电信服务器</a></div><hr>
-  <div class="am-u-sm-6"><a href="steam://connect/122.195.189.122:<?php echo $row['port'] ;?>">连接联通服务器</a></div>
+  <div class="am-u-sm-6"><a href="steam://connect/122.195.189.122:<?php echo $row['port'] + 1;?>">连接联通服务器</a></div>
 </div>
     </div>
   </div>
@@ -297,10 +306,9 @@ if ($page<$totalPage) {
   <!-- content end -->
 
 </div>
-
 <a href="#" class="am-icon-btn am-icon-th-list am-show-sm-only admin-menu" data-am-offcanvas="{target: '#admin-offcanvas'}"></a>
-<script src="assets/js/jquery.min.js"></script>
-<script src="assets/js/amazeui.min.js"></script>
-<script src="assets/js/app.js"></script>
+<script src="assets/js/jquery.min.js?v=1.0"></script>
+<script src="assets/js/amazeui.min.js?v=1.0"></script>
+<script src="assets/js/app.js?v=1.0"></script>
 </body>
 </html>
