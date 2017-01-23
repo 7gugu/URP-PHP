@@ -212,6 +212,7 @@ msg($_GET['suc'],1);
 <?php
 	if($row!=false){
 	if(isset($_GET['index'])){
+	    $sstate=0;
 		$on="";
 		$off="";
 		if(isset($_GET['suc'])){
