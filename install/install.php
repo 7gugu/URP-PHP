@@ -192,7 +192,7 @@ $err=$_GET['err'];
 			<td>cURL: curl_exec()</td>
 			<td>推荐</td>
 			<td><?php echo checkfunc('curl_exec'); ?></td>
-			<td>抓取网页</td>
+			<td>下载Rocket</td>
 		</tr>
 		<tr>
 			<td>file_get_contents()</td>
@@ -223,6 +223,12 @@ $err=$_GET['err'];
 			<td>必须</td>
 			<td><?php echo checkfunc('file_put_contents',true); ?></td>
 			<td>写入文件(2/2)</td>
+		</tr>
+			<tr>
+			<td>Socket模块</td>
+			<td>必须</td>
+			<td><?php echo checkfunc('socket_connect',true); ?></td>
+			<td>核心模块,用以与后端链接</td>
 		</tr>
 		<tr>
 			<td>MySQL: mysql_connect()</td>
