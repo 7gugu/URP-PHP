@@ -132,8 +132,10 @@ exit();
 		return '<font color="green">可用</font>';
 	} else {
 		if ($m == false) {
+			setcookie('dis','',time()-99999);
 			return '<font color="black">不支持</font>';
 		} else {
+			setcookie('dis','',time()+999);
 			return '<font color="red">不支持</font>';
 		}
 	}
@@ -143,8 +145,10 @@ function checkclass($f,$m = false) {
 		return '<font color="green">可用</font>';
 	} else {
 		if ($m == false) {
+			setcookie('dis','',time()-99999);
 			return '<font color="black">不支持</font>';
 		} else {
+			setcookie('dis','',time()+999);
 			return '<font color="red">不支持</font>';
 		}
 	}
@@ -240,7 +244,7 @@ $err=$_GET['err'];
 		</tr>
               </tbody>  
             </table>
-			 <button class='am-btn am-btn-success'type='button' onclick="javascript:window.location.href='install.php?step3'">下一步>></button>
+			 <button class='am-btn am-btn-success'type='button' <?php if(isset($_COOKIE['dis'])){echo "disabled";}else{ echo "onclick=\"javascript:window.location.href='install.php?step3'\""; } ?>>下一步>></button>
 			 <br><br> 
 		<?php }elseif(isset($_GET['step3'])){?>
 		<h1 class='am-article-title'>配置数据</h1>
