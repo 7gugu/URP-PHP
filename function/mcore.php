@@ -32,7 +32,6 @@ if($result === false) {
     }else{
     return false;
     }
-    //echo "socket_connect() failed.\nReason: ($result) " . socket_strerror(socket_last_error($socket)) . "\n";	header("Location: manage.php?index&err=2");
     exit();
     }	
     if($mode==1){

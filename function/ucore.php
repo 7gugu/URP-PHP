@@ -3,7 +3,6 @@ function checkuser(){
 if (isset($_SESSION["username"])){
  $username=$_SESSION["username"];
  $password=$_SESSION["password"];
-//$password=md5($password); 
 $sql="select * from user where username='{$username}' and password='{$password}'";  
 $rs=query($sql); 
 $rom=mysqli_fetch_array($rs);
