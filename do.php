@@ -90,13 +90,13 @@ while($rows = mysqli_fetch_array($rs)){
                 }
       query("update server set `state`='1'where `port`='{$rows['port']}'");
         }
-		$dt=date('YMD',time());
+		$dt=date('ymd',time());
 		if($time['key']!=$dt){
 			query("update cron set `key`='{$dt}'where `name`='time'");
 		if($time['switch']==1){
-    $date=$rows['time'];
-	//echo $date;
-    $date=$date-1;
+   $date=$rows['time'];//原时间
+    $v=$dt-$date;//待减时间
+    $date=$date-$v;
 	echo $date;
     if($date<=-5){
         $sid=$rows['sid'];
@@ -119,12 +119,13 @@ query("update cron set `switch`='0' where `name`='update'");
     	$rs=query("select * from server");
 while($rows = mysqli_fetch_array($rs)){
         $rows = mysqli_fetch_array (query("select * from server where port='{$rows['port']}'"));
-		$dt=date('YMD',time());
+		$dt=date('ymd',time());
 		if($time['key']!=$dt){
 			query("update cron set `key`='{$dt}'where `name`='time'");
 		if($time['switch']==1){
-    $date=$rows['time'];
-    $date=$date-1;
+    $date=$rows['time'];//原时间
+    $v=$dt-$date;//待减时间
+    $date=$date-$v;
 	echo $date;
     if($date<=-5){
         $sid=$rows['sid'];
