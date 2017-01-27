@@ -1,4 +1,5 @@
 <?php 
+date_default_timezone_set("Asia/Shanghai");//定义时区,默认为中国上海时间
 $connect=mysqli_connect(DBIP,DBUSERNAME,DBPASSWORD,DBNAME,DBPORT) ;
  function query($text){
 	global $connect;

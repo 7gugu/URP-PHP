@@ -7,19 +7,20 @@ set_time_limit(0);
 $rocket=mysqli_fetch_array(query("select * from cron where name='rocket'"));
 $time=mysqli_fetch_array(query("select * from cron where name='time'"));
 $cmd=mysqli_fetch_array(query("select * from cron where name='cmdpath'"));
+if($rocket['key']!=""){
 $api=json_decode(file_get_contents("http://api.rocketmod.net/status/unturned/".$rocket['key']),true);
 sleep(10);
 echo "http://api.rocketmod.net/status/unturned/".$rocket['key'];
 sleep(10);
+}else{
+    echo "不启用版本检测\n";
+}
 $server=false;
 $rocketver=false;
 $game=mysqli_fetch_array(query("select * from cron where name='gamever'"));
 $rocket=mysqli_fetch_array(query("select * from cron where name='rocketver'"));
 
-if($api==""){
-     exit();
-}
-
+if($api!=""){
 if($game['key']!=""&&$rocket['key']!=""){
     if($game['key']!="Unturned"){
     if($api[0]['gameversion']!=$game['key']){
@@ -42,6 +43,10 @@ echo "GameVersion:".$g;
 echo "RocketVersion:".$r;
 query("update cron set `key`='{$g}'where `name`='gamever'");
 query("update cron set `key`='{$r}'where `name`='rocketver'");
+}else{
+    echo "未检测版本";
+    sleep(5);
+}
 $update=mysqli_fetch_array(query("select * from cron where name='update'"));
 recurse_copy("D:\unturned\Servers","huifu");
 //var_dump($update);//sleep(60);
