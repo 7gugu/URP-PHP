@@ -142,12 +142,12 @@ $sid=$_SESSION['username']."x".$num;
 	}
 	$uid++;
 	$username=$_SESSION['username'];
-	$q="insert into server(id,user,time,rpw,rport,port,name,state,sid,players,welcome,difficult,mode,map,password,view,cheat)values('$uid','$username','$time','$rpw','$rport','$port','$sname','0','$sid','$players','本服务器由URP强力驱动','$dif','$pv','$map','','$view','$ch')";
+	$q="insert into server(id,user,time,rpw,rport,port,name,state,sid,players,welcome,difficult,mode,map,password,view,cheat,loadout)values('$uid','$username','$time','$rpw','$rport','$port','$sname','0','$sid','$players','本服务器由URP强力驱动','$dif','$pv','$map','','$view','$ch','')";
 		//echo $q;
 			$r=query($q);
 			$numb=mysqli_affected_rows($connect);
 			query("DELETE FROM inser WHERE inser='{$inser}'");
-			if($numb==0){
+			if($numb<=0){
 				setcookie('query',$q,time()+3600*24);
 				header("Location:create.php?c0&err=11");//sql写入失败
 				exit();
