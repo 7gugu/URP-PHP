@@ -1,6 +1,6 @@
 <?php 
 if(isset($_GET['i'])&&isset($_POST['gamepos'])){
-    if($_GET['nosql']){
+    if(isset($_GET['nosql'])){
         require '../config/config.php';
     }else{
 	define("PATHS",$_POST['gamepos']."/Unturned");
