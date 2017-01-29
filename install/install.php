@@ -1,6 +1,6 @@
 <?php 
 if(isset($_GET['i'])&&isset($_POST['gamepos'])){
-    if($_GET['nosql']){
+    if(isset($_GET['nosql'])){
         require '../config/config.php';
     }else{
 	define("PATHS",$_POST['gamepos']."/Unturned");
@@ -279,7 +279,7 @@ $err=$_GET['err'];
   <hr>
   <div class="am-input-group">
   <span class="am-input-group-label">Unturned文件夹位置</span>
-  <input type="text" name="gamepos" class="am-form-field" placeholder="需要全路径,如:D:\Unturned\Unturned.exe">
+  <input type="text" name="gamepos" class="am-form-field" placeholder="需要全路径,如:D:\Unturned\">
    <span class="am-input-group-label">\Unturned.exe</span>
 		</div>
 		<hr>
