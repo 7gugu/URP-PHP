@@ -113,7 +113,7 @@ foreach($arr as $values)
 		header("Location:create.php?c0&err=22");
 	}
 	$map=$_POST['map'];
-	$arr=mysqli_fetch_array(query("select * from inser where inser={$inser}"));
+	$arr=mysqli_fetch_array(query("select * from inser where inser='{$inser}'"));
 	$time=$arr['time'];
 	$dif=$_POST['dif'];
 	$pv=$_POST['pv'];
