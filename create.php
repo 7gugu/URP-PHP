@@ -65,8 +65,7 @@ if(isset($_GET['c1'])&&isset($_POST['inser'])&&isset($_POST['inserpassword'])){
 	echo $c1a;
 		gfl(1);
 	echo $c1b;
-	echo "  <input id='' name='' type='text' class='' value='{$a[1]}' disabled> 
-	<input id='time' name='time' type='hidden' class='' value='{$a[1]}' >";
+	echo "  <input id='' name='' type='text' class='' value='{$a[1]}' disabled> ";
 	echo $c1c;
 	
 }
@@ -84,7 +83,7 @@ foreach($arr as $values)
   $query= "SELECT * FROM server WHERE port='{$values}'";
   $rs=query($query);
   $num=mysqli_num_rows($rs);
-  if($num){}else{
+  if($num==false){
 	  $port=$values;
 	  break;
   }
@@ -96,7 +95,7 @@ foreach($arr as $values)
   $query= "SELECT * FROM server WHERE rport='{$values}'";
   $rs=query($query);
   $num=mysqli_num_rows($rs);
-  if($num){}else{
+  if($num==false){
 	  $rport=$values;
 	  break;
   }
@@ -111,10 +110,11 @@ foreach($arr as $values)
 	}
 	$sname=$_POST['servername'];
 	if(strlen($sname)<=5){
-		header("Location:create.php?c0&err=22");//
+		header("Location:create.php?c0&err=22");
 	}
 	$map=$_POST['map'];
-	$time=$_POST['time'];
+	$arr=mysqli_fetch_array(query("select * from inser where inser={$inser}"));
+	$time=$arr['time'];
 	$dif=$_POST['dif'];
 	$pv=$_POST['pv'];
 	$view=$_POST['view'];
