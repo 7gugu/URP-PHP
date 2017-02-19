@@ -339,7 +339,7 @@ echo "<table class='am-table am-table-striped '>
 			<td>	
 			<div class='am-u-lg-6'>
 			
-		<button type='submit' class='am-btn am-btn-success'>保存设置</button>
+	
 		</div>
 		</td>
 		<td>
