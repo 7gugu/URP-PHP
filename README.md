@@ -22,6 +22,7 @@ __本人恕不提供任何非URP自身问题的解答,其他问题请自行百�
 将zip置于网站根目录,解压并重命名为你所需的名字,通过浏览器打开install/install.php按步骤安装即可ouo
 <br>
 若出现start无法运行时,可以用x86文件夹内的文件替换<br>
+__本人恕不提供URP的维护工作,数据丢失恕不负责！！__
 ## 有问题反馈
  *   [Blog](http://www.7gugu.com)
  *   Email:gz_7gugu@outlook.com
