@@ -447,7 +447,7 @@ if($buf=="OK"){
     </div>
     <footer class="admin-content-footer">
       <hr>
-      <p class="am-padding-left">© 2016 Power By 7gugu.</p>
+      <p class="am-padding-left">© 2017 Power By 7gugu.</p>
     </footer>
   </div>
   <!-- content end -->

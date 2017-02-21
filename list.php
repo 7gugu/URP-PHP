@@ -259,8 +259,7 @@ if($row['time']>0){
     <div class="am-modal-hd">连接服务器</div>
     <div class="am-modal-bd">
      <div class="am-g">
-  <div class="am-u-sm-6"><a href="steam://connect/222.187.223.3:<?php echo $row['port'] + 1;?>">连接电信服务器</a></div><hr>
-  <div class="am-u-sm-6"><a href="steam://connect/122.195.189.122:<?php echo $row['port'] + 1;?>">连接联通服务器</a></div>
+  <div class="am-u-sm-6"><a href="steam://connect/<?php echo IP.":".$row['port'] + 1;?>">连接服务器</a></div><hr>
 </div>
     </div>
   </div>
@@ -300,7 +299,7 @@ if ($page<$totalPage) {
     </div>
     <footer class="admin-content-footer">
       <hr>
-      <p class="am-padding-left">© 2016 Power By 7gugu.</p>
+      <p class="am-padding-left">© 2017 Power By 7gugu.</p>
     </footer>
   </div>
   <!-- content end -->

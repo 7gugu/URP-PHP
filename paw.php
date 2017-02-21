@@ -38,7 +38,7 @@ if(isset($_POST['npw'])){
   <meta http-equiv="Cache-Control" content="no-siteapp" />
   <link rel="icon" type="image/png" href="/i/favicon.png">
   <link rel="apple-touch-icon-precomposed" href="/i/app-icon72x72@2x.png">
-  <meta name="apple-mobile-web-app-title" content="Amaze UI" />
+  <meta name="apple-mobile-web-app-title" content="更改密码" />
   <link rel="stylesheet" href="assets/css/amazeui.min.css"/>
   <link rel="stylesheet" href="assets/css/admin.css">
  
@@ -114,7 +114,7 @@ msg($_GET['suc'],1);
     </div>
     <footer class="admin-content-footer">
       <hr>
-      <p class="am-padding-left">© 2016 Power By 7gugu.</p>
+      <p class="am-padding-left">© 2017 Power By 7gugu.</p>
     </footer>
   </div>
   <!-- content end -->
