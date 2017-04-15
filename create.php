@@ -163,7 +163,7 @@ $sid=$_SESSION['username']."x".$num;
     </div>
     <footer class="admin-content-footer">
       <hr>
-      <p class="am-padding-left">© 2017 Power By 7gugu.</p>
+      <p class="am-padding-left">© <?php echo date("Y"); ?> Power By 7gugu.</p>
     </footer>
   </div>
   <!-- content end -->

@@ -1,8 +1,8 @@
-<?php 
+<?php
+//定时任务模块
 require 'config/config.php';
 require 'function/dbcore.php';
 require 'function/mcore.php';
-//ignore_user_abort(true);
 set_time_limit(0);
 $rocket=mysqli_fetch_array(query("select * from cron where name='rocket'"));
 $time=mysqli_fetch_array(query("select * from cron where name='time'"));

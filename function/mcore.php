@@ -2,6 +2,8 @@
 /*****************
    函数库
 *****************/
+
+//下载Rocket.dll
 function rocket_download($key) {
 $url="http://api.rocketmod.net/download/unturned/latest/".$key;   
 $dir=PATHS.'/Rocket.zip';
@@ -14,14 +16,14 @@ curl_close($ch);
 fclose($fp);
 return $res;
 }
+
+//Rcon函数
 function rcon($operate,$mode,$port,$rpw){
-//error_reporting(E_ALL);
 //port 服务器Rcon或者启动模块[1935]端口 Rpw Rcon密码 operate 指令
 @set_time_limit(0);
 $address = 'localhost';
 $socket = @socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
 if ($socket === false) {
-    //echo "socket_create() failed: reason: " . socket_strerror(socket_last_error()) . "\n";
     header("Location: manage.php?index&err=1");
     exit();
 } 
@@ -44,17 +46,19 @@ $in=$operate."\r\n";
 sleep(2);
 @socket_close($socket);		
         }
-        //检测服务器状态
-           function check($port){
-               $ip="localhost";
-               sleep(10);
+        
+//检测服务器状态
+function check($port){
+    $ip="localhost";
+    sleep(10);
     $sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
-  $sock=@ socket_connect($sock,$ip, $port);
-  @socket_close($sock);
-return $sock;
-   }
+    $sock=@ socket_connect($sock,$ip, $port);
+    @socket_close($sock);
+    return $sock;
+                      }
+                      
 //检查秘钥的有效性   
-   function check_key($key=""){
+function check_key($key=""){
 $url="http://api.rocketmod.net/download/unturned/latest/".$key;
 $ch = curl_init($url);
 ob_start();  
@@ -68,6 +72,8 @@ if($check=="invalid api key"||$check=="not available"){
     return true;
 }
 }
+
+//管理服务器状态函数
 function manage($sid,$switch){
     $username=$_SESSION['username'];
     $userpower=query("select serverid from user where username='{$username}'");
@@ -80,7 +86,6 @@ $ss=query("select * from server where sid='{$sid}'");
                 rcon($command,0,1935,'');}else{
          system("start".PATHS."\\Unturned.exe -nographics -batchmode -silent-crashes +secureserver/".$command);
                 }
-      //  query("update server set state='1'where sid='{$sid}'");	
         header("Location: manage.php?index&suc=1");
         }elseif($switch=='shutdown'){	
         sleep(2);
@@ -91,7 +96,6 @@ $ss=query("select * from server where sid='{$sid}'");
             rcon("shutdown",1,$rom['rport'],$rom['rpw']);
 $port=$rom['port']+1;
  system("for /f \"tokens=1-5 delims= \" %a in ('\"netstat -ano|findstr \"^:{$port}\"\"') do taskkill /f /pid %d ");
-          //  query("update server set state='0'where sid='{$sid}'");	
         header("Location: manage.php?index&suc=2");
         }elseif($switch=='restart'){
             $query=query("select * from server where sid='{$sid}'");
@@ -99,21 +103,20 @@ $port=$rom['port']+1;
              rcon("shutdown",1,$rom['rport'],$rom['rpw']);
              	$port=$rom['port']+1;
  system("for /f \"tokens=1-5 delims= \" %a in ('\"netstat -ano|findstr \"^:{$port}\"\"') do taskkill /f /pid %d ");
-           //  query("update server set state='0'where sid='{$sid}'");	
         $command=$sid;
         if(SWAY){ 
                 rcon($command,0,1935,'');}else{
          system("start".PATHS."\\Unturned.exe -nographics -batchmode -silent-crashes +secureserver/".$command);
                 }
-                
-       //  query("update server set state='1'where sid='{$sid}'");	
         header("Location: manage.php?index&suc=3");
         }
     }else{
         header("Location: manage.php?index&error=3");
     }
 }
-        function udfile($sid,$switch,$text,$file){
+
+//编辑游戏服务器配置文件
+function udfile($sid,$switch,$text,$file){
             $fpath = PATHS."\Servers\\{$sid}\\{$file}";
 			//echo $fpath;
             if(is_file( $fpath )&&filesize($fpath)!=0){
@@ -124,7 +127,7 @@ $port=$rom['port']+1;
                 if($switch=="players"){	
 				  if($text==""){
 		  $text=1;
-	  }
+	                                      }
             $strContent = str_ireplace('Maxplayers '.$row['players'],'Maxplayers '.$text,$strContent,$i);
 			if($i==0){
 				$write=fopen($fpath,"a");
@@ -336,8 +339,8 @@ if($text==""){
             
         }
         
-        //ZIP解压模块
-        function getzip($filename, $path) {
+//ZIP解压模块
+function getzip($filename, $path) {
  if(!file_exists($filename)){
  } 
  $filename = iconv("utf-8","gb2312",$filename);
@@ -366,8 +369,9 @@ if($text==""){
  zip_close($resource); 
  return true;
 }
+
 //mod上传模块
-        function upmod($upgfile){
+function upmod($upgfile){
 if(is_uploaded_file($upgfile['tmp_name'])){ 
 $upfile=$upgfile; 
 $fname=$upfile["name"];//上传文件的文件名 
@@ -402,8 +406,9 @@ return false;
 } 
         }
         }
-    //地图上传模块
-        function upmap($upgfile){
+        
+//地图上传模块
+function upmap($upgfile){
 if(is_uploaded_file($upgfile['tmp_name'])){ 
 $upfile=$upgfile; 
 $fname=$upfile["name"];//上传文件的文件名 
@@ -422,9 +427,10 @@ return false;
 } 
 } 
         }
-        }		
-        //插件上传
-            function upplugin($upgfile){
+        }
+        
+//插件上传
+function upplugin($upgfile){
 if (!file_exists("plugins/")){mkdir ("plugins/",0777,true);}
 if(is_uploaded_file($upgfile['tmp_name'])){ 
 $upfile=$upgfile; 
@@ -441,13 +447,11 @@ if($error==0){
 return false; 
 } 
 } 
-        }	
-		function ddf(){
-			return true;
-		}
-      /*  //删除目录
-        function ddf( $dirName )  
-{  
+        }
+        
+//删除游戏数据请务必三思后再启用
+function ddf($dirName){
+if(DDFS){  
 if ( $handle = opendir( "$dirName" ) ) {  
    while ( false !== ( $item = readdir( $handle ) ) ) {  
    if ( $item != "." && $item != ".." ) {  
@@ -466,12 +470,16 @@ if ( $handle = opendir( "$dirName" ) ) {
    if( rmdir( $dirName ) ){  
    return true;
 }else{
-    return false;
+   return false;
 }  
 }
-}  */
-        //删除dll
-    function del($file) {
+}else{
+   return true; 
+}
+  }
+  
+//删除插件
+function del($file) {
   if (file_exists($file)) {
         $fn=explode(".",$file);
       if(file_exists($fn[0])){
@@ -513,7 +521,8 @@ if ( $handle = opendir( "$dirName" ) ) {
   }
   }
 }
-//邀请码生成
+
+//生成激活码
 function getinser($length){
    $str = null;
    $strPol = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz";
@@ -523,11 +532,12 @@ function getinser($length){
    }
    return $str;
   }
-  
+
+//生成相关配置文件
 function fcreate($sname,$port,$rport,$rpw,$map,$mode,$pv,$cheat,$sid,$players,$loadout){ 
 $loadout=htmlspecialchars($loadout);
 $loadout=str_ireplace("/","//",$loadout);
-    $dat = "Name $sname\n";
+$dat = "Name $sname\n";
 $dat .= "Port $port\n";
 $dat .= "Maxplayers $players\n";
 $dat .= "Map $map\n";
@@ -544,7 +554,7 @@ if (!file_exists($f))
 mkdir ($f,0777,true);
 //echo "文件夹创建成功";
     }else{
-  //      echo "文件夹已创建";
+  //echo "文件夹已创建";
     }
     $f1=PATHS."\Servers\\$sid\\Rocket\Plugins";
     if (!file_exists($f1))
@@ -587,6 +597,7 @@ if($tf==false){
     return true;
 }
 }
+
 //地图文件列表
 function gfl($mode){ 
     if($mode==0){
@@ -608,7 +619,8 @@ echo "<option value='".str_replace(PATHS.'\Maps\\','',$afile)."'>".str_replace(P
 }
 } 
 }
-//文件读写
+
+//编辑器文件读写
 function rwfile($path,$switch,$text){
             $fpath = $path;
             if($switch=="r"){
@@ -643,6 +655,7 @@ if (ord($charset[1]) == 239 && ord($charset[2]) == 187 && ord($charset[3]) == 19
 }
             }
         }
+        
 //玩家数量
 function players(){
     $ser=$_COOKIE['ser'];
@@ -656,6 +669,7 @@ function players(){
         }
     echo $p."人";
 }
+
 //插件文件列表
 function plist($path,$mode){ 
 if($mode=="dll"){
@@ -699,8 +713,6 @@ echo "<tr><td></td>";
 			}
 }		
 		}
-    
-    
 }elseif($mode=="xml"){
     foreach(glob($path."/*.xml",GLOB_BRACE) as $afile){ 
 if(is_dir($afile)) 
@@ -714,6 +726,8 @@ if(is_dir($afile))
 }
 }
 }
+
+//插件列表
 function pshop($path){
 foreach(glob($path."*.dll",GLOB_BRACE) as $afile){ 
 if(!is_dir($afile)) 
@@ -731,6 +745,7 @@ $a=str_replace($path,'',$afile);
 }
 } 
 }
+
 //复制文件夹
 function recurse_copy($src,$dst) { 
         $dir = opendir($src);
@@ -747,6 +762,7 @@ function recurse_copy($src,$dst) {
         }
         closedir($dir);
     }
+//模组列表
 function pmod($path){
 $file=glob($path."/*",GLOB_BRACE);
 if(count($file)){
@@ -774,6 +790,8 @@ echo "<td></td><td>无MOD可管理</td><td></td>
   </tr>"; 
 }
 }
+
+//删除模组目录[没把上面的组合起来是因为一些特殊原因,有时间的话我会改的]
 function deldir($dir) {
   $dh=opendir($dir);
   while ($file=readdir($dh)) {
@@ -786,7 +804,6 @@ function deldir($dir) {
       }
     }
   }
-  
   closedir($dh);
   if(rmdir($dir)) {
     return true;

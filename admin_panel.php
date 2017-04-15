@@ -880,7 +880,7 @@ echo "<li class='am-disabled'><a href='admin_panel.php?mplugin&page=";echo $page
             <p>注：.....</p>
     <footer class="admin-content-footer">
       <hr>
-      <p class="am-padding-left">© 2017 Power By 7gugu.</p>
+      <p class="am-padding-left">© <?php echo date("Y"); ?> Power By 7gugu.</p>
     </footer>
   </div>
   <!-- content end -->

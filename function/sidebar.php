@@ -94,7 +94,7 @@ echo "
 		";
 	}
 }else{
-	echo "[2001]Sibebar wrong!";
+	echo "[2001]Sidebar initialization failed!";
 	exit();
 }
 

@@ -382,6 +382,7 @@ if($buf=="OK"){
   <p>Start.exe在安装完成后,需要一直开启,以此启动服务器</p>
   <ul>
     <li>在Unturned文件夹中找到Start.exe运行后,点击下方的验证,来继续下一步操作。</li>
+    <li>若出现无验证按钮的话,请前往php.ini编辑打开socket拓展。</li>
     <li>若在Unturned文件夹中找不到Start.exe,可手动从install文件夹内复制start.exe到Unturned文件夹中,然后运行并启动验证。</li>
    <?php
   if(socket()){

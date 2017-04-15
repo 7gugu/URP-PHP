@@ -1,4 +1,6 @@
 <?php 
+
+//验证用户身份
 function checkuser(){
 if (isset($_SESSION["username"])){
  $username=$_SESSION["username"];
@@ -21,6 +23,8 @@ if(isset($_COOKIE['query'])){
 	header("Location:login.php?err=10");
 	}
 }
+
+//验证激活码是否有效
 function checkinser($inser,$inserpassword){
 	global $connect;
 	$arr=array();
@@ -36,6 +40,8 @@ function checkinser($inser,$inserpassword){
   $arr[1]=$row['time'];
  return $arr; 
 }
+
+//提醒框函数
 function msg($num,$mode=0){
 	if($mode==1){
 		echo "<div class='am-alert am-alert-success' data-am-alert>

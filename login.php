@@ -182,7 +182,7 @@ $rom=mysqli_fetch_array($rs);
     </form>
     <?php }?>
     <hr>
-    <p>© Power By 7gugu.</p>
+    <p>© <?php echo date("Y"); ?>Power By 7gugu.</p>
   </div>
 </div>
 </body>
