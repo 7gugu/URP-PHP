@@ -525,7 +525,7 @@ echo "<li class='am-disabled'><a href='admin_panel.php?muser&page=";echo $page+1
       <div class='am-g'>
         <div class='am-u-sm-12'>
         <div class='am-article-hd'>
-    <legend>计划任务[Beta]</legend>
+    <legend>计划任务</legend>
 	<div class='am-u-sm-6'>
 	<section class='am-panel am-panel-default'>
   <header class='am-panel-hd'>

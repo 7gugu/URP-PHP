@@ -119,7 +119,7 @@ if(isset($_GET['mod'])){
 		}else{
 			unlink(PATHS."/Servers/".$_COOKIE['ser']."/Workshop/Content/".$_GET['del']);
 		}
-		header("Location:manage.php?mod&suc=24");
+		header("Location:manage.php?mod&suc=7");
 	}
 	if(isset($_FILES['upfile'])){
 		set_time_limit(0);
@@ -872,30 +872,6 @@ if(isset($_GET['map'])){
 </section>创意工坊的地图文件在 Steam文件夹下的 \steamapps\workshop\content\\304930中
 </div>";
 
-}
-if(isset($_GET['log'])){
-	echo "
-	<div class='am-g'> 
-        <div class='am-u-sm-8'>
-    <legend>日志查询</legend>
-          </div>
-        </div>
- <div class='am-u-sm-12'>
- <h4><strong>日志为最新日志,若需全部日志请联系管理员</strong><h4>
- <pre class='am-pre-scrollable'>
- ";
- $ser=$_COOKIE['ser'];
-$file = fopen(PATHS."\Servers\\$ser\\Rocket\\Logs\\Rocket.log", "r") or exit("打开log文件失败,请联系管理员!");
-while(!feof($file))
-{
- $rs=fgets($file);
-$rs=trim($rs);
- echo $rs. "<br />";
-}
-fclose($file);
-echo "
-</pre>
-		  </div>";  
 }
 	if(isset($_GET['players'])){
 		echo "

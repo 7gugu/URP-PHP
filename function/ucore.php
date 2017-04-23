@@ -67,7 +67,7 @@ function msg($num,$mode=0){
         echo "[2006]添加插件成功";
         break;
 		 case 7:
-        echo "[2007]上传地图成功";
+        echo "[2007]上传数据成功";
         break;
 		 case 8:
         echo "[2008]修改密码成功";
