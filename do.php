@@ -64,8 +64,12 @@ query("update server set state='0'where port='{$rows['port']}'");
 if($cmd['switch']==1&&$server==true){
     $user=mysqli_fetch_array(query("select * from cron where name='cmduser'"));
     $paw=mysqli_fetch_array(query("select * from cron where name='cmdpaw'"));
+    if(file_exists($cmd['key']."\\steamcmd.exe")){
 system("start ".$cmd['key']."\\steamcmd.exe +login ".$user['key']." ".$paw['key']." +force_install_dir ".PATHS." +app_update 304930 validate +exit","r");
 sleep(300);
+}else{
+    echo "Fail to update the game by lack of steamcmd.exe\r\n ";
+}
 }
 //Rocket更新
 if($rocket['switch']==1&&$rocketver==true){
@@ -99,7 +103,7 @@ while($rows = mysqli_fetch_array($rs)){
 	echo $date;
     if($date<=-5){
         $sid=$rows['sid'];
-      // ddf(PATHS."//Servers//{$sid}//"); //到期删除服务器文件夹[慎用!]
+       ddf(PATHS."//Servers//{$sid}//"); //到期删除服务器文件夹[慎用!]
        query("delete from server where sid='{$sid}'");
     }elseif($date<=0){
         rcon("save",1,$rows['rport'],$rows['rpw']);

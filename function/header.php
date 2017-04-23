@@ -2,7 +2,7 @@
 echo "
 <header class='am-topbar am-topbar-inverse admin-header'>
   <div class='am-topbar-brand'>
-    <strong>URP</strong> <small>后台管理</small>
+    <strong>".HNAME."</strong> <small>后台管理</small>
   </div>
   <div class='am-collapse am-topbar-collapse' id='topbar-collapse'>
 <li class=‘am-dropdown’ data-am-dropdown>
