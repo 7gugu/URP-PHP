@@ -534,7 +534,7 @@ function getinser($length){
   }
 
 //生成相关配置文件
-function fcreate($sname,$port,$rport,$rpw,$map,$mode,$pv,$cheat,$sid,$players,$loadout){ 
+function fcreate($sname,$port,$rport,$rpw,$map,$mode,$pv,$cheat,$sid,$players,$loadout=''){ 
 $loadout=htmlspecialchars($loadout);
 $loadout=str_ireplace("/","//",$loadout);
 $dat = "Name $sname\n";
