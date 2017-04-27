@@ -221,14 +221,10 @@ msg($_GET['suc'],1);
 		}
 		}
 		$port=$row['port']+1;
-	if(function_exists('exec')){	
-		$a=exec("for /f \"tokens=1-5 delims= \" %a in ('\"netstat -ano|findstr \"^:{$port}\"\"') do echo  %a");
+		$a=@exec("for /f \"tokens=1-5 delims= \" %a in ('\"netstat -ano|findstr \"^:{$port}\"\"') do echo  %a");
 		if($a==" UDP"){
 			$sstate="1";
 		}
-	}else{
-		$ssate=3;//新增检测系统状态检查
-	}
 		$sid=$row['sid'];
 		$state="未知";
 		if($sstate==1){
