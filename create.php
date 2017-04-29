@@ -51,8 +51,7 @@ msg($_GET['suc'],1);
 <?php 
 if(isset($_GET['c0'])){
 echo $c0;	
-}
-if(isset($_GET['c1'])&&isset($_POST['inser'])&&isset($_POST['inserpassword'])){
+}elseif(isset($_GET['c1'])&&isset($_POST['inser'])&&isset($_POST['inserpassword'])){
 	$inser=$_POST['inser'];
 	$inserpassword=$_POST['inserpassword'];
 	$a=checkinser($inser,$inserpassword);
@@ -68,8 +67,7 @@ if(isset($_GET['c1'])&&isset($_POST['inser'])&&isset($_POST['inserpassword'])){
 	echo "  <input id='' name='' type='text' class='' value='{$a[1]}' disabled> ";
 	echo $c1c;
 	
-}
-if(isset($_GET['c2'])&&isset($_POST['cheat'])){
+}elseif(isset($_GET['c2'])&&isset($_POST['cheat'])){
 	$inserpassword=$_COOKIE['inserpassword'];
 	$inser=$_COOKIE['inser'];
 	$a=checkinser($inser,$inserpassword);
@@ -142,7 +140,14 @@ $sid=$_SESSION['username']."x".$num;
 	}
 	$uid++;
 	$username=$_SESSION['username'];
-	$q="insert into server(id,user,time,rpw,rport,port,name,state,sid,players,welcome,difficult,mode,map,password,view,cheat,loadout)values('$uid','$username','$time','$rpw','$rport','$port','$sname','0','$sid','$players','本服务器由URP强力驱动','$dif','$pv','$map','','$view','$ch','')";
+	if(CSQL){
+	csql("un_".$num,"un_".$num,md5("un_".$num));
+    $dbname=$sqluser="un_".$num;
+    $sqlpass=md5("un_".$num);
+	$q="insert into server(id,user,time,rpw,rport,port,name,state,sid,players,welcome,difficult,mode,map,password,view,cheat,loadout,dbname,sqluser,sqlpaw)values('$uid','$username','$time','$rpw','$rport','$port','$sname','0','$sid','$players','本服务器由URP强力驱动','$dif','$pv','$map','','$view','$ch','','$dbname','$sqluser','$sqlpass')";
+	}else{
+	$q="insert into server(id,user,time,rpw,rport,port,name,state,sid,players,welcome,difficult,mode,map,password,view,cheat,loadout,dbname,sqluser,sqlpaw)values('$uid','$username','$time','$rpw','$rport','$port','$sname','0','$sid','$players','本服务器由URP强力驱动','$dif','$pv','$map','','$view','$ch','','','','')";
+	}
 		//echo $q;
 			$r=query($q);
 			$numb=mysqli_affected_rows($connect);
@@ -154,6 +159,22 @@ $sid=$_SESSION['username']."x".$num;
 			}
 			echo $c2;
 		}
+}else{
+	echo "
+	<br>
+<div class='am-g'>
+  <div class='am-u-sm-6 am-u-lg-centered'>
+  <div class=' am-alert am-alert-warning' data-am-alert>
+  <h3>检测到非法跳转</h3>
+  <p>请从正常页面的侧边栏创建服务器</p>
+  <ul>
+    <li>如果您是非法跳转，你可以戳这<a href='index.php'><code>返回首页</code></a></li>
+    <li>如果您是正常访问，请寻求管理员寻求帮助</li>
+  </ul>
+</div>
+  </div>
+</div>
+	";
 }
 ?>
 

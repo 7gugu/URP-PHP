@@ -522,6 +522,20 @@ function del($file) {
   }
 }
 
+//创建用户数据库
+function csql($dbname,$sqluser,$sqlpaw){
+    if(CSQL){
+$arr=mysqli_fetch_array(query("select * from mysql.user where User='$sqluser'"));
+query("create database $dbname");
+if($arr['User']==""){
+query("insert into mysql.user(Host,User,Password) values('localhost','$sqluser',password('$sqlpaw'))");
+query("flush privileges");
+query("grant all privileges on $dbname.* to '$sqluser'@'localhost' identified by '$sqlpaw'");
+query("REVOKE drop ON $dbname.* FROM '$sqluser'@'localhost'");
+                    }
+}
+}
+
 //生成激活码
 function getinser($length){
    $str = null;

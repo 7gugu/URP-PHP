@@ -45,6 +45,11 @@ echo "
 		  <li><a href='manage.php?map'><span class='am-icon-map-o'></span>上传地图</a></li>
 		  <li><a href='manage.php?mod'><span class='am-icon-wrench'></span>上传MOD</a></li>
 		  <li><a href='manage.php?players'><span class='am-icon-user'></span>在线玩家</a></li>
+		  ";
+	if(CSQL){	  
+		 echo "<li><a href='manage.php?msql'><span class='am-icon-skyatlas'></span>数据库管理</a></li>";
+	}
+		  echo "
       </ul>  
 	   <div class='am-panel am-panel-default admin-sidebar-panel'>
         <div class='am-panel-bd'>

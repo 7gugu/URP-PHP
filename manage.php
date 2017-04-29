@@ -923,6 +923,68 @@ if(isset($_GET['map'])){
 </div>";
 
 }
+if(isset($_GET['msql'])){
+	$sqlpaw=$row['sqlpaw'];
+		$sqluser=$row['sqluser'];
+		$dbname=$row['dbname'];
+	if($row['dbname']==""){
+		$dbname=="未知";
+	}elseif($row['sqluser']==""){
+		$sqluser=="未知";
+	}elseif($row['sqlpaw']==""){
+		$sqlpaw=="未知";
+	}
+	$dis="";
+	$slink='';
+	if(CSQL==true&&SLINK!=''){
+		$slink=SLINK;
+	}elseif(SLINK==''){
+	$dis="disabled";
+	}else{
+		echo "
+	<br>
+<div class='am-g'>
+  <div class='am-u-sm-6 am-u-lg-centered'>
+  <div class=' am-alert am-alert-warning' data-am-alert>
+  <h3>检测到非法跳转</h3>
+  <p>该面板未启用自动创建数据库模块</p>
+  <ul>
+    <li>如果您是非法跳转，你可以戳这<a href='index.php'><code>返回首页</code></a></li>
+    <li>如果面板已启用该模块，你可以寻求管理员寻求帮助</li>
+  </ul>
+</div>
+  </div>
+</div>
+	";
+	exit();
+	}
+	echo "
+	<div class='am-u-sm-12'>
+	<div class='am-u-sm-6'>
+	<section class='am-panel am-panel-default'>
+  <header class='am-panel-hd'>
+    <h3 class='am-panel-title'>数据库后台</h3>
+  </header>
+  <div class='am-panel-bd'>
+  <button type='button' target='_blank' onclick=\"javascript:window.location.href='".$slink."'\" class='am-btn am-btn-warning' formtarget='_blank' ".$dis.">进入后台</button>
+  </div>
+</section>
+	</div>
+	<div class='am-u-sm-6'>
+	<section class='am-panel am-panel-default'>
+  <header class='am-panel-hd'>
+    <h3 class='am-panel-title'>数据库信息</h3>
+  </header>
+  <div class='am-panel-bd'>
+     <li><strong>数据库名:</strong>$dbname</li>
+	 <li><strong>数据库账号:</strong>$sqluser</li>
+	 <li><strong>数据库密码:</strong>$sqlpaw</li>
+  </div>
+</section>
+	</div>
+</div>";
+
+}
 }else{
 	echo "<script>location.href='list.php?err1';</script>";  
 	exit();

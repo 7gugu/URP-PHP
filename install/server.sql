@@ -28,9 +28,9 @@ CREATE TABLE IF NOT EXISTS `server` (
   `id` int(11) NOT NULL,
   `user` text NOT NULL,
   `time` int(11) NOT NULL,
-  `rpw` text CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT 'rcon password',
-  `rport` int(11) NOT NULL COMMENT 'rcon port',
-  `port` int(11) NOT NULL COMMENT 'game port',
+  `rpw` text CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT 'Rcon密码',
+  `rport` int(11) NOT NULL COMMENT 'Rcon端口',
+  `port` int(11) NOT NULL COMMENT '游戏端口',
   `name` text CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '服务器名称',
   `sid` text CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '服务器文件夹名称',
   `players` int(11) NOT NULL COMMENT '玩家数量',
@@ -42,6 +42,9 @@ CREATE TABLE IF NOT EXISTS `server` (
   `view` text NOT NULL COMMENT '视角',
   `cheat` text NOT NULL COMMENT '作弊',
   `loadout` text NOT NULL COMMENT '出生装备',
+  `dbname` text NOT NULL COMMENT '用户数据库库名',
+  `sqluser` text NOT NULL COMMENT '用户数据库帐户',
+  `sqlpasst` text NOT NULL COMMENT '用户数据库密码',
   `state` int(11) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=gbk;
 

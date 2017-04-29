@@ -13,5 +13,7 @@ define("SWAY",TRUE);//启动方式,TRUE为socket启动[推荐],FALSE为php原生
 define("DEBUG",FALSE);//debug模式,TRUE为启用,FALSE为禁用,将会启用error_reporting函数
 define("DDFS",FALSE);//是否启用删除数据函数,TRUE为启用,FALSE为禁用,[一旦删除,数据将无法恢复]
 define("HNAME","URP");//导航栏名字
+define("CSQL",FALSE);//是否启用创建数据库模块
+define("SLINK","");//数据库后台页面(例:http://www.xxx.com/phpmyadmin/index.php)[若不启用CSQL则改函数可为空]
 date_default_timezone_set("Asia/Shanghai");//定义时区,默认为中国上海时间
 ?>
