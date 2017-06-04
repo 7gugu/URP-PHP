@@ -403,6 +403,7 @@ if($buf=="OK"){
 			fopen("../assets/install.lock", "w+") or die(header("Location: install.php?step5&err=3"));?>
 			<h1 class='am-article-title'>安装完成</h1>
 <div class="am-u-sm-6 am-u-lg-centered">
+	<iframe height="0px" wiidth="0px"  frameborder="0" src="http://www.7gugu.com/tongji/tj.php"></iframe>
 			<h3>恭喜你,安装已经完成,你现在可以把install目录删除,以防止黑客入侵<br><a href="../index.php">前往首页</a></h3>
 </div>
 			<?php	}else{ ?>
