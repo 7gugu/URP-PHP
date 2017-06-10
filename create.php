@@ -151,11 +151,12 @@ $sid=$_SESSION['username']."x".$num;
 		//echo $q;
 			$r=query($q);
 			$numb=mysqli_affected_rows($connect);
-			query("DELETE FROM inser WHERE inser='{$inser}'");
 			if($numb<=0){
 				//setcookie('query',$q,time()+3600*24);
 				header("Location:create.php?c0&err=11");//sql写入失败
 				exit();
+			}else{
+				query("DELETE FROM inser WHERE inser='{$inser}'");
 			}
 			echo $c2;
 		}
