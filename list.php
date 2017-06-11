@@ -186,7 +186,7 @@ return true;
             <table class="am-table am-table-striped am-table-hover table-main">
               <thead>
               <tr>
-                <th class="table-id am-hide-sm-only">ID</th><th class="table-title">名称</th><th class="table-type">拥有人</th><th class="table-author am-hide-sm-only">端口</th><th class="table-date ">可用时间</th><th class="table-set">操作</th>
+                <th class="table-id am-hide-sm-only">ID</th><th class="table-title">名称</th><th class="table-type">拥有人</th><th class="table-author am-hide-sm-only">状态</th><th class="table-date ">可用时间</th><th class="table-set">操作</th>
               </tr>
               </thead>
               <tbody>
@@ -239,7 +239,7 @@ if($row['time']>0){
 ?>
 </td>
                 <td><?php echo $row['user'];?></td>
-                <td class="am-hide-sm-only"><?php echo $row['port'];?></td>
+                <td class="am-hide-sm-only"><?php if($row['state']){echo "<a class='am-badge am-badge-success am-radius'>Online</a>";}else{echo "<a class='am-badge am-badge-danger am-radius'>Offline</a>";}?></td>
                 <td class=""><?php echo $row['time']."天";?></td>
                 <td>
                   <div class="am-btn-toolbar">
