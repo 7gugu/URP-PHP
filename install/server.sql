@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS `server` (
   `loadout` text NOT NULL COMMENT '出生装备',
   `dbname` text NOT NULL COMMENT '用户数据库库名',
   `sqluser` text NOT NULL COMMENT '用户数据库帐户',
-  `sqlpasst` text NOT NULL COMMENT '用户数据库密码',
+  `sqlpaw` text NOT NULL COMMENT '用户数据库密码',
   `state` int(11) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=gbk;
 

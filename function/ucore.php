@@ -163,7 +163,7 @@ echo "<div class='am-alert am-alert-warning' data-am-alert>
         echo "[1010]Session失效";
         break;
 		 case 11:
-        echo "[1011]服务器数据同步失败-错误描述: " .mysqli_error($connect);
+        echo "[1011]数据库执行错误";
         break;
 		 case 12:
         echo "[1012]服务器删除失败";
