@@ -1,5 +1,5 @@
 <?php 
-session_start();
+@session_start();
 define("PATHS","gamepath");//游戏目录
 define("IP","localhost");//服务器IP
 /*----------------------------------*/

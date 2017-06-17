@@ -4,6 +4,7 @@ require 'config/config.php';
 require 'function/dbcore.php';
 require 'function/mcore.php';
 set_time_limit(0);
+$api="";
 $rocket=mysqli_fetch_array(query("select * from cron where name='rocket'"));
 $time=mysqli_fetch_array(query("select * from cron where name='time'"));
 $cmd=mysqli_fetch_array(query("select * from cron where name='cmdpath'"));
@@ -48,7 +49,7 @@ query("update cron set `key`='{$r}'where `name`='rocketver'");
     sleep(5);
 }
 $update=mysqli_fetch_array(query("select * from cron where name='update'"));
-recurse_copy("D:\unturned\Servers","huifu");//备份文件
+recurse_copy(PATHS."\Servers",PATHS."\huifu");//备份文件
 //var_dump($update);//sleep(60);
 //--------工作模块------------
 if($update['switch']==0){
