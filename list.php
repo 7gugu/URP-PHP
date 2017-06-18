@@ -92,15 +92,17 @@ $sid=$_GET['udate'];
     <div class="admin-content-body">
       <div class="am-cf am-padding am-padding-bottom-0">
         <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">产品列表</strong> / <small>购买后的服务器都会在此显示</small></div>
-      </div>
-<div class="am-u-sm-6">
+      </div><br>
+<div class="am-u-sm-6 ">
+
 <?php if(isset($_GET['err'])){
 msg($_GET['err']);
 	}
 	if(isset($_GET['suc'])){	
 msg($_GET['suc'],1);
  }?>
-	</div><br>
+	</div>
+<br><br>
 
       <hr>
 
