@@ -129,27 +129,27 @@ exit();
 }
   function checkfunc($f,$m = false) {
 	if (function_exists($f)) {
-		return '<font color="green">可用</font>';
+		return "<a class='am-badge am-badge-success am-radius'>可用</a>";
 	} else {
 		if ($m == false) {
 			setcookie('dis','',time()-99999);
-			return '<font color="black">不支持</font>';
+			return "<a class='am-badge am-badge-danger am-radius'>不可用</a>";
 		} else {
 			setcookie('dis','',time()+999);
-			return '<font color="red">不支持</font>';
+			return "<a class='am-badge am-badge-danger am-radius'>不可用</a>";
 		}
 	}
 }
 function checkclass($f,$m = false) {
 	if (class_exists($f)) {
-		return '<font color="green">可用</font>';
+		return "<a class='am-badge am-badge-success am-radius'>可用</a>";
 	} else {
 		if ($m == false) {
 			setcookie('dis','',time()-99999);
-			return '<font color="black">不支持</font>';
+			return "<a class='am-badge am-badge-danger am-radius'>不可用</a>";
 		} else {
 			setcookie('dis','',time()+999);
-			return '<font color="red">不支持</font>';
+			return "<a class='am-badge am-badge-danger am-radius'>不可用</a>";
 		}
 	}
 }
