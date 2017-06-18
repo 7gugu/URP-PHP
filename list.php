@@ -259,7 +259,7 @@ if($row['time']>0){
     <div class="am-modal-hd">连接服务器</div>
     <div class="am-modal-bd">
      <div class="am-g">
-  <div class="am-u-sm-6"><a href="steam://connect/<?php echo IP.":".$row['port'] + 1;?>">连接服务器</a></div><hr>
+  <div class="am-u-sm-6"><a href="steam://connect/<?php echo IP.":".$row['port'] + 1;?>">连接服务器</a></div>
 </div>
     </div>
   </div>
