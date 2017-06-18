@@ -263,7 +263,7 @@ if(isset($_GET['game'])){
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>URP | 系统管理</title>
+  <title><?php echo HNAME;?> | 系统管理</title>
   <meta name="description" content="系统管理">
   <meta name="keywords" content="list">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -863,7 +863,7 @@ echo "<li class='am-disabled'><a href='admin_panel.php?mplugin&page=";echo $page
         <div class='am-u-sm-12'>
         <div class='am-article-hd'>
     <h1 class='am-article-title'>首页</h1>
-    <p>欢迎回来 {$_SESSION['username']},服务器运转正常[不然你怎么看到我Orz]</p>
+    <p>欢迎回来 {$_SESSION['username']},服务器运转正常</p>
   </div>
       
             <div class='am-cf'>

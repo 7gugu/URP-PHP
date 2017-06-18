@@ -165,7 +165,7 @@ exit();
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>URP | 管理服务器</title>
+  <title><?php echo HNAME;?> | 管理服务器</title>
   <meta name="description" content="manage">
   <meta name="keywords" content="index">
   <meta name="viewport" content="width=device-width, initial-scale=1">

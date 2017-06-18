@@ -9,7 +9,7 @@ $v="n";
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>URP | 创建服务器</title>
+  <title><?php echo HNAME;?> | 创建服务器</title>
   <meta name="description" content="服务器创建">
   <meta name="keywords" content="create">
   <meta name="viewport" content="width=device-width, initial-scale=1">

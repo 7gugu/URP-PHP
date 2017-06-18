@@ -64,7 +64,7 @@ $sid=$_GET['udate'];
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>URP | 产品列表</title>
+  <title><?php echo HNAME;?> | 产品列表</title>
   <meta name="description" content="产品列表">
   <meta name="keywords" content="list">
   <meta name="viewport" content="width=device-width, initial-scale=1">

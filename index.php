@@ -8,7 +8,7 @@ $v="n";
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>URP | 首页</title>
+  <title><?php echo HNAME;?> | 首页</title>
   <meta name="description" content="index">
   <meta name="keywords" content="index">
   <meta name="viewport" content="width=device-width, initial-scale=1">

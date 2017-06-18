@@ -300,7 +300,7 @@ $err=$_GET['err'];
   <input type="text" name="ip" class="am-form-field" placeholder="服务器IP">
 		</div><br>
 		<button class='am-btn am-btn-success'type='submit'>下一步>></button>
-		<button type='button'  data-am-popover="{content: '若您已配置好config文件', trigger: 'hover focus'}" onclick=\"javascript:window.location.href='manage.php?shop'\" class='am-btn am-btn-secondary'>跳过此步骤</button>
+		<button type='button' onclick=\"javascript:window.location.href='manage.php?shop'\" class='am-btn am-btn-secondary'>跳过此步骤</button>
 		<br><br>
 		</form>
 		 <script>
@@ -420,7 +420,6 @@ if($buf=="OK"){
 三、【禁止使用】
         3.1 不得以任何理由、任何手段（包括但不限于删减、遮挡、修改字号、添加nofollow属性等）修改URP及其衍生品原有的版权信息、版权链接的指向及友情链接，并保证原有版权能够在显眼处展示。
         3.2 禁止以任何形式向他人兜售URP的复制品或延伸产品。
-        3.3 禁止使用URP以任何强制收费形式盈利，捐赠、挂广告等非强制收费形式除外。
 四、【许可终止】
         4.1 无论何时，如果您主动放弃或被收回了许可，您必须立即销毁URP的所有复制品、衍生品，并关闭任何由URP搭建的服务。
         4.2 如您违反了本协议的任何一项条款和条件，则视为一切许可被收回。
