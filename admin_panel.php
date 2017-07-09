@@ -86,6 +86,7 @@ if(isset($_GET['stoc'])){
 	query("update cron set switch='0'where name='rocket'");
 	header("Location: admin_panel.php?cron");
 }
+/*
 if(isset($_GET['checkr'])&&isset($_POST['key'])){
 	$key=$_POST['key'];
 	$check=check_key($key);
@@ -95,7 +96,7 @@ query("UPDATE `cron` SET `key`='{$key}' WHERE `name`='rocket'");
 }else{
 	header("Location: admin_panel.php?cron&fr");
 }
-}
+}*/
 if(isset($_POST['time'])){
 	if($_POST['time']==""||$_POST['time']==0){
 		query("update cron set switch='0'where name='cron'");
@@ -532,7 +533,9 @@ echo "<li class='am-disabled'><a href='admin_panel.php?muser&page=";echo $page+1
     <h3 class='am-panel-title'>Rocket更新</h3>
   </header>
   <div class='am-panel-bd'>
-  <h4>状态</h4>";
+  <h3>状态</h3>
+  <h4 class='am-article-meta'>由于Rocket的更新源发生变化,所以暂时删除掉秘钥模块</h4>
+  ";
   $row=mysqli_fetch_array(query("select * from cron where name='rocket'"));
   $on=$off="";
   if($row['switch']==1){
@@ -543,20 +546,6 @@ echo "<li class='am-disabled'><a href='admin_panel.php?muser&page=";echo $page+1
   echo "
     <button type='button' onclick=\"javascript:window.location.href='admin_panel.php?stac'\" class='am-btn am-btn-success'{$on}>启用</button>
 <button type='button' onclick=\"javascript:window.location.href='admin_panel.php?stoc'\" class='am-btn am-btn-danger'{$off}>禁用</button>
-<hr>
-  <h4>Rocket秘钥</h4>
-  <form class='am-form' method='POST' action='admin_panel.php?checkr'> 
-    <div class='am-input-group'>
-  <span class='am-input-group-label'><i class='am-icon-lock am-icon-fw'></i></span>
-  <input type='text' name='key' class='am-form-field' placeholder='Rocket秘钥'";
-  $row=mysqli_fetch_array(query("select * from cron where name='rocket'"));
-  if($row['key']!==''){
-  echo "value='{$row['key']}'";
-  }
-  echo ">
-</div><br>
-<button type='submit' class='am-btn am-btn-success'>保存秘钥</button>
-  </form>
   </div>
 </section>
 <section class='am-panel am-panel-default'>
@@ -689,7 +678,6 @@ $row = mysqli_fetch_array( query("SELECT COUNT(*) FROM notice ") );
 if($row[0]==0){
 	echo "
 	 <tr>
-                <td><input type='checkbox' /></td>
                 <td>0</td>
                 <td class='am-hide-sm-only'>暂无公告可管理</td>
                 <td>
@@ -700,7 +688,6 @@ while($row = mysqli_fetch_array($result))
 {
 	
            echo "   <tr>
-                <td><input type='checkbox' /></td>
 <td> {$row['id']}</td>
                 <td><input id='text' name='text' type='text' class='am-form-field' value='{$row['text']}' ><input name='id' type='hidden'  value='{$row['id']}' >   
                  </td>

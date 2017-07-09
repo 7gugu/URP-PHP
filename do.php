@@ -9,40 +9,25 @@ $rocket=mysqli_fetch_array(query("select * from cron where name='rocket'"));
 $time=mysqli_fetch_array(query("select * from cron where name='time'"));
 $cmd=mysqli_fetch_array(query("select * from cron where name='cmdpath'"));
 if($rocket['key']!=""){
-$api=json_decode(file_get_contents("http://api.rocketmod.net/status/unturned/".$rocket['key']),true);
+$api=json_decode(file_get_contents("https://ci.rocketmod.net/job/Rocket.Unturned/api/json?pretty=true"),true);
 sleep(10);
-echo "http://api.rocketmod.net/status/unturned/".$rocket['key'];
+echo "检测完成|开始更新";
 sleep(10);
 }else{
     echo "不启用版本检测\n";
 }
-$server=false;
 $rocketver=false;
-$game=mysqli_fetch_array(query("select * from cron where name='gamever'"));
 $rocket=mysqli_fetch_array(query("select * from cron where name='rocketver'"));
-
 if($api!=""){
-if($game['key']!=""&&$rocket['key']!=""){
-    if($game['key']!="Unturned"){
-    if($api[0]['gameversion']!=$game['key']){
-        $server=true;
-		echo "1";
-    }
-    }
-    if($rocketver['key']!="Unturned"){
-    if($api[0]['rocketversion']!=$rocket['key']){
+if($rocket['key']!=""){
+    if($api['builds'][0]['number']!=$rocket['key']){
         $rocketver=true;echo "2";
     }
-    }
 }else{
-    $server=true;
     $rocketver=true;
 }
-$g=$api[0]['gameversion'];
-$r=$api[0]['rocketversion'];
-echo "GameVersion:".$g;
+$r=$api['builds'][0]['number'];
 echo "RocketVersion:".$r;
-query("update cron set `key`='{$g}'where `name`='gamever'");
 query("update cron set `key`='{$r}'where `name`='rocketver'");
 }else{
     echo "未检测版本";
@@ -53,7 +38,7 @@ recurse_copy(PATHS."\Servers",PATHS."\huifu");//备份文件
 //var_dump($update);//sleep(60);
 //--------工作模块------------
 if($update['switch']==0){
-if($server==true||$rocketver==true){
+if($rocketver==true){
 	query("update cron set `switch`='1' where `name`='update'");
     $rs=query("select * from server");
 while($rows = mysqli_fetch_array($rs)){
@@ -62,7 +47,7 @@ while($rows = mysqli_fetch_array($rs)){
 query("update server set state='0'where port='{$rows['port']}'");
 }
 //游戏更新
-if($cmd['switch']==1&&$server==true){
+if($cmd['switch']==1){
     $user=mysqli_fetch_array(query("select * from cron where name='cmduser'"));
     $paw=mysqli_fetch_array(query("select * from cron where name='cmdpaw'"));
     if(file_exists($cmd['key']."\\steamcmd.exe")){
