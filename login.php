@@ -135,7 +135,7 @@ $rom=mysqli_fetch_array($rs);
         if($password===$rom['password']){
     echo "
     <ul class=\"am-list confirm-list\" id=\"doc-modal-list\">
-    <p>我们侦测到你已登录以下账号,使用它们登陆么?</p>
+    <p>我们侦测到你已登录以下账号,您要使用它登陆么?</p>
     <h2><a href=\"index.php\">{$username}</a></h2>
     </ul>
     ";
@@ -159,9 +159,7 @@ $rom=mysqli_fetch_array($rs);
       <br />
       <div class="am-cf">
         <input type="submit" name="" value="注册" class="am-btn am-btn-primary am-fl">
-        <div class="am-u-sm-1 am-u-sm-offset-9">
         <button type='button'  onclick="javascript:window.location.href='login.php'" class='am-btn am-btn-success'>登录>></button>
-       </div>
       </div>
     </form>
     <?php }else{?>
@@ -175,9 +173,7 @@ $rom=mysqli_fetch_array($rs);
       <br />
       <div class="am-cf">
         <input type="submit" name="" value="登 录" class="am-btn am-btn-primary am-fl">
-        <div class="am-u-sm-1 am-u-sm-offset-9">
         <button type='button'  onclick="javascript:window.location.href='login.php?reg'" class='am-btn am-btn-success'>注册>></button>
-       </div>
       </div>
     </form>
     <?php }?>
