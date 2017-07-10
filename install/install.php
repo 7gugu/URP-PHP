@@ -300,7 +300,6 @@ $err=$_GET['err'];
   <input type="text" name="ip" class="am-form-field" placeholder="服务器IP">
 		</div><br>
 		<button class='am-btn am-btn-success'type='submit'>下一步>></button>
-		<button type='button' onclick=\"javascript:window.location.href='manage.php?shop'\" class='am-btn am-btn-secondary'>跳过此步骤</button>
 		<br><br>
 		</form>
 		 <script>

@@ -343,7 +343,7 @@ msg($_GET['suc'],1);
             <table class='am-table am-table-striped am-table-hover table-main'>
               <thead>
               <tr>
-                <th class='table-check'><input type='checkbox' /></th><th class='table-id'>ID</th><th class='table-title'>激活码</th><th class='table-type'>激活密码</th><th class='table-date am-hide-sm-only'>可用时间</th><th class='table-set'>操作</th>
+                <th class='table-id'>ID</th><th class='table-title'>激活码</th><th class='table-type'>激活密码</th><th class='table-date am-hide-sm-only'>可用时间</th><th class='table-set'>操作</th>
               </tr>
               </thead>
               <tbody>";
@@ -362,7 +362,6 @@ $row = mysqli_fetch_array( query("SELECT COUNT(*) FROM inser") );
 if($row[0]==0){
 	echo "
 	 <tr>
-                <td><input type='checkbox' /></td>
                 <td>0</td>
                 <td></td>
                 <td></td>
@@ -376,7 +375,6 @@ while($row = mysqli_fetch_array($result))
 {
 	
            echo "   <tr>
-                <td><input type='checkbox' /></td>
 <td> {$row['id']}</td>
                 <td><a href='#'> {$row['inser']}</a></td>
 <td><a href='#'>{$row['password']}</a></td>
@@ -436,7 +434,7 @@ echo "<li class='am-disabled'><a href='admin_panel.php?inser&page=";echo $page+1
             <table class='am-table am-table-striped am-table-hover table-main'>
               <thead>
               <tr>
-                <th class='table-check'><input type='checkbox' /></th><th class='table-id'>ID</th><th class='table-title'>用户名</th><th class='table-type'>密码</th><th class='table-date am-hide-sm-only'>邮箱</th><th class='table-set'>操作</th>
+                <th class='table-id'>ID</th><th class='table-title'>用户名</th><th class='table-type'>密码</th><th class='table-date am-hide-sm-only'>邮箱</th><th class='table-set'>操作</th>
               </tr>
               </thead>
               <tbody>";
@@ -455,7 +453,7 @@ $row = mysqli_fetch_array( query("SELECT COUNT(*) FROM user where admin='0'") );
 if($row[0]==0){
 	echo "
 	 <tr>
-                <td><input type='checkbox' /></td>
+                
                 <td>0</td>
                 <td></td>
                 <td></td>
@@ -469,7 +467,6 @@ while($row = mysqli_fetch_array($result))
 {
 	
            echo "   <tr>
-                <td><input type='checkbox' /></td>
 <td> {$row['id']}</td>
                 <td><input id='usernmae' name='username' type='text' class='am-form-field' value='{$row['username']}' disabled>
 			</td>
@@ -659,7 +656,7 @@ echo "<li class='am-disabled'><a href='admin_panel.php?muser&page=";echo $page+1
             <table class='am-table am-table-striped am-table-hover table-main'>
               <thead>
               <tr>
-                <th class='table-check'><input type='checkbox' /></th><th class='table-id'>ID</th><th class='table-title'>文章</th><th class='table-set'>操作</th>
+              <th class='table-id'>ID</th><th class='table-title'>文章</th><th class='table-set'>操作</th>
               </tr>
               </thead>
               <tbody>";
