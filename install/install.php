@@ -215,7 +215,7 @@ $err=$_GET['err'];
 		<tr>
 			<td>写入权限</td>
 			<td>必须</td>
-			<td><?php if (is_writable("install.php")) { echo '<font color="green">可用</font>'; } else { echo '<font color="black">不支持</font>'; } ?></td>
+			<td><?php if (is_writable("install.php")) { echo "<a class='am-badge am-badge-success am-radius'>可用</a>"; } else { echo "<a class='am-badge am-badge-danger am-radius'>不可用</a>"; } ?></td>
 			<td>写入文件(1/2)</td>
 		</tr>
 		<tr>
@@ -245,7 +245,7 @@ $err=$_GET['err'];
 		<tr>
 			<td>PHP 5+</td>
 			<td>必须</td>
-			<td><?php echo phpversion(); ?></td>
+			<td><?php echo "<span class=\"am-badge am-badge-secondary am-radius\">".phpversion()."</span>"; ?></td>
 			<td>核心,未来URP可能不支持PHP 5.3以下版本</td>
 		</tr>
               </tbody>  
