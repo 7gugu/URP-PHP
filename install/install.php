@@ -240,7 +240,7 @@ $err=$_GET['err'];
 			<td>MySQLi: mysqli</td>
 			<td>必须</td>
 			<td><?php echo checkclass('mysqli'); ?></td>
-			<td>数据库操作，若支持本项可忽略不支持 MySQL 函数</td>
+			<td>数据库操作，若支持本项可略不支持 MySQL 函数</td>
 		</tr>
 		<tr>
 			<td>PHP 5+</td>

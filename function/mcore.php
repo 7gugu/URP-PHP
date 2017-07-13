@@ -86,7 +86,7 @@ $ss=query("select * from server where sid='{$sid}'");
                 rcon($command,0,1935,'');}else{
          system("start".PATHS."\\Unturned.exe -nographics -batchmode -silent-crashes +secureserver/".$command);
                 }
-        header("Location: manage.php?index&suc=1");
+        header("Location: manage.php?order&suc=1");
         }elseif($switch=='shutdown'){	
         sleep(2);
             $query=query("select * from server where sid='{$sid}'");
