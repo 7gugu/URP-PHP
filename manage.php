@@ -176,6 +176,37 @@ exit();
   <meta name="apple-mobile-web-app-title" content="管理服务器" />
   <link rel="stylesheet" href="assets/css/amazeui.min.css"/>
   <link rel="stylesheet" href="assets/css/admin.css">
+<style type="text/css">
+        #bg{ display: none;  position: absolute;  top: 0%;  left: 0%;  width: 100%;  height: 100%;  background-color: black;  z-index:1001;  -moz-opacity: 0.7;  opacity:.70;  filter: alpha(opacity=70);}
+#show {
+  width: 60px;
+  height: 60px;
+  background-color: #67CF22;
+  z-index:1002;
+  margin: 300px auto;
+  -webkit-animation: rotateplane 1.2s infinite ease-in-out;
+  animation: rotateplane 1.2s infinite ease-in-out;
+}
+ 
+@-webkit-keyframes rotateplane {
+  0% { -webkit-transform: perspective(120px) }
+  50% { -webkit-transform: perspective(120px) rotateY(180deg) }
+  100% { -webkit-transform: perspective(120px) rotateY(180deg)  rotateX(180deg) }
+}
+ 
+@keyframes rotateplane {
+  0% {
+    transform: perspective(120px) rotateX(0deg) rotateY(0deg);
+    -webkit-transform: perspective(120px) rotateX(0deg) rotateY(0deg)
+  } 50% {
+    transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg);
+    -webkit-transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg)
+  } 100% {
+    transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
+    -webkit-transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
+  }
+}
+</style>
 </head>
 <body>
  <!-- header start -->
@@ -190,6 +221,7 @@ exit();
   <!-- content start -->
   <div class="admin-content">
   <div class="admin-content-body">
+  	<div id="bg"><div id="show"></div></div>
     <div class="am-cf am-padding am-padding-bottom-0">
       <div class="am-fl am-cf">
         <strong class="am-text-primary am-text-lg">管理服务器</strong> /
@@ -217,7 +249,22 @@ msg($_GET['suc'],1);
 		$off="";
 		if(isset($_GET['suc'])){
 			if($_GET['suc']==1||$_GET['suc']==3){
-		sleep(10);
+		?>
+		<script language="javascript" type="text/javascript">    
+ function showdiv() { 
+            document.getElementById("bg").style.display ="block";
+            document.getElementById("show").style.display ="block";
+}
+function hidediv() {
+            document.getElementById("bg").style.display ='none';
+            document.getElementById("show").style.display ='none';
+            location.href="manage.php?index";
+	
+}
+		    window.onload=showdiv();
+			setTimeout("hidediv()",15000);
+</script>
+		<?php
 		}
 		}
 		$port=$row['port']+1;
@@ -989,9 +1036,8 @@ if(isset($_GET['msql'])){
 	echo "<script>location.href='list.php?err1';</script>";  
 	exit();
 }
-
-
 ?>
+
 </div>
 <footer class="admin-content-footer">
       <hr>

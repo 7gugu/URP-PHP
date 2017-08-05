@@ -11,15 +11,19 @@ if(isset($_GET['reg'])&&isset($_POST['email'])){
             echo "<script>location.href='login.php?reg&err=17';</script>";  
             exit();
         }
-            $user=$_POST['username'];
+    $user=$_POST['username'];
     $paw=$_POST['password'];
     $cpw=$_POST['cpassword'];
     $email=$_POST['email'];
-        if(!preg_match('/^[\w\x80-\xff]{4,15}$/', $user)){
-    exit('错误：用户名不符合规定。<a href="javascript:history.back(-1);">返回</a>');
-}
+        if(!preg_match('/^[\w\x80-\xff]{4,15}$/', $user)&&!preg_match('/^[\x{4e00}-\x{9fa5}\w\x{80}-\x{ff}]{4,15}$/', $user)){
+    echo "<script>location.href='login.php?reg&err=25';</script>";
+    exit();
+            
+        }
 if(strlen($paw) < 6){
-    exit('错误：密码长度不符合规定。<a href="javascript:history.back(-1);">返回</a>');
+    echo "<script>location.href='login.php?reg&err=26';</script>";
+    exit();
+    
 }
 
     $num=mysqli_fetch_array(query("select count(*) from user where username='{$user}'"));
@@ -66,7 +70,7 @@ $rom=mysqli_fetch_array($rs);
 $_SESSION['username']=$username;
 $_SESSION['password']=$password;
 $_SESSION['sec']=$rom['admin'];
-setcookie("wel", '1', time()+3600);
+setcookie("wel", '1', time()+60);
 sleep(3);
 header("location:index.php");
     }else{

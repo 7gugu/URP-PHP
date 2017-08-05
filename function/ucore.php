@@ -203,6 +203,10 @@ echo "<div class='am-alert am-alert-warning' data-am-alert>
         break;
         case 24:
         echo "[2024]服务器可用时间更新失败";
+        case 25:
+        echo "[2025]用户名不符合规定[不能有特殊字符,不能是中文]";
+        case 26:
+        echo "[2026]密码长度不符合规定[最少6位]";
         break;
     default:
         echo "[XXXX]出现了一个未知错误,请尽快联系管理员解决";
