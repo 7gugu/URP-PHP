@@ -233,7 +233,7 @@ while($row = mysqli_fetch_array($result))
 <td><?php
 if($row['time']>0){ 
 ?>
-<a href="#" data-am-modal="{target:'#link<?php echo $row['sid']; ?>'}" >
+<a href="#">
 <?php echo $sname;?>
 </a>
 <?php
@@ -256,16 +256,6 @@ if($row['time']>0){
 					</div>
 				  </div>
                 </td>
-					  <div class="am-modal am-modal-alert" tabindex="-1" id="link<?php echo $row['sid'];?>">
-  <div class="am-modal-dialog">
-    <div class="am-modal-hd">连接服务器</div>
-    <div class="am-modal-bd">
-     <div class="am-g">
-  <div class="am-u-sm-6"><a href="steam://connect/<?php echo IP.":".$row['port'] + 1;?>">连接服务器</a></div>
-</div>
-    </div>
-  </div>
-</div>
               </tr>
 <?php }	
 } ?>

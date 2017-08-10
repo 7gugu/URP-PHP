@@ -15,7 +15,7 @@ if(isset($_GET['reg'])&&isset($_POST['email'])){
     $paw=$_POST['password'];
     $cpw=$_POST['cpassword'];
     $email=$_POST['email'];
-        if(!preg_match('/^[\w\x80-\xff]{4,15}$/', $user)&&!preg_match('/^[\x{4e00}-\x{9fa5}\w\x{80}-\x{ff}]{4,15}$/', $user)){
+        if(preg_match('/^[\w\x80-\xff]{4,15}$/', $user)||preg_match('/^[\x{4e00}-\x{9fa5}\w\x{80}-\x{ff}]{4,15}$/', $user)){
     echo "<script>location.href='login.php?reg&err=25';</script>";
     exit();
             
