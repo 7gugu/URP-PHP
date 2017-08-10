@@ -728,9 +728,13 @@ echo "<tr><td></td>";
 }		
 		}
 }elseif($mode=="xml"){
-    foreach(glob($path."/*.xml",GLOB_BRACE) as $afile){ 
+    foreach(glob($path."/*",GLOB_BRACE) as $afile){ 
 if(is_dir($afile)) 
-{}else{
+{$a=str_replace($path."/",'',$afile);
+  $name=explode('.',$a);
+       echo "<tr><td></td>";
+  echo "<td>".$a."</td>";
+  echo "<td><a href='manage.php?po=".$afile."' >打开</a></td><td></td></tr>";}else{
     $a=str_replace($path."/",'',$afile);
   $name=explode('.',$a);
        echo "<tr><td></td>";
