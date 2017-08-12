@@ -232,7 +232,7 @@ function hidediv() {
 	
 }
 		    window.onload=showdiv();
-			setTimeout("hidediv()",20000);
+			setTimeout("hidediv()",15000);
 </script>
 		<?php
 		}
@@ -653,19 +653,21 @@ if(isset($_GET['plugin'])){
         </tr>
     </thead>
     <tbody> ";
+	       
 		   $ser=$_COOKIE['ser'];
+		   $fa=mysqli_fetch_array(query("select * from server where sid='{$ser}'"));
 		   $pa=PATHS."\Servers\\".$ser."\Rocket\Permissions.config.xml";
 		   		      echo "<tr><td></td>";
   echo "<td><strong><font color='red'>权限组管理</font></strong></td>";
-  echo "<td><a href='manage.php?per&pfile=".$pa."' >编辑</a>         
+  echo "<td><a class='am-badge am-badge-secondary am-text-sm' href='manage.php?per&pfile=".$pa."' >编辑</a>         
   </td><td></td></tr>";
-  		   $ser=$_COOKIE['ser'];
 		   $pa=PATHS."\Servers\\".$ser."\Config.json";
 		   		      echo "<tr><td></td>";
   echo "<td><strong><font color='red'>Config.json</font></strong></td>";
-  echo "<td><a href='manage.php?con&pfile=".$pa."' >编辑</a>      
+  echo "<td><a class='am-badge am-badge-secondary am-text-sm' href='manage.php?con&pfile=".$pa."' >编辑</a>      
   </td><td></td></tr>";
-		   plist(PATHS."/Servers/$ser/Rocket/plugins","dll");
+  if($fa['state']==0){$state=0;}else{$state=1;}
+		   plist(PATHS."/Servers/$ser/Rocket/plugins","dll",$state);
 		  echo  "
       
 		
@@ -686,6 +688,8 @@ if(isset($_GET['plugin'])){
 if(isset($_GET['po'])){
 	$po=$_GET['po'];
 	$ser=$_COOKIE['ser'];
+	$fa=mysqli_fetch_array(query("select * from server where sid='{$ser}'"));
+	if($fa['state']==0){$state=0;}else{$state=1;}
 	if(isset($_GET['del'])){
 		echo "
 		<table class='am-table am-table-striped am-table-centered'>
@@ -697,7 +701,7 @@ if(isset($_GET['po'])){
 	<tbody>
 	<tr>
 	<td>";
-	echo del(PATHS."/Servers/$ser/Rocket/plugins/".$po); 
+	echo del(PATHS."/Servers/$ser/Rocket/plugins/".$po);	
 	echo "<br><a href='manage.php?plugin'>返回插件列表</a></td>
 	</tr>
 	</tbody>
@@ -720,9 +724,10 @@ if(isset($_GET['po'])){
 	   <td><a href=\"javascript:history.go(-1);\">返回上一级</a></td>
 	   <td></td>
 	   <td></td>
+	   <td></td>
 	   </tr>
            ";
-	plist($po,"xml");
+	plist(PATHS."/Servers/$ser/Rocket/plugins/".$po,"config",$state);
 	 echo  "
 <tr>		
 <td>
@@ -748,6 +753,7 @@ if(isset($_GET['pfile'])){
 	$ser=$_COOKIE['ser'];
 	$fn=str_replace(PATHS."/Servers/$ser/Rocket/plugins/","",$_GET['pfile']);
 	$fn=explode("/",$fn);
+	$fn= end($fn);
 	}
 		echo "
 <table class='am-table am-table-striped '>
@@ -764,7 +770,7 @@ if(isset($_GET['pfile'])){
 	   <td> <a href=\"javascript:history.go(-1);\"> 返回上一级</a></td>
 	   	   <td></td> <td></td>
 	   </tr>
-	   <tr><td>文件名:<br>{$fn[1]}<br></td>
+	   <tr><td>文件名:<br>{$fn}<br></td>
 	   <td>
            ";?>
 		   <style type="text/css" media="screen">
@@ -776,7 +782,7 @@ if(isset($_GET['pfile'])){
   </style>
 		     <script src="assets/ace/ace.js" type="text/javascript" charset="utf-8"></script>
 			 <input type='hidden' value='<?php echo $_GET['pfile']; ?>' name='path' id='path'></input>
-            <pre id="editor"><?php echo rwfile($_GET['pfile'],'r','');?></pre>
+            <pre id="editor"><?php echo rwfile(PATHS."/Servers/$ser/Rocket/plugins/".$_GET['pfile'],'r','');?></pre>
 <input type="hidden" id="es" name='es' value=''/>
 <script>
     var editorr = ace.edit("editor");
@@ -812,7 +818,9 @@ if(isset($_GET['pfile'])){
 if(isset($_GET['save'])&&isset($_POST['path'])){
 	$path=$_POST['path'];
 	$text=$_POST['es']; 
-	if(rwfile($path,'w',$text)){
+	$ser=$_COOKIE['ser'];
+	$fa=mysqli_fetch_array(query("select * from server where sid='{$ser}'"));
+	if(rwfile(PATHS."/Servers/$ser/Rocket/plugins/".$path,'w',$text)){
 		echo "
 		<table class='am-table am-table-striped am-table-centered'>
  <thead>

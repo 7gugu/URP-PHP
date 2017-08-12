@@ -685,7 +685,9 @@ function players(){
 }
 
 //插件文件列表
-function plist($path,$mode){ 
+function plist($path,$mode,$state){
+	 $ser=$_COOKIE['ser'];
+	 $fa=mysqli_fetch_array(query("select * from server where sid='{$ser}'"));
 if($mode=="dll"){
         $arr=glob($path."/*",GLOB_BRACE);
         $ac=count($arr);
@@ -699,8 +701,10 @@ if($mode=="dll"){
             
             $ps=str_replace($path."/","",$afile);
               echo "<tr><td></td>";
-  echo "<td>".$ps."</td>";
-  echo "<td>无配置文件</td><td><a href='manage.php?del&po=".$ps."' >删除插件</a></td></tr>";	
+  echo "<td><span class='am-icon-file-o'></span> ".$ps."</td>";
+  echo "<td>无配置文件</td><td>";
+  if($state==0){echo "<a class='am-badge am-badge-danger' href='manage.php?del&po=".$ps."' >删除插件</a>";}else{echo "服务器运行中-不可管理";}
+  echo "</td></tr>";	
         }
             }         
         }elseif($ac==0){
@@ -714,36 +718,43 @@ if($mode=="dll"){
 			}else{
 			$pfile=str_replace(".dll","",$afile);
 			if(in_array($pfile,$arr)){
+				 $ps=str_replace($path."/","",$afile);
+				
 echo "<tr><td></td>";
-  echo "<td>".str_replace($path."/","",$afile)."</td>";
+  echo "<td><span class='am-icon-file-o'></span> ".$ps."</td>";
   echo "<td>
-  <a href='manage.php?po=".$pfile."' >设置</a></td><td><a href='manage.php?del&po=".$afile."' >删除插件</a>
+  <a  class='am-badge am-badge-secondary am-text-sm' href='manage.php?po=".str_replace($path,"",$pfile)."' >设置</a></td><td><a class='am-badge am-badge-primary  am-text-sm' href='manage.php?del&po=".$ps."' >删除插件</a>
   </td></tr>";
 			}else{
+				 $ps=str_replace($path."/","",$afile);
   echo "<tr><td></td>";
-  echo "<td>".str_replace($path."/","",$afile)."</td>";
-  echo "<td>无配置文件</td><td><a href='manage.php?del&po=".$afile."' >删除插件</a></td></tr>";
+  echo "<td><span class='am-icon-file-o'></span>  ".$ps."</td>";
+  echo "<td>无配置文件</td><td><a class='am-badge am-badge-primary  am-text-sm' href='manage.php?del&po=".$ps."' >删除插件</a></td></tr>";
 			}
 			}
 }		
 		}
-}elseif($mode=="xml"){
-    foreach(glob($path."/*",GLOB_BRACE) as $afile){ 
+}elseif($mode=="config"){
+	$glob=glob($path."/*",GLOB_BRACE);
+    foreach($glob as $afile){ 
 if(is_dir($afile)) 
 {$a=str_replace($path."/",'',$afile);
   $name=explode('.',$a);
        echo "<tr><td></td>";
-  echo "<td>".$a."</td>";
-  echo "<td><a href='manage.php?po=".$afile."' >打开</a></td><td></td></tr>";}else{
+  echo "<td><span class='am-icon-folder-o'></span> ".$a."</td>";
+  echo "<td><a class='am-badge am-badge-primary am-text-sm' href='manage.php?po=".str_replace(PATHS."/Servers/$ser/Rocket/plugins/","",$afile)."' >打开</a></td><td></td></tr>";}else{
     $a=str_replace($path."/",'',$afile);
   $name=explode('.',$a);
        echo "<tr><td></td>";
-  echo "<td>".$a."</td>";
-  echo "<td><a href='manage.php?pfile=".$afile."' >编辑</a></td><td></td></tr>";
+  echo "<td><span class='am-icon-file-o'></span> ".$a."</td>";
+  echo "<td><a class='am-badge am-badge-secondary am-text-sm' href='manage.php?pfile=".str_replace(PATHS."/Servers/$ser/Rocket/plugins/","",$afile)."' >编辑</a></td><td></td></tr>";
+}
+}
+if(!$glob){echo "<tr><td></td><td>无可管理的文件</td><td></td><td></td></tr>";
 }
 }
 }
-}
+
 
 //插件列表
 function pshop($path){
