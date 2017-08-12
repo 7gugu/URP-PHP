@@ -262,7 +262,7 @@ function hidediv() {
 	
 }
 		    window.onload=showdiv();
-			setTimeout("hidediv()",15000);
+			setTimeout("hidediv()",20000);
 </script>
 		<?php
 		}
