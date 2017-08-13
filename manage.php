@@ -37,6 +37,7 @@ if(isset($_POST['players'])){
 }*/
 if(isset($_POST['servername'])){
 	$ser=$_COOKIE['ser'];
+	$f="0";
 	udfile($ser,"servername",$_POST['servername'],"Server//Commands.dat");
 	udfile($ser,"welcome",$_POST['welcome'],"Server//Commands.dat");
 	udfile($ser,"difficult",$_POST['difficult'],"Server//Commands.dat");
@@ -45,10 +46,14 @@ if(isset($_POST['servername'])){
 	udfile($ser,"password",$_POST['password'],"Server//Commands.dat");
 	udfile($ser,"view",$_POST['view'],"Server//Commands.dat");
 	udfile($ser,"cheat",$_POST['cheat'],"Server//Commands.dat");
-	udfile($ser,"players",$_POST['players'],"Server//Commands.dat");
+	$f=udfile($ser,"players",$_POST['players'],"Server//Commands.dat");
 	udfile($ser,"port",$_POST['port'],"Server//Commands.dat");
 	udfile($ser,"loadout",$_POST['loadout'],"Server//Commands.dat");
+	if($f=="0"){
 	echo "<script>location.href='manage.php?information&suc=4';</script>";  
+	}else{
+	echo "<script>location.href='manage.php?information&err=27';</script>";  	
+	}
 	exit();
 }
 //获取数据
@@ -406,7 +411,7 @@ if(isset($_GET['information'])){
             <td>服务器最大人数</td>
             <td>
 			<div class='am-u-lg-6'>
-			<input id='players' name='players' type='number' class='am-form-field' value='{$row['players']}'>
+			<input id='players' name='players' min='0' max='{$rom['maxplayers']}' type='number' class='am-form-field' value='{$row['players']}'>
 			</div>
 			</td>
 			<td>
@@ -905,7 +910,7 @@ if(isset($_GET['map'])){
  
  <h2><strong>在线玩家:";
  players();
- echo "</strong><h2><hr></div>
+ echo "</strong><h2><h4 class='am-article-meta'>此数值仅供参考,与实际会有差距</h4><hr></div>
  ";
 	}	
 	if(isset($_GET['mod'])){

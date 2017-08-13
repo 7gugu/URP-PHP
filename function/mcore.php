@@ -77,10 +77,11 @@ if($check=="invalid api key"||$check=="not available"){
 function manage($sid,$switch){
     $username=$_SESSION['username'];
     $userpower=query("select serverid from user where username='{$username}'");
-$ss=query("select * from server where sid='{$sid}'");
+    $ss=query("select * from server where sid='{$sid}'");
     $ss=mysqli_fetch_array($ss);
     if($username==$ss['user']||$_SESSION['sec']==1){
         if($switch=='start'){
+	       udfile($ser,"players",$ss['players'],"Server//Commands.dat");//同步最大玩家数
             $command=$sid;
             if(SWAY){ 
                 rcon($command,0,1935,'');}else{
@@ -123,12 +124,12 @@ function udfile($sid,$switch,$text,$file){
                 $strContent = file_get_contents($fpath);
                 $re=query("select * from server where sid='{$sid}'");
                 $row=mysqli_fetch_array($re);
-                
                 if($switch=="players"){	
-				  if($text==""){
-		  $text=1;
-	                                      }
-            $strContent = str_ireplace('Maxplayers '.$row['players'],'Maxplayers '.$text,$strContent,$i);
+				if($text>$row['maxplayers']){
+					return "1";
+				}else{
+				if($text==""){$text=1;}
+			$strContent =preg_replace('/Maxplayers (\d+)/','Maxplayers '.$text,$strContent,"-1",$i);
 			if($i==0){
 				$write=fopen($fpath,"a");
 				fwrite($write,'Maxplayers '.$text."\r\n");
@@ -136,8 +137,10 @@ function udfile($sid,$switch,$text,$file){
 			}else{
 				file_put_contents($fpath,$strContent."\n");
 			}
-           query("update server set players='{$text}'where sid='{$sid}'");   
+           query("update server set players='{$text}'where sid='{$sid}'");  
+return "0";		   
                 }
+				}
                 if($switch=="servername"){				
             $strContent = str_ireplace('Name '.$row['name'],'Name '.$text,$strContent,$i);
 			if($i==0){
@@ -675,12 +678,13 @@ function players(){
     $ser=$_COOKIE['ser'];
 	$path=PATHS."\Servers\\$ser\\Rocket\\Logs\\Rocket.log";
 	 $path = iconv("utf-8","gb2312",$path);
+	 $p=0;
+	 if(file_exists($path)){
     $file=file_get_contents($path);
-    $p=0;
         $p=$p+substr_count($file,"Connecting");
         if(substr_count($file,"Disconnecting")){
             $p=$p-substr_count($file,"Disconnecting");
-        }
+	 }}
     echo $p."人";
 }
 
