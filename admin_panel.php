@@ -14,7 +14,7 @@ $v="a";
 if(isset($_GET['cinser'])&&isset($_POST['time'])){
 	$time=$_POST['time'];
 	$num=$_POST['num'];
-	for($i=0;$i<=$num;$i++){
+	for($i=0;$i<$num;$i++){
 			$uid = query("select * from inser order by id DESC limit 1 ");
 	$uid=mysqli_fetch_array($uid);
 	if($uid){
@@ -312,6 +312,7 @@ msg($_GET['suc'],1);
 	  <div class='am-form-group'>
       <label for='doc-select-1'>生成数量</label>
       <select name='num' id='doc-select-1'data-am-selected>
+	    <option value='1'>1个</option>
         <option value='5'>5个</option>
         <option value='10'>10个</option>
         <option value='20'>20个</option>
@@ -376,8 +377,8 @@ while($row = mysqli_fetch_array($result))
 	
            echo "   <tr>
 <td> {$row['id']}</td>
-                <td><a href='#'> {$row['inser']}</a></td>
-<td><a href='#'>{$row['password']}</a></td>
+                <td> {$row['inser']}</td>
+<td>{$row['password']}</td>
                 <td class='am-hide-sm-only'>{$row['time']}</td>
                 <td>
                   <div class='am-btn-toolbar'>
