@@ -34,6 +34,7 @@ CREATE TABLE IF NOT EXISTS `server` (
   `name` text CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '服务器名称',
   `sid` text CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '服务器文件夹名称',
   `players` int(11) NOT NULL COMMENT '玩家数量',
+  `maxplayers` int(11) NOT NULL COMMENT '最大玩家数量',
   `welcome` text NOT NULL COMMENT '欢迎信息',
   `difficult` text NOT NULL COMMENT '难度',
   `mode` text NOT NULL COMMENT '对战模式',
