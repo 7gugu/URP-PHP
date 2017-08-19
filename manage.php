@@ -411,7 +411,7 @@ if(isset($_GET['information'])){
             <td>服务器最大人数</td>
             <td>
 			<div class='am-u-lg-6'>
-			<input id='players' name='players' min='0' max='{$rom['maxplayers']}' type='number' class='am-form-field' value='{$row['players']}'>
+			<input id='players' name='players' min='0' max='{$row['maxplayers']}' type='number' class='am-form-field' value='{$row['players']}'>
 			</div>
 			</td>
 			<td>

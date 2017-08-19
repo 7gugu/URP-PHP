@@ -14,6 +14,7 @@ $v="a";
 if(isset($_GET['cinser'])&&isset($_POST['time'])){
 	$time=$_POST['time'];
 	$num=$_POST['num'];
+	$max=$_POST['max'];
 	for($i=0;$i<$num;$i++){
 			$uid = query("select * from inser order by id DESC limit 1 ");
 	$uid=mysqli_fetch_array($uid);
@@ -25,7 +26,7 @@ if(isset($_GET['cinser'])&&isset($_POST['time'])){
 	$uid++;
 	$inser=getinser(8);
 	$inserpassword=getinser(8);
-	$sql="insert into inser(id,password,time,inser)values('$uid','$inserpassword','$time','$inser')";
+	$sql="insert into inser(id,password,time,inser,max)values('$uid','$inserpassword','$time','$inser',$max)";
 	query($sql);	
 }
 header("Location: admin_panel.php?inser&suc=13");
@@ -310,7 +311,7 @@ msg($_GET['suc'],1);
 		<fieldset>
     <legend>生成激活码</legend>
 	  <div class='am-form-group'>
-      <label for='doc-select-1'>生成数量</label>
+      <label for='doc-select-1'>生成数量</label>&nbsp;&nbsp;
       <select name='num' id='doc-select-1'data-am-selected>
 	    <option value='1'>1个</option>
         <option value='5'>5个</option>
@@ -320,7 +321,7 @@ msg($_GET['suc'],1);
       <span class='am-form-caret'></span>
     </div>
 	 <div class='am-form-group'>
-      <label for='doc-select-1'>可用时间</label>
+      <label for='doc-select-1'>可用时间</label>&nbsp;&nbsp;
       <select name='time' id='doc-select-1'data-am-selected>
         <option value='1'>一天[1]</option>
         <option value='7'>一周[7]</option>
@@ -331,6 +332,13 @@ msg($_GET['suc'],1);
       </select>
       <span class='am-form-caret'></span>
     </div>
+	 <div class='am-form-group'>
+      <label for='doc-select-1' style='float:left'>最大玩家数</label>
+	  <div class='am-u-sm-6'>
+      <input id='max' name='max' min='0' max='999' type='number' value='24' class='am-form-field'>
+			</div>
+      </div>
+    <br>
 	<hr>
 <button type='submit' class='am-btn am-btn-warning' >生成激活码</button>
   </fieldset>
@@ -344,7 +352,7 @@ msg($_GET['suc'],1);
             <table class='am-table am-table-striped am-table-hover table-main'>
               <thead>
               <tr>
-                <th class='table-id'>ID</th><th class='table-title'>激活码</th><th class='table-type'>激活密码</th><th class='table-date am-hide-sm-only'>可用时间</th><th class='table-set'>操作</th>
+                <th class='table-id'>ID</th><th class='table-title'>激活码</th><th class='table-type'>激活密码</th><th class='table-date am-hide-sm-only'>可用时间</th><th class='table-set'>最大玩家数</th><th class='table-set'>操作</th>
               </tr>
               </thead>
               <tbody>";
@@ -368,6 +376,7 @@ if($row[0]==0){
                 <td></td>
                 <td class='am-hide-sm-only'>暂无激活码可管理</td>
                 <td class='am-hide-sm-only'></td>
+				<td></td>
                 <td>
                 </td>
               </tr>";
@@ -380,6 +389,7 @@ while($row = mysqli_fetch_array($result))
                 <td> {$row['inser']}</td>
 <td>{$row['password']}</td>
                 <td class='am-hide-sm-only'>{$row['time']}</td>
+				<td>{$row['max']}</td>
                 <td>
                   <div class='am-btn-toolbar'>
 				  

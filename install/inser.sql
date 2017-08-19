@@ -29,6 +29,7 @@ CREATE TABLE IF NOT EXISTS `inser` (
   `id` int(11) NOT NULL,
   `inser` text NOT NULL COMMENT '激活码',
   `time` int(11) NOT NULL COMMENT '可用时间',
+  `max` int(11) NOT NULL COMMENT '最大人数',
   `password` text NOT NULL COMMENT '拥有者'
 ) ENGINE=MyISAM DEFAULT CHARSET=gbk;
 
