@@ -30,7 +30,7 @@ return true;
   </fieldset>
 </form>
 ";
-$c1a= "
+$c1a1= "
  <script type='text/javascript'>
 function check(form){
 if(form.servername.value==''){
@@ -49,9 +49,9 @@ return true;
         <input id='servername' name='servername' type='text' class='' placeholder='输入服务器名'>
       </div>
 	   <div class='am-form-group'>
-        <label for='doc-ipt-email-1'>玩家上限</label>
-        <input id='players' name='players' type='text' class='' placeholder='输入玩家上限'>
-      </div>
+        <label for='doc-ipt-email-1'>玩家上限</label>";
+      $c1a2="<h4 class='am-article-meta'>创建服务器后可修改</h4>
+	  </div>
     <div class='am-form-group'>
         <label for='doc-ipt-pwd-1'>游戏地图</label>
         <select name='map' id='doc-select-'>

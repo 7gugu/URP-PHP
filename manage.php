@@ -144,7 +144,7 @@ if(isset($_GET['read'])){
  $ser=$_GET['read'];
  $path=PATHS."\Servers\\$ser\\Rocket\\Logs\\Rocket.log";
  $path = iconv("utf-8","gb2312",$path);
-$file = fopen($path, "r") or exit("打开log文件失败,请联系管理员!");
+$file = @fopen($path, "r") or exit("打开log文件失败,请启动服务器或联系管理员!");
 while(!feof($file))
 {
  $rs=fgets($file);
@@ -237,7 +237,7 @@ function hidediv() {
 	
 }
 		    window.onload=showdiv();
-			setTimeout("hidediv()",15000);
+			setTimeout("hidediv()",20000);
 </script>
 		<?php
 		}

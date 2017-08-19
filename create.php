@@ -59,9 +59,13 @@ echo $c0;
 		header("Location:create.php?c0&err=13");//激活码不存在或错误
 	exit();
 	}
+	$query= "SELECT * FROM inser WHERE password='{$inserpassword}' and inser='{$inser}'";
+    $rs=mysqli_fetch_array(query($query));
 	setcookie("inser", $inser, time()+600);
 	setcookie("inserpassword", $inserpassword, time()+600);
-	echo $c1a;
+	echo $c1a1;
+	echo " <input id='players' name='players' type='text' class='' value='{$rs['max']}' disabled>";
+	echo $c1a2;
 		gfl(1);
 	echo $c1b;
 	echo "  <input id='' name='' type='text' class='' value='{$a[1]}' disabled> ";
@@ -116,7 +120,7 @@ foreach($arr as $values)
 	$dif=$_POST['dif'];
 	$pv=$_POST['pv'];
 	$view=$_POST['view'];
-	$players=$_POST['players'];
+	$players=$arr['max'];
 	if($players==0||$players==''){
 		$players=1;
 	}
