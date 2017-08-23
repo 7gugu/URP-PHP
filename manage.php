@@ -775,7 +775,9 @@ if(isset($_GET['pfile'])){
 	   <td> <a href=\"javascript:history.go(-1);\"> 返回上一级</a></td>
 	   	   <td></td> <td></td>
 	   </tr>
-	   <tr><td>文件名:<br>{$fn}<br></td>
+	   <tr><td>文件名:<br>{$fn}<br></td></tr>
+	   <tr>
+	  <td colspan='3'>
 	   <td>
            ";?>
 		   <style type="text/css" media="screen">
