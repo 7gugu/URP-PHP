@@ -29,5 +29,10 @@ __本人恕不提供URP的维护工作,数据丢失恕不负责！！__
 ## 有问题反馈
  *   [Blog](http://www.7gugu.com)
  *   Email:gz_7gugu@outlook.com [只支持部分技术解答]
+
+## 赞助
+希望有能力的dalao们能赞助支持下OTZ
+<img src="http://7u2sc0.com1.z0.glb.clouddn.com/WQ947[32{4$82P[OMN(F@`3.jpg" alt="WQ947[32{4$82P[OMN(F@`3.jpg" > 
+
  
   
