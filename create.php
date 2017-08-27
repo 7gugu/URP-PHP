@@ -149,6 +149,7 @@ $sid=$_SESSION['username']."x".$num;
     $dbname=$sqluser="un_".$num;
     $sqlpass=md5("un_".$num);
 	$q="insert into server(id,user,time,rpw,rport,port,name,state,sid,players,welcome,difficult,mode,map,password,view,cheat,loadout,dbname,sqluser,sqlpaw)values('$uid','$username','$time','$rpw','$rport','$port','$sname','0','$sid','$players','本服务器由URP强力驱动','$dif','$pv','$map','','$view','$ch','','$dbname','$sqluser','$sqlpass')";
+	recurse_copy("Libraries",PATHS."\Servers\\$sid\\Rocket\Libraries");
 	}else{
 	$q="insert into server(id,user,time,rpw,rport,port,name,state,sid,players,welcome,difficult,mode,map,password,view,cheat,loadout,dbname,sqluser,sqlpaw)values('$uid','$username','$time','$rpw','$rport','$port','$sname','0','$sid','$players','本服务器由URP强力驱动','$dif','$pv','$map','','$view','$ch','','','','')";
 	}
