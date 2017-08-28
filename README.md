@@ -15,7 +15,8 @@
 ## 注意
 程序需要.net4.0+以及php5.3+的运行环境,同时需要exec,curl函数的支持,推荐在Windows 2012 64位的环境下运行<br>
 请使用Windows自带的计划任务调用php.exe执行do.php以实现定时运行,并在设定时勾选<br>
-[不储存密码]选项.
+[不储存密码]选项.<br>
+更多设置,可前往编辑Config.php进行设置(本面板支持自动化创建数据库)
 
 __本人恕不提供任何非URP自身问题的解答,其他问题请自行百度或谷歌！！__
 <hr>
@@ -31,7 +32,7 @@ __本人恕不提供URP的维护工作,数据丢失恕不负责！！__
  *   Email:gz_7gugu@outlook.com [只支持部分技术解答]
 
 ## 赞助
-希望有能力的dalao们能赞助支持下OTZ
+希望有能力的dalao们能赞助支持下OTZ<br>
 <img src="http://7u2sc0.com1.z0.glb.clouddn.com/WQ947[32{4$82P[OMN(F@`3.jpg" alt="WQ947[32{4$82P[OMN(F@`3.jpg" > 
 
  
