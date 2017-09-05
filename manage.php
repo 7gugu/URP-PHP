@@ -970,7 +970,7 @@ if(isset($_GET['msql'])){
 	$slink='';
 	if(CSQL==true&&SLINK!=''){
 		$slink=SLINK;
-	}elseif(SLINK==''){
+	}elseif(CSQL==FALSE||SLINK==''){
 	$dis="disabled";
 	}else{
 		echo "

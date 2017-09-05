@@ -120,7 +120,7 @@ foreach($arr as $values)
 	$dif=$_POST['dif'];
 	$pv=$_POST['pv'];
 	$view=$_POST['view'];
-	$players=$arr['max'];
+	$maxplayers=$players=$arr['max'];
 	if($players==0||$players==''){
 		$players=1;
 	}
@@ -148,10 +148,10 @@ $sid=$_SESSION['username']."x".$num;
 	csql("un_".$num,"un_".$num,md5("un_".$num));
     $dbname=$sqluser="un_".$num;
     $sqlpass=md5("un_".$num);
-	$q="insert into server(id,user,time,rpw,rport,port,name,state,sid,players,welcome,difficult,mode,map,password,view,cheat,loadout,dbname,sqluser,sqlpaw)values('$uid','$username','$time','$rpw','$rport','$port','$sname','0','$sid','$players','本服务器由URP强力驱动','$dif','$pv','$map','','$view','$ch','','$dbname','$sqluser','$sqlpass')";
+	$q="insert into server(id,user,time,rpw,rport,port,name,state,sid,players,maxplayers,welcome,difficult,mode,map,password,view,cheat,loadout,dbname,sqluser,sqlpaw)values('$uid','$username','$time','$rpw','$rport','$port','$sname','0','$sid','$players','$maxplayers','本服务器由URP强力驱动','$dif','$pv','$map','','$view','$ch','','$dbname','$sqluser','$sqlpass')";
 	recurse_copy("Libraries",PATHS."\Servers\\$sid\\Rocket\Libraries");
 	}else{
-	$q="insert into server(id,user,time,rpw,rport,port,name,state,sid,players,welcome,difficult,mode,map,password,view,cheat,loadout,dbname,sqluser,sqlpaw)values('$uid','$username','$time','$rpw','$rport','$port','$sname','0','$sid','$players','本服务器由URP强力驱动','$dif','$pv','$map','','$view','$ch','','','','')";
+	$q="insert into server(id,user,time,rpw,rport,port,name,state,sid,players,maxplayers,welcome,difficult,mode,map,password,view,cheat,loadout,dbname,sqluser,sqlpaw)values('$uid','$username','$time','$rpw','$rport','$port','$sname','0','$sid','$players','$maxplayers','本服务器由URP强力驱动','$dif','$pv','$map','','$view','$ch','','','','')";
 	}
 		//echo $q;
 			$r=query($q);
