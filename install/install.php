@@ -3,12 +3,15 @@ if(isset($_GET['i'])&&isset($_POST['gamepos'])){
     if(isset($_GET['nosql'])){
         require '../config/config.php';
     }else{
+	if(isset($_POST['ostype'])){IF($_POST['ostype']=="linux"){$ostype=false;}else{$ostype=true;}}
 	define("PATHS",$_POST['gamepos']."/Unturned");
+	define("LINUXPA",$_POST['gamepos']);
 	define('SYSTEM_ROOT',dirname(dirname(__FILE__)));
 	define('DBIP',$_POST['dbip']);
 	define('DBUSERNAME',$_POST['dbusername']);
 	define('DBPASSWORD',$_POST['dbpassword']);
 	define('DBNAME',$_POST['dbname']);
+	define('OSTYPE',$ostype);
 	$gamepos=str_ireplace("unturned.exe","",$_POST['gamepos']);
 		$sql  = str_ireplace("define(\"PATHS\",\"gamepath\");","define(\"PATHS\",\"{$gamepos}\");", file_get_contents(SYSTEM_ROOT.'/config/config.php'));
 		$sql  = str_ireplace("define(\"DBIP\",\"localhost\");","define(\"DBIP\",\"{$_POST['dbip']}\");",$sql);
@@ -17,7 +20,8 @@ if(isset($_GET['i'])&&isset($_POST['gamepos'])){
 		}
 		$sql  = str_ireplace("define(\"DBUSERNAME\",\"root\");","define(\"DBUSERNAME\",\"{$_POST['dbusername']}\");",$sql); 
 		$sql  = str_ireplace("define(\"DBPASSWORD\",\"root\");","define(\"DBPASSWORD\",\"{$_POST['dbpassword']}\");",$sql); 
-		$sql  = str_ireplace("define(\"DBNAME\",\"urp\");","define(\"DBNAME\",\"{$_POST['dbname']}\");",$sql); 
+		$sql  = str_ireplace("define(\"DBNAME\",\"urp\");","define(\"DBNAME\",\"{$_POST['dbname']}\");",$sql);
+		$sql  = str_ireplace("define(\"OSTYPE\",\"true\");","define(\"OSTYPE\",\"{$ostype}\");",$sql); 
 		if($_POST['dbport']==""||$_POST['dbport']==3306){
 		    	$sql  = str_ireplace("define(\"DBPORT\",\"port\");","define(\"DBPORT\",\"3306\");",$sql); 
 		}else{
@@ -57,7 +61,7 @@ $uid = query("select * from user order by id DESC limit 1 ");
 query("insert into user(id,username,password,email,admin)values('{$uid}','{$_POST['username']}','{$_POST['password']}','{$_POST['email']}','1')");
 $nums=mysqli_affected_rows($connect);
 	if($nums){
-copy(dirname(__FILE__)."/start.exe",PATHS."/start.exe");
+if(OSTYPE){copy(dirname(__FILE__)."/start.exe",PATHS."/start.exe");}
 header("Location: install.php?step4");
 	}else{
 header("Location: install.php?step3&err=2");
@@ -153,7 +157,18 @@ function checkclass($f,$m = false) {
 		}
 	}
 }
-
+function checkos(){
+	 $os=''; 
+ $Agent=$_SERVER['HTTP_USER_AGENT']; 
+if(stristr($Agent,'linux')){ 
+  $os='Linux'; 
+ }elseif(stristr($Agent,'Win')){
+  $os='Windows'; 	 
+ }else{
+  $os="Unknown"; 
+ }
+ return $os;
+}
   ?>
    <div class="admin-content">
     <div class="admin-content-body">
@@ -248,11 +263,32 @@ $err=$_GET['err'];
 			<td><?php echo "<span class=\"am-badge am-badge-secondary am-radius\">".phpversion()."</span>"; ?></td>
 			<td>核心,未来URP可能不支持PHP 5.3以下版本</td>
 		</tr>
+		<tr>
+			<td>OS version</td>
+			<td>必须</td>
+			<td><?php echo "<span class=\"am-badge am-badge-secondary am-radius\">".checkos()."</span>"; ?></td>
+			<td>支持linux内核和windows内核的系统</td>
+		</tr>
               </tbody>  
             </table>
 			 <button class='am-btn am-btn-success'type='button' <?php if(isset($_COOKIE['dis'])){echo "disabled";}else{ echo "onclick=\"javascript:window.location.href='install.php?step3'\""; } ?>>下一步>></button>
 			 <br><br> 
 		<?php }elseif(isset($_GET['step3'])){?>
+		<?php if(checkos()=="Windows"){echo " 
+		<div class='am-panel am-panel-default'>
+		<div class='am-panel-bd'>
+		<strong>系统内核选择: </strong>
+		<div class='am-form-group'>
+      <label class='am-radio-inline'>
+        <input type='radio'  value='windows' name='ostype' checked>Windows内核
+      </label>
+      <label class='am-radio-inline'>
+        <input type='radio'  value='linux' name='ostype'>Linux内核
+      </label>
+    </div>
+	</div>
+	</div>
+	";}else{echo "<input type='hidden'  value='windows' name='ostype'>";?>
 		<h1 class='am-article-title'>配置数据</h1>
 		<form class="am-form" method="POST" action="install.php?i" >
 		<div class="am-input-group">
@@ -356,6 +392,7 @@ $err=$_GET['err'];
 	  }
 	  </script>
 		<?php }elseif(isset($_GET['step4'])){
+			if(OSTYPE){
 		function socket(){
 @set_time_limit(0);
 $address = 'localhost';
@@ -398,7 +435,34 @@ if($buf=="OK"){
 </div>
   </div>
 </div>
-		<?php }elseif(isset($_GET['step5'])){
+		<?php }else{
+	function exist_start(){if(file_exists(LINUXPA."/Scripts/start.sh")){return true;}else{return false;}}
+			?>
+			<h1 class='am-article-title'>Linux后端检测</h1>
+			<div class="am-g">
+  <div class="am-u-sm-6 am-u-lg-centered">
+  <div class=" am-alert am-alert-secondary" data-am-alert>
+  <h3>安装向导:</h3>
+  <ul>
+    <li>1.下载LINUX版本的Rocket</li>
+    <li>2.正确的安装至Unturned中</li>
+    <li>3.点击下方的验证按钮,进行验证</li>
+   <?php
+  if(exist_start()){ 
+	  ?>
+  <li><h3><font color="green">验证成功</font></h3></li>
+  <button class='am-btn am-btn-success'type='button' onclick="javascript:window.location.href='install.php?step5'">下一步>></button>
+  <?php }else{
+	  echo "<li><h3><font color='red'>验证失败</font><h3></li>";
+  ?>
+  	    <button class='am-btn am-btn-secondary' type='button' onclick="javascript:window.location.href='install.php?step4'">验证>></button>
+  <?php } ?>
+  </ul>
+</div>
+  </div>
+</div>
+		
+		<?php}}elseif(isset($_GET['step5'])){
 			fopen("../assets/install.lock", "w+") or die(header("Location: install.php?step5&err=3"));?>
 			<h1 class='am-article-title'>安装完成</h1>
 <div class="am-u-sm-6 am-u-lg-centered">
@@ -447,7 +511,7 @@ if($buf=="OK"){
     </div>
     <footer class="admin-content-footer">
       <hr>
-      <p class="am-padding-left">© 2017 Power By 7gugu.</p>
+      <p class="am-padding-left">© 2018 Power By 7gugu.</p>
     </footer>
   </div>
   <!-- content end -->
