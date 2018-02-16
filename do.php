@@ -38,7 +38,6 @@ recurse_copy(PATHS."\Servers",PATHS."\huifu");//备份文件
 //var_dump($update);//sleep(60);
 //--------工作模块------------
 if($update['switch']==0){
-if($rocketver==true){
 	query("update cron set `switch`='1' where `name`='update'");
     $rs=query("select * from server");
 while($rows = mysqli_fetch_array($rs)){
@@ -47,6 +46,7 @@ while($rows = mysqli_fetch_array($rs)){
 query("update server set state='0'where port='{$rows['port']}'");
 }
 //游戏更新
+if(OSTYPE){
 if($cmd['switch']==1){
     $user=mysqli_fetch_array(query("select * from cron where name='cmduser'"));
     $paw=mysqli_fetch_array(query("select * from cron where name='cmdpaw'"));
@@ -57,9 +57,11 @@ sleep(300);
     echo "Fail to update the game by lack of steamcmd.exe\r\n ";
 }
 }
+}
 //Rocket更新
-if($rocket['switch']==1&&$rocketver==true){
-rocket_download($rocket['key']);
+if($rocket['switch']==1){
+if(OSTYPE){$url="https://ci.rocketmod.net/job/Rocket.Unturned/lastSuccessfulBuild/artifact/Rocket.Unturned/bin/Release/Rocket.zip";}else{$url="https://ci.rocketmod.net/job/Rocket.Unturned%20Linux/lastSuccessfulBuild/artifact/Rocket.Unturned/bin/Release/Rocket.zip";}
+rocket_download($url);
 getzip(PATHS."/Rocket.zip",PATHS."/");
 sleep(60);
 }
@@ -72,12 +74,16 @@ while($rows = mysqli_fetch_array($rs)){
 				continue;
 			}
 			sleep(5);
-       if(SWAY){ 
-                rcon($command,0,1935,'');
-           
-       }else{
+       if(OSTYPE==TRUE){
+            if(SWAY==TRUE){
+            //Windows环境				
+                rcon($command,0,1935,'');}else{
          system("start".PATHS."\\Unturned.exe -nographics -batchmode -silent-crashes +secureserver/".$command);
-                }
+		}}else{
+			//Linux环境	
+			system("cd /".PATHS."/Scripts");
+			system("./start.sh ".$sid);
+		}
       query("update server set `state`='1'where `port`='{$rows['port']}'");
         }
 		$dt=date('ymd',time());
@@ -104,33 +110,6 @@ query("update server set `time`='{$date}'where `port`='{$rows['port']}'");
 		}
 }
 query("update cron set `switch`='0' where `name`='update'");
-}else{
-    	$rs=query("select * from server");
-while($rows = mysqli_fetch_array($rs)){
-        $rows = mysqli_fetch_array (query("select * from server where port='{$rows['port']}'"));
-		$dt=date('ymd',time());
-		if($time['key']!=$dt){
-			query("update cron set `key`='{$dt}'where `name`='time'");
-		if($time['switch']==1){
-       $date=$rows['time'];
-		    $date=$date-1;
-	echo $date;
-    if($date<=-5){
-        $sid=$rows['sid'];
-       query("delete from server where sid='{$sid}'");
-    }elseif($date<=0){
-        rcon("save",1,$rows['rport'],$rows['rpw']);
-        $port=$rows['port']+1;
-		echo $port."\n";
- system("for /f \"tokens=1-5 delims= \" %a in ('\"netstat -ano|findstr \"^:{$port}\"\"') do taskkill /f /pid %d ");
-    }
-query("update server set `time`='{$date}'where `port`='{$rows['port']}'");
-}
-		}else{
-						query("update cron set `key`='{$dt}'where `name`='time'");
-		}
-}
-}
 sleep(10);
 }else{
 	echo "Server update\n";sleep(10);
