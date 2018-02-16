@@ -83,10 +83,16 @@ function manage($sid,$switch){
         if($switch=='start'){
 	       udfile($ser,"players",$ss['players'],"Server//Commands.dat");//同步最大玩家数
             $command=$sid;
-            if(SWAY){ 
+			if(OSTYPE==TRUE){
+            if(SWAY==TRUE){
+            //Windows环境				
                 rcon($command,0,1935,'');}else{
          system("start".PATHS."\\Unturned.exe -nographics -batchmode -silent-crashes +secureserver/".$command);
-                }
+		}}else{
+			//Linux环境	
+			system("cd /".PATHS."/Scripts");
+			system("./start.sh ".$sid);
+		}		
         header("Location: manage.php?index&suc=1");
         }elseif($switch=='shutdown'){	
         sleep(2);
@@ -95,20 +101,30 @@ function manage($sid,$switch){
                 rcon("save",1,$rom['rport'],$rom['rpw']);
                 sleep(1);
             rcon("shutdown",1,$rom['rport'],$rom['rpw']);
-$port=$rom['port']+1;
+			if(OSTYPE==true){	
+ $port=$rom['port']+1;
  system("for /f \"tokens=1-5 delims= \" %a in ('\"netstat -ano|findstr \"^:{$port}\"\"') do taskkill /f /pid %d ");
+		}
         header("Location: manage.php?index&suc=2");
         }elseif($switch=='restart'){
             $query=query("select * from server where sid='{$sid}'");
             $rom=mysqli_fetch_array($query);
              rcon("shutdown",1,$rom['rport'],$rom['rpw']);
+			 if(OSTYPE==true){
              	$port=$rom['port']+1;
  system("for /f \"tokens=1-5 delims= \" %a in ('\"netstat -ano|findstr \"^:{$port}\"\"') do taskkill /f /pid %d ");
+			 }
         $command=$sid;
-        if(SWAY){ 
+        if(OSTYPE==TRUE){
+            if(SWAY==TRUE){
+            //Windows环境				
                 rcon($command,0,1935,'');}else{
          system("start".PATHS."\\Unturned.exe -nographics -batchmode -silent-crashes +secureserver/".$command);
-                }
+		}}else{
+			//Linux环境	
+			system("cd /".PATHS."/Scripts");
+			system("./start.sh ".$sid);
+		}		
         header("Location: manage.php?index&suc=3");
         }
     }else{
