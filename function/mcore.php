@@ -4,8 +4,7 @@
 *****************/
 
 //下载Rocket.dll
-function rocket_download($key) {
-$url="http://api.rocketmod.net/download/unturned/latest/".$key;   
+function rocket_download($url) {
 $dir=PATHS.'/Rocket.zip';
 $ch = curl_init($url);
 $fp = fopen($dir, "w+");
