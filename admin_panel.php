@@ -542,7 +542,7 @@ echo "<li class='am-disabled'><a href='admin_panel.php?muser&page=";echo $page+1
   </header>
   <div class='am-panel-bd'>
   <h3>状态</h3>
-  <h4 class='am-article-meta'>由于Rocket的更新源发生变化,所以暂时删除掉秘钥模块</h4>
+  <h4 class='am-article-meta'>Rocket的更新源现已支持Linux与Windows源h4>
   ";
   $row=mysqli_fetch_array(query("select * from cron where name='rocket'"));
   $on=$off="";
