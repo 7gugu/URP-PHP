@@ -582,7 +582,9 @@ echo "<li class='am-disabled'><a href='admin_panel.php?muser&page=";echo $page+1
 <div class='am-u-sm-6'>
 <section class='am-panel am-panel-default'>
   <header class='am-panel-hd'>
-    <h3 class='am-panel-title'>游戏更新</h3>
+    <h3 class='am-panel-title'>游戏更新"; 
+	echo "<span class=\"am-badge am-badge-danger am-radius\">Linux环境不可用</span>";
+	echo"</h3>
   </header>
   <div class='am-panel-bd'>
      <div class='am-form-group'>
@@ -612,7 +614,7 @@ echo "<li class='am-disabled'><a href='admin_panel.php?muser&page=";echo $page+1
  </strong>
  <hr>
 	<h3>参数</h3>
-	<form method='POST' action='admin_panel.php?game'>
+	<form method='POST' ";if(OSTYPE){echo "action='admin_panel.php?game'";} echo">
 	<input type='text' name='cmdpath' class='am-form-field' value='";
 	$rom=mysqli_fetch_array(query("select * from cron where name='cmdpath'"));
 	echo $rom['key'];
