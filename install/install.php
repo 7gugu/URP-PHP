@@ -462,7 +462,9 @@ if($buf=="OK"){
   </div>
 </div>
 		
-		<?php}}elseif(isset($_GET['step5'])){
+		<?php
+		    
+		}}elseif(isset($_GET['step5'])){
 			fopen("../assets/install.lock", "w+") or die(header("Location: install.php?step5&err=3"));?>
 			<h1 class='am-article-title'>安装完成</h1>
 <div class="am-u-sm-6 am-u-lg-centered">
