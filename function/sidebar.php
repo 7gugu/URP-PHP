@@ -80,7 +80,7 @@ echo "
 		 <li><a href='admin_panel.php?cron'><span class='am-icon-tag'></span> 计划任务</a></li>
 		  <li><a href='admin_panel.php?notice'><span class='am-icon-arrows'></span> 发布公告</a></li>
 		   <li><a href='admin_panel.php?mplugin'><span class='am-icon-upload'></span> 插件管理</a></li>
-		   <li><a href='admin_panel.php?upgrade'><span class='am-icon-refresh'></span> 升级管理</a></li>
+		   <li><a href='admin_panel.php?upgrade'><span class='am-icon-refresh'></span> 系统管理</a></li>
       </ul>  
 	   <div class='am-panel am-panel-default admin-sidebar-panel'>
         <div class='am-panel-bd'>
