@@ -391,7 +391,7 @@ $err=$_GET['err'];
     return true;
 	  }
 	  </script>
-		<?php }elseif(isset($_GET['step4'])){
+		<?php }}elseif(isset($_GET['step4'])){
 			if(OSTYPE){
 		function socket(){
 @set_time_limit(0);
