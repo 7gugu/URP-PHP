@@ -288,7 +288,7 @@ $err=$_GET['err'];
     </div>
 	</div>
 	</div>
-	";}else{echo "<input type='hidden'  value='windows' name='ostype'>";?>
+	";}else{echo "<input type='hidden'  value='windows' name='ostype'>";}?>
 		<h1 class='am-article-title'>配置数据</h1>
 		<form class="am-form" method="POST" action="install.php?i" >
 		<div class="am-input-group">
@@ -391,7 +391,7 @@ $err=$_GET['err'];
     return true;
 	  }
 	  </script>
-		<?php }}elseif(isset($_GET['step4'])){
+		<?php }elseif(isset($_GET['step4'])){
 			if(OSTYPE){
 		function socket(){
 @set_time_limit(0);
