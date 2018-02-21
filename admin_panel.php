@@ -542,7 +542,7 @@ echo "<li class='am-disabled'><a href='admin_panel.php?muser&page=";echo $page+1
   </header>
   <div class='am-panel-bd'>
   <h3>状态</h3>
-  <h4 class='am-article-meta'>Rocket的更新源现已支持Linux与Windows源h4>
+  <h4 class='am-article-meta'>Rocket的更新源现已支持Linux与Windows源 </h4>
   ";
   $row=mysqli_fetch_array(query("select * from cron where name='rocket'"));
   $on=$off="";
@@ -583,7 +583,9 @@ echo "<li class='am-disabled'><a href='admin_panel.php?muser&page=";echo $page+1
 <section class='am-panel am-panel-default'>
   <header class='am-panel-hd'>
     <h3 class='am-panel-title'>游戏更新"; 
-	echo "<span class=\"am-badge am-badge-danger am-radius\">Linux环境不可用</span>";
+	if(!OSTYPE){
+	echo " <span class=\"am-badge am-badge-danger am-radius\">Linux环境不可用</span>";
+	}
 	echo"</h3>
   </header>
   <div class='am-panel-bd'>
@@ -633,7 +635,12 @@ echo "<li class='am-disabled'><a href='admin_panel.php?muser&page=";echo $page+1
 	<input type='text' name='' class='am-form-field' placeholder='游戏的位置' value='";
 	echo PATHS;
 	echo "'disabled><br>
-	<button type='submit' class='am-btn am-btn-success'>保存设置</button>
+	<button type='submit' class='am-btn am-btn-success'
+	";
+	if(!OSTYPE){
+		echo "disabled";
+	}
+	echo ">保存设置</button>
 	</form>
 	</div>
   </div>
