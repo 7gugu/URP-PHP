@@ -2,39 +2,38 @@
 if(isset($_GET['i'])&&isset($_POST['gamepos'])){
     if(isset($_GET['nosql'])){
         require '../config/config.php';
-    }else{
-	if(isset($_POST['ostype'])){IF($_POST['ostype']=="linux"){$ostype=false;}else{$ostype=true;}}
-	define("PATHS",$_POST['gamepos']."/Unturned");
-	define("LINUXPA",$_POST['gamepos']);
-	define('SYSTEM_ROOT',dirname(dirname(__FILE__)));
-	define('DBIP',$_POST['dbip']);
-	define('DBUSERNAME',$_POST['dbusername']);
-	define('DBPASSWORD',$_POST['dbpassword']);
-	define('DBNAME',$_POST['dbname']);
-	define('OSTYPE',$ostype);
-	$gamepos=str_ireplace("unturned.exe","",$_POST['gamepos']);
-		$sql  = str_ireplace("define(\"PATHS\",\"gamepath\");","define(\"PATHS\",\"{$gamepos}\");", file_get_contents(SYSTEM_ROOT.'/config/config.php'));
-		$sql  = str_ireplace("define(\"DBIP\",\"localhost\");","define(\"DBIP\",\"{$_POST['dbip']}\");",$sql);
-		if($_POST['ip']!=""){
+    }else{	
+   IF($_POST['ostype']=="linux"){$ostype=false;}else{$ostype=true;}
+    define("PATHS",$_POST['gamepos']."/Unturned");
+    define('SYSTEM_ROOT',dirname(dirname(__FILE__)));
+    define('DBIP',$_POST['dbip']);
+    define('DBUSERNAME',$_POST['dbusername']);
+    define('DBPASSWORD',$_POST['dbpassword']);
+    define('DBNAME',$_POST['dbname']);
+   define('OSTYPE',$ostype);
+    $gamepos=str_ireplace("unturned.exe","",$_POST['gamepos']);
+        $sql  = str_ireplace("define(\"PATHS\",\"gamepath\");","define(\"PATHS\",\"{$gamepos}\");", file_get_contents(SYSTEM_ROOT.'/config/config.php'));
+        $sql  = str_ireplace("define(\"DBIP\",\"localhost\");","define(\"DBIP\",\"{$_POST['dbip']}\");",$sql);
+        if($_POST['ip']!=""){
         $sql  = str_ireplace("define(\"IP\",\"localhost\");","define(\"IP\",\"{$_POST['ip']}\");",$sql); 		
-		}
-		$sql  = str_ireplace("define(\"DBUSERNAME\",\"root\");","define(\"DBUSERNAME\",\"{$_POST['dbusername']}\");",$sql); 
-		$sql  = str_ireplace("define(\"DBPASSWORD\",\"root\");","define(\"DBPASSWORD\",\"{$_POST['dbpassword']}\");",$sql); 
-		$sql  = str_ireplace("define(\"DBNAME\",\"urp\");","define(\"DBNAME\",\"{$_POST['dbname']}\");",$sql);
-		$sql  = str_ireplace("define(\"OSTYPE\",\"true\");","define(\"OSTYPE\",\"{$ostype}\");",$sql); 
-		if($_POST['dbport']==""||$_POST['dbport']==3306){
-		    	$sql  = str_ireplace("define(\"DBPORT\",\"port\");","define(\"DBPORT\",\"3306\");",$sql); 
-		}else{
-		    	$sql  = str_ireplace("define(\"DBPORT\",\"port\");","define(\"DBPORT\",\"{$_POST['dbport']}\");",$sql); 
-		}
-		file_put_contents(SYSTEM_ROOT.'/config/config.php',$sql);
+        }
+        $sql  = str_ireplace("define(\"DBUSERNAME\",\"root\");","define(\"DBUSERNAME\",\"{$_POST['dbusername']}\");",$sql); 
+        $sql  = str_ireplace("define(\"DBPASSWORD\",\"root\");","define(\"DBPASSWORD\",\"{$_POST['dbpassword']}\");",$sql); 
+        $sql  = str_ireplace("define(\"DBNAME\",\"urp\");","define(\"DBNAME\",\"{$_POST['dbname']}\");",$sql);
+    $sql  = str_ireplace("define(\"OSTYPE\",\"true\");","define(\"OSTYPE\",\"{$ostype}\");",$sql); 
+        if($_POST['dbport']==""||$_POST['dbport']==3306){
+            	$sql  = str_ireplace("define(\"DBPORT\",\"port\");","define(\"DBPORT\",\"3306\");",$sql); 
+        }else{
+            	$sql  = str_ireplace("define(\"DBPORT\",\"port\");","define(\"DBPORT\",\"{$_POST['dbport']}\");",$sql); 
+        }
+        file_put_contents(SYSTEM_ROOT.'/config/config.php',$sql);
     }
-		$connect=mysqli_connect(DBIP,DBUSERNAME,DBPASSWORD,DBNAME) or die(header("Location: install.php?step3&err=1"));
+        $connect=mysqli_connect(DBIP,DBUSERNAME,DBPASSWORD,DBNAME) or die(header("Location: install.php?step3&err=1"));
  function query($text){
-	global $connect;
-	mysqli_query($connect,"set names 'utf8'");
-	$res=mysqli_query($connect,"{$text}");
-	return $res;
+    global $connect;
+    mysqli_query($connect,"set names 'utf8'");
+    $res=mysqli_query($connect,"{$text}");
+    return $res;
 }
 function loadsql($file){
 $_sql = file_get_contents($file);
@@ -44,31 +43,34 @@ foreach ($_arr as $_value) {
 }
 }
     loadsql("cron.sql");
-	loadsql("user.sql");
-	loadsql("inser.sql");
-	loadsql("server.sql");
-	loadsql("notice.sql");
-	loadsql("plugin.sql");
-	sleep(1);
+    loadsql("user.sql");
+    loadsql("inser.sql");
+    loadsql("server.sql");
+    loadsql("notice.sql");
+    loadsql("plugin.sql");
+    sleep(1);
 $uid = query("select * from user order by id DESC limit 1 ");
-	$uid=mysqli_fetch_array($uid);
-	if($uid){
-		$uid=$uid['id'];
-	}else{
-	$uid=0;
-	}
-	$uid++;	
+    $uid=mysqli_fetch_array($uid);
+    if($uid){
+        $uid=$uid['id'];
+    }else{
+    $uid=0;
+    }
+    $uid++;	
 query("insert into user(id,username,password,email,admin)values('{$uid}','{$_POST['username']}','{$_POST['password']}','{$_POST['email']}','1')");
 $nums=mysqli_affected_rows($connect);
-	if($nums){
-if(OSTYPE){copy(dirname(__FILE__)."/start.exe",PATHS."/start.exe");}
+    if($nums){
+if(OSTYPE){
+copy(dirname(__FILE__)."/start.exe",PATHS."/start.exe"); 
 header("Location: install.php?step4");
-	}else{
+}else{
+header("Location: install.php?step4&linux");	
+}
+    }else{
 header("Location: install.php?step3&err=2");
-	}
+    }
 exit();
 }
-
 ?>
 <!doctype html>
 <html class="no-js fixed-layout">
@@ -94,7 +96,6 @@ exit();
   <div class='am-topbar-brand'>
     <strong>URP</strong> <small>后台管理</small>
   </div>
-
   <div class='am-collapse am-topbar-collapse' id='topbar-collapse'>
   </div>
 </header>
@@ -107,11 +108,11 @@ exit();
       <ul class='am-list admin-sidebar-list'>
         <li><a href='#'><span class='am-icon-th-large'></span> 阅读协议</a></li>
         <li><a href='#'><span class='am-icon-refresh'></span> 功能检测</a></li>
-	    <li><a href='#'><span class='am-icon-list'></span> 数据配置</a></li>
-		 <li><a href='#'><span class='am-icon-bolt'></span> 后端安装</a></li>
+        <li><a href='#'><span class='am-icon-list'></span> 数据配置</a></li>
+         <li><a href='#'><span class='am-icon-bolt'></span> 后端安装</a></li>
         <li><a href='#'><span class='am-icon-check-square'></span> 安装完成</a></li>
       </ul>  
-	   <div class='am-panel am-panel-default admin-sidebar-panel'>
+       <div class='am-panel am-panel-default admin-sidebar-panel'>
         <div class='am-panel-bd'>
           <p><span class='am-icon-bookmark'></span> 公告</p>
           <p>我才是帅比—— 7gugu</p>
@@ -124,41 +125,41 @@ exit();
   <?php 
   if(file_exists(dirname(dirname(__FILE__))."/assets/install.lock"))
 {
-	echo "<br><div class='am-u-sm-8'><div class='am-alert am-alert-danger'>";
+    echo "<br><div class='am-u-sm-8'><div class='am-alert am-alert-danger'>";
     echo "<h3>检测到Install.lock文件,请删除后再继续安装!</h3>
-	<li>若你已安装此程序,点击<a href='../index.php'><code>此处</code></a>返回首页</li>
-	";
-	echo "</div></div>";
+    <li>若你已安装此程序,点击<a href='../index.php'><code>此处</code></a>返回首页</li>
+    ";
+    echo "</div></div>";
     exit();
 }
   function checkfunc($f,$m = false) {
-	if (function_exists($f)) {
-		return "<a class='am-badge am-badge-success am-radius'>可用</a>";
-	} else {
-		if ($m == false) {
-			setcookie('dis','',time()-99999);
-			return "<a class='am-badge am-badge-danger am-radius'>不可用</a>";
-		} else {
-			setcookie('dis','',time()+999);
-			return "<a class='am-badge am-badge-danger am-radius'>不可用</a>";
-		}
-	}
+    if (function_exists($f)) {
+        return "<a class='am-badge am-badge-success am-radius'>可用</a>";
+    } else {
+        if ($m == false) {
+            setcookie('dis','',time()-99999);
+            return "<a class='am-badge am-badge-danger am-radius'>不可用</a>";
+        } else {
+            setcookie('dis','',time()+999);
+            return "<a class='am-badge am-badge-danger am-radius'>不可用</a>";
+        }
+    }
 }
 function checkclass($f,$m = false) {
-	if (class_exists($f)) {
-		return "<a class='am-badge am-badge-success am-radius'>可用</a>";
-	} else {
-		if ($m == false) {
-			setcookie('dis','',time()-99999);
-			return "<a class='am-badge am-badge-danger am-radius'>不可用</a>";
-		} else {
-			setcookie('dis','',time()+999);
-			return "<a class='am-badge am-badge-danger am-radius'>不可用</a>";
-		}
-	}
+    if (class_exists($f)) {
+        return "<a class='am-badge am-badge-success am-radius'>可用</a>";
+    } else {
+        if ($m == false) {
+            setcookie('dis','',time()-99999);
+            return "<a class='am-badge am-badge-danger am-radius'>不可用</a>";
+        } else {
+            setcookie('dis','',time()+999);
+            return "<a class='am-badge am-badge-danger am-radius'>不可用</a>";
+        }
+    }
 }
 function checkos(){
-	 $os=''; 
+     $os=''; 
  $Agent=$_SERVER['HTTP_USER_AGENT']; 
 if(stristr($Agent,'linux')){ 
   $os='Linux'; 
@@ -178,107 +179,109 @@ if(stristr($Agent,'linux')){
       <hr>
       <div class="am-g">
         <div class="am-u-sm-12">
-		<?php if(isset($_GET['err'])){?>
-		<div class="am-alert am-alert-danger">
-		<?php
+        <?php if(isset($_GET['err'])){?>
+        <div class="am-alert am-alert-danger">
+        <?php
 $err=$_GET['err'];		
-		if($err==1){
-			echo "数据库连接失败,请检查信息是否填写正确";
-		}elseif($err==2){
-			echo "数据导入失败,请检查信息是否填写正确";
-		}elseif($err=3){
-				echo "Install.lock生成失败,请手动在assets文件夹中创建";
-		}
-		?>
+        if($err==1){
+            echo "数据库连接失败,请检查信息是否填写正确";
+        }elseif($err==2){
+            echo "数据导入失败,请检查信息是否填写正确";
+        }elseif($err=3){
+                echo "Install.lock生成失败,请手动在assets文件夹中创建";
+        }
+        ?>
 </div>
-		<?php }?>
-		<?php 
-		if(isset($_GET['step2'])){
-		?>
-		  <h1 class='am-article-title'>检测环境</h1>
-		   <table class="am-table am-table-striped am-table-hover table-main">
+        <?php }?>
+        <?php 
+        if(isset($_GET['step2'])){
+        ?>
+          <h1 class='am-article-title'>检测环境</h1>
+           <table class="am-table am-table-striped am-table-hover table-main">
               <thead>
               <tr>
                <th class="table-id">功能</th><th class="table-title">需求</th><th class="table-type">当前</th><th class="table-author am-hide-sm-only">用途</th>
               </tr>
               </thead>
               <tbody>       
-	<tr>
-			<td>cURL: curl_exec()</td>
-			<td>推荐</td>
-			<td><?php echo checkfunc('curl_exec'); ?></td>
-			<td>下载Rocket</td>
-		</tr>
-		<tr>
-			<td>file_get_contents()</td>
-			<td>必须</td>
-			<td><?php echo checkfunc('file_get_contents',true); ?></td>
-			<td>读取文件</td>
-		</tr>
-		<tr>
-			<td>Socket: fsockopen()</td>
-			<td>必须</td>
-			<td><?php echo checkfunc('fsockopen',true); ?></td>
-			<td>Socket，用以模拟控制台</td>
-		</tr>
-		<tr>
-			<td>Zip</td>
-			<td>必须</td>
-			<td><?php echo checkfunc('zip_open',true); ?></td>
-			<td>Zip 解包和压缩</td>
-		</tr>
-		<tr>
-			<td>写入权限</td>
-			<td>必须</td>
-			<td><?php if (is_writable("install.php")) { echo "<a class='am-badge am-badge-success am-radius'>可用</a>"; } else { echo "<a class='am-badge am-badge-danger am-radius'>不可用</a>"; } ?></td>
-			<td>写入文件(1/2)</td>
-		</tr>
-		<tr>
-			<td>file_put_contents()</td>
-			<td>必须</td>
-			<td><?php echo checkfunc('file_put_contents',true); ?></td>
-			<td>写入文件(2/2)</td>
-		</tr>
-			<tr>
-			<td>Socket模块</td>
-			<td>必须</td>
-			<td><?php echo checkfunc('socket_connect',true); ?></td>
-			<td>核心模块,用以与后端链接</td>
-		</tr>
-		<tr>
-			<td>MySQL: mysql_connect()</td>
-			<td>必须</td>
-			<td><?php echo checkfunc('mysql_connect',true); ?></td>
-			<td>数据库操作，若支持 MySQLi 可忽略本项</td>
-		</tr>
-		<tr>
-			<td>MySQLi: mysqli</td>
-			<td>必须</td>
-			<td><?php echo checkclass('mysqli'); ?></td>
-			<td>数据库操作，若支持本项可不支持 MySQL 函数</td>
-		</tr>
-		<tr>
-			<td>PHP 5+</td>
-			<td>必须</td>
-			<td><?php echo "<span class=\"am-badge am-badge-secondary am-radius\">".phpversion()."</span>"; ?></td>
-			<td>核心,未来URP可能不支持PHP 5.3以下版本</td>
-		</tr>
-		<tr>
-			<td>OS version</td>
-			<td>必须</td>
-			<td><?php echo "<span class=\"am-badge am-badge-secondary am-radius\">".checkos()."</span>"; ?></td>
-			<td>支持linux内核和windows内核的系统</td>
-		</tr>
+    <tr>
+            <td>cURL: curl_exec()</td>
+            <td>推荐</td>
+            <td><?php echo checkfunc('curl_exec'); ?></td>
+            <td>下载Rocket</td>
+        </tr>
+        <tr>
+            <td>file_get_contents()</td>
+            <td>必须</td>
+            <td><?php echo checkfunc('file_get_contents',true); ?></td>
+            <td>读取文件</td>
+        </tr>
+        <tr>
+            <td>Socket: fsockopen()</td>
+            <td>必须</td>
+            <td><?php echo checkfunc('fsockopen',true); ?></td>
+            <td>Socket，用以模拟控制台</td>
+        </tr>
+        <tr>
+            <td>Zip</td>
+            <td>必须</td>
+            <td><?php echo checkfunc('zip_open',true); ?></td>
+            <td>Zip 解包和压缩</td>
+        </tr>
+        <tr>
+            <td>写入权限</td>
+            <td>必须</td>
+            <td><?php if (is_writable("install.php")) { echo "<a class='am-badge am-badge-success am-radius'>可用</a>"; } else { echo "<a class='am-badge am-badge-danger am-radius'>不可用</a>"; } ?></td>
+            <td>写入文件(1/2)</td>
+        </tr>
+        <tr>
+            <td>file_put_contents()</td>
+            <td>必须</td>
+            <td><?php echo checkfunc('file_put_contents',true); ?></td>
+            <td>写入文件(2/2)</td>
+        </tr>
+            <tr>
+            <td>Socket模块</td>
+            <td>必须</td>
+            <td><?php echo checkfunc('socket_connect',true); ?></td>
+            <td>核心模块,用以与后端链接</td>
+        </tr>
+        <tr>
+            <td>MySQL: mysql_connect()</td>
+            <td>必须</td>
+            <td><?php echo checkfunc('mysql_connect',true); ?></td>
+            <td>数据库操作，若支持 MySQLi 可忽略本项</td>
+        </tr>
+        <tr>
+            <td>MySQLi: mysqli</td>
+            <td>必须</td>
+            <td><?php echo checkclass('mysqli'); ?></td>
+            <td>数据库操作，若支持本项可不支持 MySQL 函数</td>
+        </tr>
+        <tr>
+            <td>PHP 5+</td>
+            <td>必须</td>
+            <td><?php echo "<span class=\"am-badge am-badge-secondary am-radius\">".phpversion()."</span>"; ?></td>
+            <td>核心,未来URP可能不支持PHP 5.3以下版本</td>
+        </tr>
+        <tr>
+            <td>OS version</td>
+            <td>必须</td>
+            <td><?php echo "<span class=\"am-badge am-badge-secondary am-radius\">".checkos()."</span>"; ?></td>
+            <td>支持linux内核和windows内核的系统</td>
+        </tr>
               </tbody>  
             </table>
-			 <button class='am-btn am-btn-success'type='button' <?php if(isset($_COOKIE['dis'])){echo "disabled";}else{ echo "onclick=\"javascript:window.location.href='install.php?step3'\""; } ?>>下一步>></button>
-			 <br><br> 
-		<?php }elseif(isset($_GET['step3'])){?>
-		<?php if(checkos()=="Windows"){echo " 
-		<div class='am-panel am-panel-default'>
-		<div class='am-panel-bd'>
-		<strong>系统内核选择: </strong>
-		<div class='am-form-group'>
+             <button class='am-btn am-btn-success'type='button' <?php if(isset($_COOKIE['dis'])){echo "disabled";}else{ echo "onclick=\"javascript:window.location.href='install.php?step3'\""; } ?>>下一步>></button>
+             <br><br> 
+        <?php }elseif(isset($_GET['step3'])){?>
+        <h1 class='am-article-title'>配置数据</h1>
+        <form class="am-form" method="POST" action="install.php?i" >
+		 <?php if(checkos()!="Windows"){echo " 
+        <div class='am-panel am-panel-default'>
+        <div class='am-panel-bd'>
+        <strong>系统内核选择: </strong>
+        <div class='am-form-group'>
       <label class='am-radio-inline'>
         <input type='radio'  value='windows' name='ostype' checked>Windows内核
       </label>
@@ -286,16 +289,14 @@ $err=$_GET['err'];
         <input type='radio'  value='linux' name='ostype'>Linux内核
       </label>
     </div>
-	</div>
-	</div>
-	";}else{echo "<input type='hidden'  value='windows' name='ostype'>";}?>
-		<h1 class='am-article-title'>配置数据</h1>
-		<form class="am-form" method="POST" action="install.php?i" >
-		<div class="am-input-group">
+    </div>
+    </div>
+    ";}else{echo "<input type='hidden'  value='windows' name=\"ostype\">";}?>
+        <div class="am-input-group">
   <span class="am-input-group-label">数据库地址</span>
   <input type="text" name="dbip" class="am-form-field" value="localhost" placeholder="数据库地址">
 </div><br>
-		<div class="am-input-group">
+        <div class="am-input-group">
   <span class="am-input-group-label">数据库用户名</span>
   <input type="text" name="dbusername" class="am-form-field" placeholder="数据库用户名">
 </div><br>
@@ -303,13 +304,13 @@ $err=$_GET['err'];
  <span class="am-input-group-label">数据库密码</span>
   <input type="text" name="dbpassword" class="am-form-field" placeholder="数据库密码">
     </div><br>
-	<div class="am-input-group">
-	<span class="am-input-group-label">数据库名</span>
+    <div class="am-input-group">
+    <span class="am-input-group-label">数据库名</span>
   <input type="text" name="dbname" class="am-form-field" placeholder="数据库名">
   </div>
   <br>
-	<div class="am-input-group">
-	<span class="am-input-group-label">数据库端口</span>
+    <div class="am-input-group">
+    <span class="am-input-group-label">数据库端口</span>
   <input type="text" name="dbport" class="am-form-field" placeholder="数据库端口" value="3306">
   </div>
   <hr>
@@ -317,29 +318,29 @@ $err=$_GET['err'];
   <span class="am-input-group-label">Unturned文件夹位置</span>
   <input type="text" name="gamepos" class="am-form-field" placeholder="需要全路径,如:D:\Unturned\">
    <span class="am-input-group-label">\Unturned.exe</span>
-		</div>
-		<hr>
-		  <div class="am-input-group">
+        </div>
+        <hr>
+          <div class="am-input-group">
   <span class="am-input-group-label">管理员用户名</span>
   <input type="text" name="username" class="am-form-field" placeholder="管理员用户名">
-		</div><br>
-		<div class="am-input-group">
+        </div><br>
+        <div class="am-input-group">
   <span class="am-input-group-label">管理员密码</span>
   <input type="text" name="password" class="am-form-field" placeholder="管理员密码">
-		</div><br>
-		<div class="am-input-group">
+        </div><br>
+        <div class="am-input-group">
   <span class="am-input-group-label">管理员邮箱</span>
   <input type="text" name="email" class="am-form-field" placeholder="管理员邮箱">
-		</div><br>
-		<div class="am-input-group">
+        </div><br>
+        <div class="am-input-group">
   <span class="am-input-group-label">服务器IP[可选]</span>
   <input type="text" name="ip" class="am-form-field" placeholder="服务器IP">
-		</div><br>
-		<button class='am-btn am-btn-success'type='submit'>下一步>></button>
-		<br><br>
-		</form>
-		 <script>
-	  function check(){
+        </div><br>
+        <button class='am-btn am-btn-success'type='submit'>下一步>></button>
+        <br><br>
+        </form>
+         <script>
+      function check(){
    if(document.getElementById("dbip").value=="")
     {
         alert("数据库IP不可为空!");
@@ -356,44 +357,44 @@ $err=$_GET['err'];
     {
         alert("数据库密码不可为空!");
        document.getElementById("dbpassword").focus();
-		return false;
+        return false;
      }
-	  if(document.getElementById("dbname").value=="")
+      if(document.getElementById("dbname").value=="")
     {
         alert("数据库名不可为空!");
        document.getElementById("dbname").focus();
-		return false;
+        return false;
      }
-	  if(document.getElementById("gamepos").value=="")
+      if(document.getElementById("gamepos").value=="")
     {
         alert("游戏路径不可为空!");
        document.getElementById("gamepos").focus();
-		return false;
+        return false;
      }
-	  if(document.getElementById("username").value=="")
+      if(document.getElementById("username").value=="")
     {
         alert("管理员账户不可为空!");
        document.getElementById("username").focus();
-		return false;
+        return false;
      }
-	  if(document.getElementById("password").value=="")
+      if(document.getElementById("password").value=="")
     {
         alert("管理员密码不可为空!");
        document.getElementById("password").focus();
-		return false;
+        return false;
      }
-	  if(document.getElementById("email").value=="")
+      if(document.getElementById("email").value=="")
     {
         alert("管理员邮箱不可为空!");
        document.getElementById("email").focus();
-		return false;
+        return false;
      }
     return true;
-	  }
-	  </script>
-		<?php }elseif(isset($_GET['step4'])){
-			if(OSTYPE){
-		function socket(){
+      }
+      </script>
+        <?php }elseif(isset($_GET['step4'])){
+            if(!isset($_GET['linux'])){
+        function socket(){
 @set_time_limit(0);
 $address = 'localhost';
 $socket = @socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
@@ -404,14 +405,14 @@ $in="installtest";
 sleep(2);
 $buf = @socket_read($socket,8192);
 if($buf=="OK"){
-	return true;
+    return true;
 }else{
-	return false;
+    return false;
 }
 @socket_close($socket);		
-		}?>
-			<h1 class='am-article-title'>安装后端</h1>
-			<div class="am-g">
+        }?>
+            <h1 class='am-article-title'>安装后端</h1>
+            <div class="am-g">
   <div class="am-u-sm-6 am-u-lg-centered">
   <div class=" am-alert am-alert-secondary" data-am-alert>
   <h3>注意:</h3>
@@ -422,12 +423,12 @@ if($buf=="OK"){
     <li>若在Unturned文件夹中找不到Start.exe,可手动从install文件夹内复制start.exe到Unturned文件夹中,然后运行并启动验证。</li>
    <?php
   if(socket()){
-	  
-	  ?>
+      
+      ?>
   <li><h3><font color="green">验证成功</font></h3></li>
   <button class='am-btn am-btn-success'type='button' onclick="javascript:window.location.href='install.php?step5'">下一步>></button>
   <?php }else{
-	  echo "<li><h3><font color='red'>验证失败</font><h3></li>";
+      echo "<li><h3><font color='red'>验证失败</font><h3></li>";
   ?>
   	    <button class='am-btn am-btn-secondary' type='button' onclick="javascript:window.location.href='install.php?step4'">验证>></button>
   <?php } ?>
@@ -435,11 +436,12 @@ if($buf=="OK"){
 </div>
   </div>
 </div>
-		<?php }else{
-	function exist_start(){if(file_exists(LINUXPA."/Scripts/start.sh")){return true;}else{return false;}}
-			?>
-			<h1 class='am-article-title'>Linux后端检测</h1>
-			<div class="am-g">
+        <?php }else{
+			require "../config/config.php";
+    function exist_start(){if(file_exists(str_replace ( "/Unturned", "", PATHS )."/Scripts/start.sh")){return true;}else{return false;}}
+            ?>
+            <h1 class='am-article-title'>Linux后端检测</h1>
+            <div class="am-g">
   <div class="am-u-sm-6 am-u-lg-centered">
   <div class=" am-alert am-alert-secondary" data-am-alert>
   <h3>安装向导:</h3>
@@ -449,31 +451,31 @@ if($buf=="OK"){
     <li>3.点击下方的验证按钮,进行验证</li>
    <?php
   if(exist_start()){ 
-	  ?>
+      ?>
   <li><h3><font color="green">验证成功</font></h3></li>
   <button class='am-btn am-btn-success'type='button' onclick="javascript:window.location.href='install.php?step5'">下一步>></button>
   <?php }else{
-	  echo "<li><h3><font color='red'>验证失败</font><h3></li>";
+      echo "<li><h3><font color='red'>验证失败</font><h3></li>";
   ?>
-  	    <button class='am-btn am-btn-secondary' type='button' onclick="javascript:window.location.href='install.php?step4'">验证>></button>
+  	    <button class='am-btn am-btn-secondary' type='button' onclick="javascript:window.location.href='install.php?step4&linux'">验证>></button>
   <?php } ?>
   </ul>
 </div>
   </div>
 </div>
-		
-		<?php
-		    
-		}}elseif(isset($_GET['step5'])){
-			fopen("../assets/install.lock", "w+") or die(header("Location: install.php?step5&err=3"));?>
-			<h1 class='am-article-title'>安装完成</h1>
+        
+        <?php
+            
+        }}elseif(isset($_GET['step5'])){
+            fopen("../assets/install.lock", "w+") or die(header("Location: install.php?step5&err=3"));?>
+            <h1 class='am-article-title'>安装完成</h1>
 <div class="am-u-sm-6 am-u-lg-centered">
-	<iframe height="0px" wiidth="0px"  frameborder="0" src="http://www.7gugu.com/tongji/tj.php"></iframe>
-			<h3>恭喜你,安装已经完成,你现在可以把install目录删除,以防止黑客入侵<br><a href="../index.php">前往首页</a></h3>
+    <iframe height="0px" wiidth="0px"  frameborder="0" src="http://www.7gugu.com/tongji/tj.php"></iframe>
+            <h3>恭喜你,安装已经完成,你现在可以把install目录删除,以防止黑客入侵<br><a href="../index.php">前往首页</a></h3>
 </div>
-			<?php	}else{ ?>
-		<h1 class='am-article-title'>阅读许可协议</h1>
-		<pre class="am-pre-scrollable">
+            <?php	}else{ ?>
+        <h1 class='am-article-title'>阅读许可协议</h1>
+        <pre class="am-pre-scrollable">
   URP《最终用户使用许可协议书》 V1.0
         【首部及导言】
         架设或使用URP项目（包括此程序本身及相关所有文档，以下简称“URP”）及其衍生品（包括在URP基础上二次创作的项目及依赖URP程序运行的插件等），您应当阅读并遵守URP《最终用户使用许可协议书》（以下简称“协议”） 。请您务必审慎阅读、充分理解各条款内容，协议中的重点内容可能以加粗或加下划线的形式提示您重点注意。除非您已阅读并接受本协议所有条款，否则您无权架设或使用URP。您架设或使用URP即视为您已阅读并同意本协议的约束。 
@@ -505,9 +507,9 @@ if($buf=="OK"){
 7gugu
 </pre>
  <button class='am-btn am-btn-success'type='button' onclick="if(confirm('“我尊重原作者为URP付出的心血，在使用该系统的同时将保护原作者的版权。\r\n保证原作者的名称、链接等版权信息不被删改、淡化或遮挡，如果我没有做到，自愿承担由此引发的所有不良后果”\r\n\r\n同意请确定，不同意请取消')){location = 'install.php?step2';} else {alert('请立即删除所有与本程序相关的文件及其延伸产品');window.opener=null;window.open('','_self');window.close();}">我接受</button>
-			 <button class='am-btn am-btn-danger'type='button' onclick="alert('请立即删除所有与本程序相关的文件及其延伸产品');window.opener=null;window.open('','_self');window.close();">我拒绝</button>
-			 <br><br>
-			 <?php }?>		
+             <button class='am-btn am-btn-danger'type='button' onclick="alert('请立即删除所有与本程序相关的文件及其延伸产品');window.opener=null;window.open('','_self');window.close();">我拒绝</button>
+             <br><br>
+             <?php }?>		
         </div>
       </div>
     </div>
