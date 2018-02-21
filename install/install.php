@@ -19,12 +19,12 @@ if(isset($_GET['i'])&&isset($_POST['gamepos'])){
         }
         $sql  = str_ireplace("define(\"DBUSERNAME\",\"root\");","define(\"DBUSERNAME\",\"{$_POST['dbusername']}\");",$sql); 
         $sql  = str_ireplace("define(\"DBPASSWORD\",\"root\");","define(\"DBPASSWORD\",\"{$_POST['dbpassword']}\");",$sql); 
-        $sql  = str_ireplace("define(\"DBNAME\",\"urp\");","define(\"DBNAME\",\"{$_POST['dbname']}\");",$sql);
-    $sql  = str_ireplace("define(\"OSTYPE\",\"true\");","define(\"OSTYPE\",\"{$ostype}\");",$sql); 
+        $sql  = str_ireplace("define(\"DBNAME\",\"URP\");","define(\"DBNAME\",\"{$_POST['dbname']}\");",$sql);
+    $sql  = str_ireplace("define(\"OSTYPE\",\"TRUE\");","define(\"OSTYPE\",\"{$ostype}\");",$sql); 
         if($_POST['dbport']==""||$_POST['dbport']==3306){
-            	$sql  = str_ireplace("define(\"DBPORT\",\"port\");","define(\"DBPORT\",\"3306\");",$sql); 
+            	$sql  = str_ireplace("define(\"DBPORT\",\"PORT\");","define(\"DBPORT\",\"3306\");",$sql); 
         }else{
-            	$sql  = str_ireplace("define(\"DBPORT\",\"port\");","define(\"DBPORT\",\"{$_POST['dbport']}\");",$sql); 
+            	$sql  = str_ireplace("define(\"DBPORT\",\"PORT\");","define(\"DBPORT\",\"{$_POST['dbport']}\");",$sql); 
         }
         file_put_contents(SYSTEM_ROOT.'/config/config.php',$sql);
     }
