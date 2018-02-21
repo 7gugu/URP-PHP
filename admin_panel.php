@@ -861,6 +861,11 @@ echo "<li class='am-disabled'><a href='admin_panel.php?mplugin&page=";echo $page
         </div>
 </div>
    </div>";
+   }elseif(isset($_GET['upgrade'])){ ?>
+   <div class="am-panel am-panel-default">
+    <div class="am-panel-bd">敬请期待</div>
+</div>
+<?php
    }else{
   echo " 
       <div class='am-g'>
