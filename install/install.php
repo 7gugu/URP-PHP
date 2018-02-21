@@ -1,33 +1,13 @@
 <?php 
-if(isset($_GET['i'])&&isset($_POST['gamepos'])){
-    if(isset($_GET['nosql'])){
-        require '../config/config.php';
-    }else{	
-   IF($_POST['ostype']=="linux"){$ostype=false;}else{$ostype=true;}
-    define("PATHS",$_POST['gamepos']."/Unturned");
+if(isset($_GET['i'])&&isset($_POST['gamepos'])){	
+IF($_POST['ostype']=="linux"){$ostype=false;}else{$ostype=true;}
+define("PATHS",$_POST['gamepos']."/Unturned");
     define('SYSTEM_ROOT',dirname(dirname(__FILE__)));
     define('DBIP',$_POST['dbip']);
     define('DBUSERNAME',$_POST['dbusername']);
     define('DBPASSWORD',$_POST['dbpassword']);
     define('DBNAME',$_POST['dbname']);
    define('OSTYPE',$ostype);
-    $gamepos=str_ireplace("unturned.exe","",$_POST['gamepos']);
-        $sql  = str_ireplace("define(\"PATHS\",\"gamepath\");","define(\"PATHS\",\"{$gamepos}\");", file_get_contents(SYSTEM_ROOT.'/config/config.php'));
-        $sql  = str_ireplace("define(\"DBIP\",\"localhost\");","define(\"DBIP\",\"{$_POST['dbip']}\");",$sql);
-        if($_POST['ip']!=""){
-        $sql  = str_ireplace("define(\"IP\",\"localhost\");","define(\"IP\",\"{$_POST['ip']}\");",$sql); 		
-        }
-        $sql  = str_ireplace("define(\"DBUSERNAME\",\"root\");","define(\"DBUSERNAME\",\"{$_POST['dbusername']}\");",$sql); 
-        $sql  = str_ireplace("define(\"DBPASSWORD\",\"root\");","define(\"DBPASSWORD\",\"{$_POST['dbpassword']}\");",$sql); 
-        $sql  = str_ireplace("define(\"DBNAME\",\"URP\");","define(\"DBNAME\",\"{$_POST['dbname']}\");",$sql);
-    $sql  = str_ireplace("define(\"OSTYPE\",\"TRUE\");","define(\"OSTYPE\",\"{$ostype}\");",$sql); 
-        if($_POST['dbport']==""||$_POST['dbport']==3306){
-            	$sql  = str_ireplace("define(\"DBPORT\",\"PORT\");","define(\"DBPORT\",\"3306\");",$sql); 
-        }else{
-            	$sql  = str_ireplace("define(\"DBPORT\",\"PORT\");","define(\"DBPORT\",\"{$_POST['dbport']}\");",$sql); 
-        }
-        file_put_contents(SYSTEM_ROOT.'/config/config.php',$sql);
-    }
         $connect=mysqli_connect(DBIP,DBUSERNAME,DBPASSWORD,DBNAME) or die(header("Location: install.php?step3&err=1"));
  function query($text){
     global $connect;
@@ -62,6 +42,22 @@ $nums=mysqli_affected_rows($connect);
     if($nums){
 if(OSTYPE){
 copy(dirname(__FILE__)."/start.exe",PATHS."/start.exe"); 
+    $gamepos=str_ireplace("unturned.exe","",$_POST['gamepos']);
+        $sql  = str_ireplace("define(\"PATHS\",\"gamepath\");","define(\"PATHS\",\"{$gamepos}\");", file_get_contents(SYSTEM_ROOT.'/config/config.php'));
+        $sql  = str_ireplace("define(\"DBIP\",\"localhost\");","define(\"DBIP\",\"{$_POST['dbip']}\");",$sql);
+        if($_POST['ip']!=""){
+        $sql  = str_ireplace("define(\"IP\",\"localhost\");","define(\"IP\",\"{$_POST['ip']}\");",$sql); 		
+        }
+        $sql  = str_ireplace("define(\"DBUSERNAME\",\"root\");","define(\"DBUSERNAME\",\"{$_POST['dbusername']}\");",$sql); 
+        $sql  = str_ireplace("define(\"DBPASSWORD\",\"root\");","define(\"DBPASSWORD\",\"{$_POST['dbpassword']}\");",$sql); 
+        $sql  = str_ireplace("define(\"DBNAME\",\"URP\");","define(\"DBNAME\",\"{$_POST['dbname']}\");",$sql);
+    $sql  = str_ireplace("define(\"OSTYPE\",\"TRUE\");","define(\"OSTYPE\",\"{$ostype}\");",$sql); 
+        if($_POST['dbport']==""||$_POST['dbport']==3306){
+            	$sql  = str_ireplace("define(\"DBPORT\",\"PORT\");","define(\"DBPORT\",\"3306\");",$sql); 
+        }else{
+            	$sql  = str_ireplace("define(\"DBPORT\",\"port\");","define(\"DBPORT\",\"{$_POST['dbport']}\");",$sql); 
+        }
+file_put_contents(SYSTEM_ROOT.'/config/config.php',$sql);
 header("Location: install.php?step4");
 }else{
 header("Location: install.php?step4&linux");	
