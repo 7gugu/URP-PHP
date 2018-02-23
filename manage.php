@@ -661,12 +661,12 @@ if(isset($_GET['plugin'])){
 	       
 		   $ser=$_COOKIE['ser'];
 		   $fa=mysqli_fetch_array(query("select * from server where sid='{$ser}'"));
-		   $pa=PATHS."\Servers\\".$ser."\Rocket\Permissions.config.xml";
+		   $pa="Rocket\Permissions.config.xml";
 		   		      echo "<tr><td></td>";
   echo "<td><strong><font color='red'>权限组管理</font></strong></td>";
   echo "<td><a class='am-badge am-badge-secondary am-text-sm' href='manage.php?per&pfile=".$pa."' >编辑</a>         
   </td><td></td></tr>";
-		   $pa=PATHS."\Servers\\".$ser."\Config.json";
+		   $pa="Config.json";
 		   		      echo "<tr><td></td>";
   echo "<td><strong><font color='red'>Config.json</font></strong></td>";
   echo "<td><a class='am-badge am-badge-secondary am-text-sm' href='manage.php?con&pfile=".$pa."' >编辑</a>      
@@ -732,7 +732,7 @@ if(isset($_GET['po'])){
 	   <td></td>
 	   </tr>
            ";
-	plist(PATHS."/Servers/$ser/Rocket/plugins/".$po,"config",$state);
+	plist(PATHS."/Servers/$ser/Rocket/plugins".$po,"config",$state);
 	 echo  "
 <tr>		
 <td>
@@ -748,17 +748,15 @@ if(isset($_GET['po'])){
 </table>注：configuration.xml为配置文件 en.translation.xml为翻译文件";
 }
 if(isset($_GET['pfile'])){
+	$ser=$_COOKIE['ser'];
 	if(isset($_GET['per'])){
-		$fn[1]="Permissions.config.xml";
+		$fn="Rocket/Permissions.config.xml";
 	}
     else if(isset($_GET['con'])){
-		$fn[1]="Config.json";
+		$fn="Config.json";
 	}
 	else{
-	$ser=$_COOKIE['ser'];
-	$fn=str_replace(PATHS."/Servers/$ser/Rocket/plugins/","",$_GET['pfile']);
-	$fn=explode("/",$fn);
-	$fn= end($fn);
+	$fn=str_replace("/plugins","",$_GET['pfile']);
 	}
 		echo "
 <table class='am-table am-table-striped '>
@@ -778,7 +776,6 @@ if(isset($_GET['pfile'])){
 	   <tr><td>文件名:<br>{$fn}<br></td></tr>
 	   <tr>
 	  <td colspan='3'>
-	   <td>
            ";?>
 		   <style type="text/css" media="screen">
   pre{
@@ -789,7 +786,15 @@ if(isset($_GET['pfile'])){
   </style>
 		     <script src="assets/ace/ace.js" type="text/javascript" charset="utf-8"></script>
 			 <input type='hidden' value='<?php echo $_GET['pfile']; ?>' name='path' id='path'></input>
-            <pre id="editor"><?php echo rwfile(PATHS."/Servers/$ser/Rocket/plugins/".$_GET['pfile'],'r','');?></pre>
+            <pre id="editor">
+			<?php 
+			if(strstr($_GET['pfile'],"plugins")!=false){
+				$path=PATHS."\\Servers\\{$ser}\\Rocket\\";
+			}else{
+				$path=PATHS."\\Servers\\{$ser}\\";
+			}
+			echo rwfile($path.$_GET['pfile'],'r','');?>
+			</pre>
 <input type="hidden" id="es" name='es' value=''/>
 <script>
     var editorr = ace.edit("editor");
@@ -827,7 +832,12 @@ if(isset($_GET['save'])&&isset($_POST['path'])){
 	$text=$_POST['es']; 
 	$ser=$_COOKIE['ser'];
 	$fa=mysqli_fetch_array(query("select * from server where sid='{$ser}'"));
-	if(rwfile(PATHS."/Servers/$ser/Rocket/plugins/".$path,'w',$text)){
+	if(strstr($path,"plugins")!=false){
+				$paths=PATHS."\\Servers\\{$ser}\\Rocket\\";
+			}else{
+				$paths=PATHS."\\Servers\\{$ser}\\";
+			}
+	if(rwfile($paths.$path,'w',$text)){
 		echo "
 		<table class='am-table am-table-striped am-table-centered'>
  <thead>
@@ -970,7 +980,7 @@ if(isset($_GET['msql'])){
 	$slink='';
 	if(CSQL==true&&SLINK!=''){
 		$slink=SLINK;
-	}elseif(CSQL==FALSE||SLINK==''){
+	}elseif(SLINK==''){
 	$dis="disabled";
 	}else{
 		echo "
