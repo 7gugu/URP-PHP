@@ -4,7 +4,8 @@
 *****************/
 
 //下载Rocket.dll
-function rocket_download($url) {
+function rocket_download($key) {
+$url="http://api.rocketmod.net/download/unturned/latest/".$key;   
 $dir=PATHS.'/Rocket.zip';
 $ch = curl_init($url);
 $fp = fopen($dir, "w+");
@@ -82,16 +83,10 @@ function manage($sid,$switch){
         if($switch=='start'){
 	       udfile($ser,"players",$ss['players'],"Server//Commands.dat");//同步最大玩家数
             $command=$sid;
-			if(OSTYPE==TRUE){
-            if(SWAY==TRUE){
-            //Windows环境				
+            if(SWAY){ 
                 rcon($command,0,1935,'');}else{
          system("start".PATHS."\\Unturned.exe -nographics -batchmode -silent-crashes +secureserver/".$command);
-		}}else{
-			//Linux环境	
-			system("cd /".PATHS."/Scripts");
-			system("./start.sh ".$sid);
-		}		
+                }
         header("Location: manage.php?index&suc=1");
         }elseif($switch=='shutdown'){	
         sleep(2);
@@ -100,30 +95,20 @@ function manage($sid,$switch){
                 rcon("save",1,$rom['rport'],$rom['rpw']);
                 sleep(1);
             rcon("shutdown",1,$rom['rport'],$rom['rpw']);
-			if(OSTYPE==true){	
- $port=$rom['port']+1;
+$port=$rom['port']+1;
  system("for /f \"tokens=1-5 delims= \" %a in ('\"netstat -ano|findstr \"^:{$port}\"\"') do taskkill /f /pid %d ");
-		}
         header("Location: manage.php?index&suc=2");
         }elseif($switch=='restart'){
             $query=query("select * from server where sid='{$sid}'");
             $rom=mysqli_fetch_array($query);
              rcon("shutdown",1,$rom['rport'],$rom['rpw']);
-			 if(OSTYPE==true){
              	$port=$rom['port']+1;
  system("for /f \"tokens=1-5 delims= \" %a in ('\"netstat -ano|findstr \"^:{$port}\"\"') do taskkill /f /pid %d ");
-			 }
         $command=$sid;
-        if(OSTYPE==TRUE){
-            if(SWAY==TRUE){
-            //Windows环境				
+        if(SWAY){ 
                 rcon($command,0,1935,'');}else{
          system("start".PATHS."\\Unturned.exe -nographics -batchmode -silent-crashes +secureserver/".$command);
-		}}else{
-			//Linux环境	
-			system("cd /".PATHS."/Scripts");
-			system("./start.sh ".$sid);
-		}		
+                }
         header("Location: manage.php?index&suc=3");
         }
     }else{
@@ -761,12 +746,12 @@ if(is_dir($afile))
   $name=explode('.',$a);
        echo "<tr><td></td>";
   echo "<td><span class='am-icon-folder-o'></span> ".$a."</td>";
-  echo "<td><a class='am-badge am-badge-primary am-text-sm' href='manage.php?po=".str_replace(PATHS."/Servers/$ser/Rocket/plugins/","",$afile)."' >打开</a></td><td></td></tr>";}else{
+  echo "<td><a class='am-badge am-badge-primary am-text-sm' href='manage.php?po=".str_replace(PATHS."/Servers/$ser/Rocket/plugins","",$afile)."' >打开</a></td><td></td></tr>";}else{
     $a=str_replace($path."/",'',$afile);
   $name=explode('.',$a);
        echo "<tr><td></td>";
   echo "<td><span class='am-icon-file-o'></span> ".$a."</td>";
-  echo "<td><a class='am-badge am-badge-secondary am-text-sm' href='manage.php?pfile=".str_replace(PATHS."/Servers/$ser/Rocket/plugins/","",$afile)."' >编辑</a></td><td></td></tr>";
+  echo "<td><a class='am-badge am-badge-secondary am-text-sm' href='manage.php?pfile=".str_replace(PATHS."/Servers/$ser/Rocket/","",$afile)."' >编辑</a></td><td></td></tr>";
 }
 }
 if(!$glob){echo "<tr><td></td><td>无可管理的文件</td><td></td><td></td></tr>";
